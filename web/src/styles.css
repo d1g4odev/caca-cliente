@@ -26,6 +26,9 @@
   --accent-border: #bbf7d0; /* verde-200 */
   --accent-ring: rgba(22, 163, 74, 0.28);
   --accent-glow: 0 0 0 0 transparent; /* sem glow no light */
+  --accent-btn: #15803d; /* verde-700: AA normal com branco (4.8:1) */
+  --accent-btn-fg: #ffffff;
+  --accent-btn-hover: #166534; /* verde-800 */
 
   /* WhatsApp */
   --wa: #25d366;
@@ -112,6 +115,9 @@
   --accent-border: #1f4d2e;
   --accent-ring: rgba(74, 222, 128, 0.32);
   --accent-glow: 0 0 12px rgba(74, 222, 128, 0.35); /* glow sutil no dark */
+  --accent-btn: #4ade80; /* verde-400 */
+  --accent-btn-fg: #052e16; /* verde-950: AA normal com #4ade80 (8.9:1) */
+  --accent-btn-hover: #22c55e; /* verde-500 */
 
   --wa: #25d366;
   --wa-hover: #2fe075;
@@ -242,7 +248,7 @@ body {
   transition: background var(--transition), color var(--transition), border-color var(--transition);
 }
 .filter-chips button:hover { border-color: var(--accent); color: var(--text); }
-.filter-chips button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.filter-chips button.on { background: var(--accent-btn); border-color: var(--accent-btn); color: var(--accent-btn-fg); }
 
 .exports { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-2); font-size: var(--font-base); color: var(--text-muted); }
 .exports a {
@@ -250,7 +256,7 @@ body {
   border: 1px solid var(--accent); border-radius: var(--radius-md); padding: 3px 10px;
   transition: background var(--transition), color var(--transition);
 }
-.exports a:hover { background: var(--accent); color: #fff; }
+.exports a:hover { background: var(--accent-btn); color: var(--accent-btn-fg); }
 
 /* ── Busca ── */
 .search-bar { display: flex; flex-direction: column; gap: var(--space-2); }
@@ -323,11 +329,11 @@ body {
 .suggestion:hover { background: var(--bg-muted); }
 .suggestion.muted { cursor: default; color: var(--text-subtle); }
 .search-bar button {
-  padding: 10px; border: 0; border-radius: var(--radius-md); background: var(--accent); color: #fff;
+  padding: 10px; border: 0; border-radius: var(--radius-md); background: var(--accent-btn); color: var(--accent-btn-fg);
   font-weight: 600; font-size: var(--font-md); cursor: pointer;
   transition: background var(--transition), box-shadow var(--transition);
 }
-.search-bar button:hover:not(:disabled) { background: var(--accent-hover); }
+.search-bar button:hover:not(:disabled) { background: var(--accent-btn-hover); }
 [data-theme='dark'] .search-bar button { box-shadow: var(--accent-glow); }
 .search-bar button:disabled { opacity: 0.6; cursor: wait; }
 
@@ -339,7 +345,7 @@ body {
   transition: background var(--transition), color var(--transition), border-color var(--transition);
 }
 .view-toggle button:hover { border-color: var(--accent); color: var(--text); }
-.view-toggle button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.view-toggle button.active { background: var(--accent-btn); color: var(--accent-btn-fg); border-color: var(--accent-btn); }
 [data-theme='dark'] .view-toggle button.active { box-shadow: var(--accent-glow); }
 
 /* ── Botão WhatsApp (reutilizado em lista, mapa e kanban) ── */
@@ -538,8 +544,8 @@ body {
 .preview pre { margin: 6px 0 0; white-space: pre-wrap; font-family: inherit; font-size: var(--font-base); color: var(--text); }
 .modal-foot { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-3) var(--space-5); border-top: 1px solid var(--border); }
 .modal-foot .spacer { flex: 1; }
-.btn-primary { border: 0; border-radius: var(--radius-md); background: var(--accent); color: #fff; font-weight: 600; font-size: var(--font-base); padding: 8px 16px; cursor: pointer; transition: background var(--transition), box-shadow var(--transition); }
-.btn-primary:hover { background: var(--accent-hover); }
+.btn-primary { border: 0; border-radius: var(--radius-md); background: var(--accent-btn); color: var(--accent-btn-fg); font-weight: 600; font-size: var(--font-base); padding: 8px 16px; cursor: pointer; transition: background var(--transition), box-shadow var(--transition); }
+.btn-primary:hover { background: var(--accent-btn-hover); }
 [data-theme='dark'] .btn-primary { box-shadow: var(--accent-glow); }
 .btn-secondary { border: 1px solid var(--border-strong); border-radius: var(--radius-md); background: var(--bg-elevated); color: var(--text-muted); font-size: var(--font-base); padding: 8px 14px; cursor: pointer; transition: background var(--transition), color var(--transition); }
 .btn-secondary:hover { background: var(--bg-muted); color: var(--text); }
@@ -601,7 +607,7 @@ body {
   background: var(--accent-soft); color: var(--accent-strong); border: 1px solid var(--accent-border);
   transition: background var(--transition), color var(--transition);
 }
-.mail-btn:hover { background: var(--accent); color: #fff; }
+.mail-btn:hover { background: var(--accent-btn); color: var(--accent-btn-fg); }
 .details-btn {
   font-size: var(--font-sm); border-radius: var(--radius-md); padding: 5px 9px; cursor: pointer;
   background: var(--bg-elevated); color: var(--text-muted); border: 1px solid var(--border-strong);
@@ -642,7 +648,7 @@ body {
   font-size: var(--font-sm); font-weight: 600; padding: 6px 12px; border-radius: var(--radius-md);
   transition: background var(--transition), color var(--transition);
 }
-.msg-gen-btn:hover:not(:disabled) { background: var(--accent); color: #fff; }
+.msg-gen-btn:hover:not(:disabled) { background: var(--accent-btn); color: var(--accent-btn-fg); }
 .msg-gen-btn:disabled { opacity: 0.6; cursor: wait; }
 .msg-gen-spinner { width: 14px; height: 14px; border: 2px solid var(--accent-border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
