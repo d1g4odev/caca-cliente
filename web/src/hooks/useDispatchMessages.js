@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { montarMensagem } from '../lib/whatsapp.js';
+import { mensagemFallbackManual } from '../lib/nome.js';
 
 // Hook que gerencia a geração de mensagens para o Modo Disparo.
 // Estratégia (em ordem de preferência):
@@ -117,7 +117,7 @@ export function useDispatchMessages({ searchId, leads }) {
 
     function aplicarFallback(lead, motivo) {
       cache.current.set(lead.id, {
-        mensagem: montarMensagem(lead.name, lead.niche),
+        mensagem: mensagemFallbackManual(lead.name, lead.niche),
         angulo: null,
         proximaAcao: null,
         fonte: 'fallback',
