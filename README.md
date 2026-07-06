@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="docs/assets/banner-horizontal.png" alt="Caça-Cliente — Sites com IA do Zero" width="100%" />
+
 # 🎯 Caça-Cliente
 
 ### O radar de negócios sem site — do clique ao WhatsApp.
@@ -258,6 +260,23 @@ flowchart LR
 - Projeto em estágio **MVP**. Sem `DATABASE_URL`, as sessões ficam em memória e somem ao reiniciar; com Postgres configurado, buscas/leads/estágios são persistidos (a fila e o stream SSE seguem em memória, por serem estado de runtime).
 - Tiles do OSM são gratuitos mas têm política de uso justo; em produção use um provedor de tiles (MapTiler) ou self-host.
 - Coleta de contatos para prospecção: registre a origem do dado (campo `source`), ofereça _opt-out_ e trate apenas o necessário (**LGPD**).
+
+---
+
+## 🎓 Créditos
+
+<div align="center">
+
+<img src="docs/assets/banner-devjuninho.png" alt="DevJuninho — Sites com IA do Zero" width="400" />
+
+### O Caça-Cliente é a ferramenta oficial do curso **[Sites com IA do Zero](https://instagram.com/devjuninho_)**.
+
+Siga o **DevJuninho** nas redes e fique por dentro do curso:
+
+[![Instagram](https://img.shields.io/badge/Instagram-@devjuninho_-E4405F?logo=instagram&logoColor=white)](https://instagram.com/devjuninho_)
+[![X](https://img.shields.io/badge/X-@devjuninho-000000?logo=x&logoColor=white)](https://x.com/devjuninho)
+
+</div>
 
 ---
 
