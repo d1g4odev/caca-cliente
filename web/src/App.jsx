@@ -10,6 +10,7 @@ import LeadDetails from './components/LeadDetails.jsx';
 import HistoryPanel from './components/HistoryPanel.jsx';
 import ThemeToggle, { useTheme } from './components/ThemeToggle.jsx';
 import Brand from './components/Brand.jsx';
+import Welcome from './components/Welcome.jsx';
 import { leadScore } from './lib/score.js';
 import { useEnrichmentStream } from './hooks/useEnrichmentStream.js';
 
@@ -260,7 +261,11 @@ export default function App() {
             </>
           )}
         </header>
-        <LeadList leads={visibleLeads} selectedId={selectedId} onSelect={selectLead} onOpenDetails={setDetailId} loading={loading} />
+        {!search && !loading ? (
+          <Welcome />
+        ) : (
+          <LeadList leads={visibleLeads} selectedId={selectedId} onSelect={selectLead} onOpenDetails={setDetailId} loading={loading} />
+        )}
         <Brand />
       </aside>
 

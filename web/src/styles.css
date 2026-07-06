@@ -404,10 +404,25 @@ body {
 
 /* ── Lista de leads ── */
 .lead-list { overflow-y: auto; padding: var(--space-3); display: flex; flex-direction: column; gap: var(--space-3); flex: 1; }
-.empty { padding: var(--space-6) var(--space-4); color: var(--text-muted); text-align: center; flex: 1; }
+.empty { padding: var(--space-6) var(--space-4); color: var(--text-muted); text-align: center; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-1); }
 .empty-icon { font-size: 40px; display: block; margin-bottom: var(--space-2); opacity: 0.7; }
+.empty-mascot { border-radius: 50%; object-fit: cover; margin-bottom: var(--space-2); box-shadow: var(--shadow-sm); }
+.empty-mascot--pulse { animation: mascot-pulse 1.6s ease-in-out infinite; }
+@keyframes mascot-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.06); opacity: 0.92; } }
+.empty--loading { gap: var(--space-2); }
 .empty-title { font-size: var(--font-md); font-weight: 600; color: var(--text); margin: 0 0 var(--space-1); }
 .empty-hint { font-size: var(--font-base); color: var(--text-muted); margin: 0; }
+
+/* ── Tela de boas-vindas (primeira visita) ── */
+.welcome { padding: var(--space-6) var(--space-4); text-align: center; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-2); }
+.welcome-mascot { border-radius: 50%; object-fit: cover; margin-bottom: var(--space-2); box-shadow: var(--shadow-md); }
+[data-theme='dark'] .welcome-mascot { box-shadow: var(--shadow-md), var(--accent-glow); }
+.welcome-title { font-size: var(--font-xl); font-weight: 700; color: var(--text); margin: 0; }
+.welcome-text { font-size: var(--font-md); color: var(--text-muted); margin: 0 0 var(--space-3); }
+.welcome-steps { list-style: none; padding: 0; margin: 0 0 var(--space-3); display: flex; flex-direction: column; gap: 6px; text-align: left; }
+.welcome-steps li { font-size: var(--font-base); color: var(--text-muted); padding: 6px 12px; background: var(--bg-muted); border-radius: var(--radius-md); }
+.welcome-steps li strong { color: var(--accent-strong); font-weight: 600; }
+.welcome-hint { font-size: var(--font-sm); color: var(--text-subtle); margin: 0; }
 
 /* Skeleton cards (loading) */
 .skeleton-card {

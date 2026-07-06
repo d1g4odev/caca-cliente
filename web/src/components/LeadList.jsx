@@ -23,7 +23,11 @@ export default function LeadList({ leads, selectedId, onSelect, onOpenDetails, l
   if (loading) {
     return (
       <div className="lead-list">
-        <Skeleton />
+        <div className="empty empty--loading">
+          <img src="/brand/icon.png" alt="" className="empty-mascot empty-mascot--pulse" width={56} height={56} />
+          <p className="empty-title">Procurando negócios…</p>
+          <p className="empty-hint">Varrendo a região em busca de quem ainda não tem site.</p>
+        </div>
         <Skeleton />
         <Skeleton />
       </div>
@@ -32,7 +36,7 @@ export default function LeadList({ leads, selectedId, onSelect, onOpenDetails, l
   if (!leads.length) {
     return (
       <div className="empty">
-        <span className="empty-icon">🗺️</span>
+        <img src="/brand/icon.png" alt="" className="empty-mascot" width={56} height={56} />
         <p className="empty-title">Nenhum lead por aqui</p>
         <p className="empty-hint">Faça uma busca para ver os negócios sem site da sua região.</p>
       </div>
