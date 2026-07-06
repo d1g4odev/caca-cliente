@@ -97,3 +97,11 @@ export function waLink(phone, nome, niche) {
   if (!d) return null;
   return `https://wa.me/${d}?text=${encodeURIComponent(montarMensagem(nome, niche))}`;
 }
+
+// Monta link wa.me com mensagem personalizada (ex: mensagem gerada pela IA).
+// Usado pelo botão "Gerar mensagem" no LeadDetails.
+export function waLinkWithMessage(phone, message) {
+  const d = normalizePhoneBR(phone);
+  if (!d || !message) return null;
+  return `https://wa.me/${d}?text=${encodeURIComponent(message)}`;
+}
