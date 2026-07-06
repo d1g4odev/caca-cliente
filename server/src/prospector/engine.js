@@ -1,4 +1,4 @@
-// Engine principal do gerador de mensagens de abordagem do Captação.
+// Engine principal do gerador de mensagens de abordagem do Caça-Cliente.
 // Implementa o fluxo do Manual Mestre Prospector do Juninho (seções 3 a 9).
 //
 // Entrada (lead): { nome, nicho, cidade, temSite, temInstagram, linkQuebrado,
