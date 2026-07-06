@@ -1,8 +1,10 @@
-# Propostas de rebrand — ferramenta de prospecção do curso *Sites com IA do Zero*
+# Rebrand — ferramenta de prospecção do curso *Sites com IA do Zero*
 
-> **Objetivo:** reposicionar o produto como a ferramenta oficial dos alunos do Rodrigo para encontrar negócios sem site e vender sites para eles. O nome atual "Captação" é genérico demais (descreve a ação, não a identidade) e carrega referências ao autor original (Lorenzo) que precisam sair.
+> **DECISÃO REGISTRADA (2026-07-05):** O Rodrigo escolheu a **Opção 2 — Caça-Cliente**, com a tagline ***"O radar de negócios sem site — do clique ao WhatsApp."*** As renomeações no código, docs e UI foram aplicadas em commits atômicos subsequentes (ver `git log --oneline`).
 
-Este documento apresenta **3 opções de nome + tagline** com a racional por trás de cada uma. O Rodrigo escolhe uma — **nada é renomeado ainda** (código, README, UI continuam como estão até a decisão).
+> **Objetivo original:** reposicionar o produto como a ferramenta oficial dos alunos do Rodrigo para encontrar negócios sem site e vender sites para eles. O nome anterior "Captação" era genérico demais (descreve a ação, não a identidade) e carregava referências ao autor original (Lorenzo) que precisavam sair.
+
+Este documento apresenta **3 opções de nome + tagline** com a racional por trás de cada uma. A decisão foi da **Opção 2** — as outras duas ficam registradas abaixo como histórico.
 
 ---
 
@@ -118,19 +120,19 @@ Qualquer uma das três funciona. A decisão é de **posicionamento** — o que o
 
 ## Próximos passos após a escolha
 
-1. Rodrigo escolhe uma opção (ou pede ajuste).
-2. Eu (Dono de Produto) atualizo este doc com a decisão registrada.
+1. ~~Rodrigo escolhe uma opção (ou pede ajuste).~~ ✅ Escolheu a Opção 2 (Caça-Cliente).
+2. ~~Eu (Dono de Produto) atualizo este doc com a decisão registrada.~~ ✅ Feito neste commit.
 3. Em commits atômicos subsequentes:
-   - `docs:` atualiza README com o novo nome + tagline.
-   - `docs:` atualiza TUTORIAL.md.
-   - `feat:` renomeia o projeto no `package.json` (campo `name`).
-   - `feat:` atualiza o `<h1>` no `App.jsx` (de `Captação<span>.app</span>` para o novo nome).
-   - `feat:` remove a referência ao "Lorenzo" no template padrão do WhatsApp (`web/src/lib/whatsapp.js`).
-4. Vitral é avisado para revisar qualquer copy visual que faça referência ao nome antigo.
-5. Turbina e Mascate são avisados de que o nome mudou (mas a lógica de backend não é afetada).
+   - `docs:` atualiza README com o novo nome + tagline. ✅
+   - `docs:` atualiza TUTORIAL.md. ✅
+   - `feat:` renomeia o projeto no `package.json` (campo `name`). ✅
+   - `feat:` atualiza o `<h1>` no `App.jsx` e o `<title>` no `index.html`. ✅
+   - `feat:` remove a referência ao "Lorenzo" no template padrão do WhatsApp (`web/src/lib/whatsapp.js`). ✅
+4. Vitral é avisado para revisar qualquer copy visual que faça referência ao nome antigo. ✅
+5. Turbina e Mascate são avisados de que o nome mudou (mas a lógica de backend não é afetada). ✅
 
 ---
 
 <div align="center">
-<sub>Documento de produto — Dono de Produto, projeto Captação (rebrand). Decisão pendente.</sub>
+<sub>Documento de produto — Dono de Produto, projeto Caça-Cliente (rebrand concluído em 2026-07-05).</sub>
 </div>
