@@ -12,7 +12,7 @@
 
 import { Router } from 'express';
 import { gerarMensagem, TIPOS_MENSAGEM } from '../prospector/index.js';
-import { reopenSearch } from '../enrichment/enricher.js';
+import { reopenSearch, getSearchLeads } from '../enrichment/enricher.js';
 
 const router = Router();
 
@@ -100,6 +100,141 @@ router.post('/api/leads/:leadId/message', async (req, res) => {
       error: 'Não consegui gerar a mensagem agora. Tente novamente em instantes.',
     });
   }
+});
+
+// ── Lote (Modo Disparo) ────────────────────────────────────────────────────
+// POST /api/search/:searchId/messages/batch
+// Body: { "tipo": "abordagem", "leadIds": ["id1", "id2"] }
+//   - tipo: opcional (default: "abordagem"). Se omitido, infere pelo estágio.
+//   - leadIds: opcional. Se omitido, gera para TODOS os leads da busca.
+//
+// Limite: 50 leads por chamada (protege o event loop e o provider de LLM).
+// Paralelismo: chunk de 5 (Promise.all por chunk) — não estoura o event loop.
+// Respostas parciais: cada geração é independente. Falha em um lead vai para
+// o array `falhas` e não derruba o lote.
+//
+// Resposta 200:
+//   { searchId, tipo, geracoes: [{leadId, mensagem, angulo, proximaAcao}], falhas: [{leadId, erro}] }
+//   207 não é usado — mantemos 200 mesmo com falhas parciais (o front decide
+//   como tratar via o array `falhas`).
+const BATCH_LIMIT = 50;
+const BATCH_CHUNK = 5;
+
+router.post('/api/search/:searchId/messages/batch', async (req, res) => {
+  const { searchId } = req.params;
+  if (!searchId) {
+    return res.status(400).json({ error: 'searchId é obrigatório.' });
+  }
+
+  const body = req.body ?? {};
+  const tipoParam = (body.tipo ?? req.query.tipo ?? '').toString().trim();
+  const tipo = TIPOS_VALIDOS.has(tipoParam) ? tipoParam : '';
+  const leadIdsReq = Array.isArray(body.leadIds) ? body.leadIds : null;
+
+  // Reabre a sessão e pega os leads (snapshot com score).
+  let data;
+  try {
+    data = await getSearchLeads(searchId);
+  } catch (e) {
+    console.error('[messages/batch] falha ao carregar busca:', e);
+    return res.status(502).json({
+      error: 'Não consegui carregar a busca agora. Tente novamente em instantes.',
+    });
+  }
+
+  if (!data) {
+    return res.status(404).json({
+      error: 'Busca não encontrada (sessão expirou?).',
+    });
+  }
+
+  // Filtra leads por leadIds (se vieram) ou pega todos.
+  let leads = data.leads ?? [];
+  const notFound = [];
+  if (leadIdsReq && leadIdsReq.length > 0) {
+    const set = new Set(leadIdsReq.map(String));
+    leads = leads.filter((l) => set.has(String(l.id)));
+    // Reporta leadIds pedidos mas não encontrados na busca (visibilidade pro front).
+    const found = new Set(leads.map((l) => String(l.id)));
+    for (const id of leadIdsReq.map(String)) {
+      if (!found.has(id)) notFound.push(id);
+    }
+  }
+
+  // Limite de leads por chamada — protege o servidor.
+  if (leads.length > BATCH_LIMIT) {
+    return res.status(413).json({
+      error: `Lote grande demais: ${leads.length} leads. Limite de ${BATCH_LIMIT} por chamada. Use leadIds para paginar.`,
+    });
+  }
+
+  if (leads.length === 0) {
+    return res.json({
+      searchId,
+      tipo: tipo || 'inferido',
+      geracoes: [],
+      falhas: [],
+    });
+  }
+
+  // Monta o shape do lead esperado pelo motor.
+  const toEngineLead = (l) => {
+    const e = l.enrichment ?? {};
+    return {
+      nome: l.name ?? '',
+      nicho: l.niche ?? data.niche ?? '',
+      cidade: data.city ?? '',
+      temSite: l.hasWebsite ?? Boolean(e.discoveredWebsite),
+      temInstagram: Boolean(e.instagram),
+      linkQuebrado: false,
+      estagio: l.stage ?? 'novo',
+      instagram: e.instagram ?? '',
+    };
+  };
+
+  // Processa em chunks de 5 para não estourar o event loop nem o provider de LLM.
+  const geracoes = [];
+  const falhas = [];
+
+  for (let i = 0; i < leads.length; i += BATCH_CHUNK) {
+    const chunk = leads.slice(i, i + BATCH_CHUNK);
+    const results = await Promise.all(
+      chunk.map(async (l) => {
+        try {
+          const r = await gerarMensagem(toEngineLead(l), tipo);
+          return { leadId: l.id, ok: true, data: r };
+        } catch (e) {
+          return { leadId: l.id, ok: false, erro: e?.message ?? String(e) };
+        }
+      })
+    );
+    for (const r of results) {
+      if (r.ok) {
+        geracoes.push({
+          leadId: r.leadId,
+          mensagem: r.data.mensagem,
+          angulo: r.data.angulo,
+          tipo: r.data.tipo,
+          proximaAcao: r.data.proximaAcao,
+        });
+      } else {
+        falhas.push({ leadId: r.leadId, erro: r.erro });
+      }
+    }
+  }
+
+  // leadIds pedidos mas não encontrados na busca viram falhas (visibilidade pro front).
+  const falhasComNotFound = [
+    ...falhas,
+    ...notFound.map((id) => ({ leadId: id, erro: 'Lead não encontrado nesta busca.' })),
+  ];
+
+  return res.json({
+    searchId,
+    tipo: tipo || 'inferido',
+    geracoes,
+    falhas: falhasComNotFound,
+  });
 });
 
 export default router;
