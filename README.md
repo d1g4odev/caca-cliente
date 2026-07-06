@@ -2,35 +2,172 @@
 
 # 🎯 Captação
 
-### Prospecção B2B inteligente — encontre negócios **sem site**, enriqueça os contatos e gerencie tudo num funil visual.
+### A ferramenta oficial do curso **Sites com IA do Zero** — encontre negócios **sem site** na sua cidade e feche seu primeiro cliente.
 
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://python.org)
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)](https://react.dev)
-[![Leaflet](https://img.shields.io/badge/Leaflet-OpenStreetMap-199900?logo=leaflet&logoColor=white)](https://leafletjs.com)
-[![Custo](https://img.shields.io/badge/custo-R$%200-2ea44f)](#-100-gratuito)
+[![Custo](https://img.shields.io/badge/custo-R$%200-2ea44f)](#-quanto-custa)
 [![Status](https://img.shields.io/badge/status-MVP-1f6feb)](#-roadmap)
 
 </div>
 
 ---
 
-Um SaaS estilo **busca imobiliária**: de um lado um mapa interativo, do outro a lista de leads. Você define **nicho + cidade + raio**, e o sistema encontra os estabelecimentos comerciais da região que **não têm website cadastrado** — exatamente o público que mais precisa de presença digital. Para cada lead, um worker busca **e-mail, Instagram, Facebook e LinkedIn** na web, em tempo real.
+## 👋 O que é isso?
 
-> 💸 **100% gratuito, sem chaves de API e sem cartão de crédito.** Os dados vêm do **OpenStreetMap** e o enriquecimento do **DuckDuckGo**. 
+Você acabou de aprender a criar sites com IA. Agora precisa de **clientes** pra vender esses sites. Mas onde encontrar quem precisa de um site?
+
+**A resposta é simples:** os negócios que **ainda não têm site**.
+
+O problema é que achar esses negócios na mão é lento — você teria que abrir o Google, digitar "barbearia em [sua cidade]", clicar em cada um, ver se tem ou não site, anotar o telefone... O **Captação** faz tudo isso pra você, **de graça**, em segundos:
+
+1. Você digita o **nicho** (ex.: _barbearia_) e a **cidade**.
+2. A ferramenta varre o **OpenStreetMap** (o "Google Maps" gratuito) e acha todos os estabelecimentos daquele ramo na região.
+3. Ela **descarta automaticamente** os que já têm site — sobram só os que precisam de um.
+4. Para cada lead, ela ainda **procura sozinha** o telefone, e-mail, Instagram, Facebook e LinkedIn na internet.
+5. Você abre o WhatsApp com a mensagem já pronta, manda, e fecha o cliente.
+
+> 💸 **100% gratuito, sem chaves de API, sem cartão de crédito.** Os dados vêm do **OpenStreetMap** e o enriquecimento do **DuckDuckGo** — ambos gratuitos e públicos.
 
 ---
 
-## ✨ Destaques
+## 🚀 Começando em 1 comando
 
-- 🗺️ **Mapa interativo** com pinos coloridos por status (Leaflet + tiles OpenStreetMap)
-- 🔍 **Filtro "sem website" nativo** — descarta automaticamente quem já tem site
-- 🧩 **Enriquecimento sob demanda** — e-mail, Instagram, Facebook e LinkedIn via busca cruzada
-- ⚡ **Tempo real (SSE)** — os contatos pingam na tela conforme são encontrados, sem travar
-- 🗂️ **Funil Kanban** — arraste leads entre `Novo · Qualificado · Contatado · Ganho · Descartado`
-- 🏙️ **Autocomplete de cidade** com geocoding gratuito (Nominatim)
-- 📤 **Exportação CSV / Excel** + **webhook** para integrar com seu CRM
-- 🗄️ **Persistência opcional** em PostgreSQL (roda em memória por padrão; ativa com `DATABASE_URL`)
+**Pré-requisitos:** [Node.js 18+](https://nodejs.org) e [Python 3.10+](https://python.org/downloads) instalados.
+
+```bash
+git clone <repo-do-curso>.git
+cd Captacao
+npm run setup   # 1ª vez: instala tudo (raiz, server, web e o worker Python)
+npm run dev     # sobe a ferramenta em http://localhost:5173
+```
+
+Abra **http://localhost:5173** no navegador. Pronto — a ferramenta está rodando.
+
+> 💡 **Sem internet ou quer só testar?** Rode `npm run dev:mock` em vez de `npm run dev`. A ferramenta usa dados fictícios (negócios e contatos de mentira) pra você ver o fluxo funcionando sem depender de internet.
+
+> 📺 **Nunca abriu um terminal antes?** Tem um passo a passo com prints em **[TUTORIAL.md](./TUTORIAL.md)** — começa por como abrir a pasta certa no VS Code.
+
+---
+
+## 🧭 Primeiro uso guiado — do clique ao primeiro cliente
+
+### Passo 1 — Fazer uma busca
+
+Na barra à esquerda:
+
+1. **Nicho** — digite o tipo de negócio. Ex.: `barbearia`, `salão de estética`, `escritório de advocacia`, `restaurante`. Tem um dropdown com nichos prontos se você não souber o que digitar.
+2. **Cidade** — comece a digitar e escolha uma opção da lista que aparece (autocomplete gratuito).
+3. **Raio** — arraste a barrinha pra definir o tamanho da área (em km).
+4. Clique em **Buscar leads sem site**.
+
+Em segundos, os **pinos aparecem no mapa** e os cartões na lista à esquerda. Cada pino é um negócio **sem site** que você pode abordar.
+
+### Passo 2 — Esperar os contatos chegarem (eles vêm sozinhos)
+
+Você não precisa fazer nada. O sistema busca os contatos em segundo plano e eles **vão aparecendo nos cartões** conforme são encontrados (e-mail ✉️, Instagram 📷, Facebook, LinkedIn). Os pinos no mapa mudam de cor conforme isso acontece.
+
+> Quer dar prioridade a um negócio específico? **Clique nele** — ele "fura a fila" e é processado na frente.
+
+### Passo 3 — Filtrar e ordenar os leads
+
+Acima da lista você pode:
+
+- **Ordenar** por **Relevância (score)** ou por **Nome**.
+- Ligar **filtros**: mostrar só quem tem 📞 WhatsApp, 📷 Instagram ou ✉️ E-mail.
+
+Cada lead ganha uma nota de 0 a 100 (quanto mais fácil de contatar, maior):
+
+- 🔴 **Quente** (60+) — tem vários contatos, vá com tudo.
+- 🟡 **Morno** (35–59).
+- 🔵 **Frio** (abaixo de 35).
+
+### Passo 4 — Enriquecer o lead (opcional, mas recomendado)
+
+Clique num cartão pra abrir os **detalhes** do lead. Lá você pode:
+
+- Ver todos os contatos encontrados (e-mail, Instagram, Facebook, LinkedIn).
+- Adicionar **anotações** (ex.: "liguei dia 12, pediu pra retornar quinta").
+- Marcar **data de retorno** (follow-up) — o sistema te avisa quando vencer.
+- Estimar o **valor** da venda.
+- Adicionar **tags** (interessado, sem orçamento, pediu proposta, etc.).
+
+### Passo 5 — Gerar a mensagem e abordar no WhatsApp
+
+No cartão de um lead com telefone, clique em **💬 WhatsApp**. Abre uma conversa **com a mensagem já escrita** e personalizada conforme o ramo do negócio (barbearia recebe um gancho diferente de salão de estética, etc.). Você só revisa e aperta enviar.
+
+> ✏️ **Quer editar a mensagem padrão?** Clique no botão **✏️ Mensagem do WhatsApp** (no topo). Você pode mudar o template, criar ganchos diferentes por nicho e definir um benefício padrão. A config fica salva no seu navegador.
+
+> 🚀 **Modo disparo:** no Kanban, marque as caixinhas de até 10 leads e clique em **💬 Enviar no WhatsApp**. A ferramenta abre uma conversa por vez, em sequência — você só aperta enviar e o lead vai pra "Contatado" sozinho. (Limite de 10 pra não derrubar/bloquear seu número.)
+
+### Passo 6 — Mover no Kanban até "Ganho"
+
+No topo da barra, clique em **🗂 Kanban**. Aparece um quadro com colunas:
+
+`Novo · Qualificado · Contatado · Ganho · Descartado`
+
+**Arraste** os cartões de uma coluna pra outra conforme avança a negociação. Quando o cliente fechar, arraste pra **Ganho**. Pronto — você fechou seu primeiro cliente. 🎉
+
+### Passo 7 — Exportar a lista (opcional)
+
+Na barra à esquerda, em **Exportar**, baixe a planilha em **CSV** ou **Excel** com todos os leads e contatos — pronto pra usar em outro lugar ou no seu CRM.
+
+---
+
+## ❓ FAQ — erros e dúvidas comuns
+
+### Instalação
+
+**O comando `npm run setup` deu erro.**
+- Confira se você tem o **Node.js 18+** instalado: rode `node --version` no terminal. Se aparecer um número menor que 18, baixe a versão LTS em [nodejs.org](https://nodejs.org).
+- Confira se você tem o **Python 3.10+**: rode `py --version` (Windows) ou `python3 --version` (Mac/Linux). Se não aparecer nada, instale em [python.org](https://python.org/downloads) e marque **"Add Python to PATH"** na instalação (Windows).
+- Se o erro for de permissão no Windows, tente abrir o terminal como administrador.
+
+**O comando `npm run dev` não faz nada / abre e fecha.**
+- Veja se aparece alguma mensagem de erro no terminal. Se aparecer "porta em uso" ou "port 5173 is in use", feche outros programas que possam estar usando essa porta (ou outro `npm run dev` que você deixou aberto).
+
+### Uso
+
+**Acessei http://localhost:5173 mas aparece "não foi possível acessar".**
+- Confira se o terminal com `npm run dev` está aberto e mostrando as duas linhas `[api]` e `[web]`. Se o terminal fechou ou você reiniciou o PC, rode `npm run dev` de novo.
+
+**Apareceu "Overpass ocupado" ao buscar.**
+- É o serviço de mapas gratuito sob carga. Espere alguns segundos e tente de novo, ou reduza o raio da busca.
+
+**Vieram poucos resultados.**
+- Alguns nichos são mais bem mapeados no OpenStreetMap (restaurantes, beleza, clínicas, dentistas). Tente um raio maior ou uma cidade próxima.
+
+**Os leads sumiram quando reiniciei o PC.**
+- Sem banco de dados configurado, as buscas ficam só em memória (30 min). Pra salvar tudo, configure o PostgreSQL — veja **[docs/deploy-avancado.md](./docs/deploy-avancado.md)**.
+
+**O WhatsApp não abre quando clico no botão.**
+- Confira se o lead tem telefone (alguns negócios no OSM não têm). Se tem e mesmo assim não abre, confira se o seu navegador não está bloqueando pop-ups pra `wa.me`.
+
+**A mensagem do WhatsApp veio com "Lorenzo" no texto.**
+- Esse é o template padrão antigo. Clique em **✏️ Mensagem do WhatsApp** no topo e edite o template — coloque seu nome no lugar. A config fica salva no seu navegador.
+
+### Avançado
+
+**Quero deixar a ferramenta 24/7 em casa (sem depender de terminal aberto).**
+- Veja **[docs/deploy-avancado.md](./docs/deploy-avancado.md)** — tem o passo a passo de Docker + PostgreSQL + VPN privada.
+
+**Quero compartilhar a ferramenta com meu sócio.**
+- Mesmo link acima. Com a VPN privada configurada, você compartilha o acesso à máquina do seu home server com o email dele.
+
+---
+
+## 💸 Quanto custa?
+
+**R$ 0.** A ferramenta é 100% gratuita:
+
+- Dados de negócios: **OpenStreetMap** (gratuito, colaborativo).
+- Geocoding (autocomplete de cidade): **Nominatim** (gratuito).
+- Enriquecimento de contatos: **DuckDuckGo** (gratuito).
+- Banco de dados: **PostgreSQL** (gratuito, opcional).
+- VPN privada pra acesso remoto: **Tailscale** (gratuito até 100 dispositivos, opcional).
+
+O único custo é a sua internet e, se você quiser deixar 24/7, um home server (qualquer PC velho ou Raspberry Pi serve).
 
 ---
 
@@ -78,179 +215,24 @@ flowchart LR
 
 ---
 
-## 🚀 Rodando localmente
+## ✨ Destaques
 
-**Pré-requisitos:** Node.js 18+, Python 3.10+
-
-### Atalho — um comando (recomendado)
-
-```bash
-npm run setup   # 1ª vez: instala raiz, server, web e o worker Python
-npm run dev     # sobe API (3001) + front (5173) juntos, com logs [api]/[web]
-```
-
-> 💡 **Sem rede / demo:** `npm run dev:mock` desliga Overpass/DuckDuckGo e usa negócios e contatos fictícios — ótimo pra testar o fluxo na hora.
-
-### Manual (3 terminais)
-
-```bash
-# 1) Worker Python (uma vez)
-pip install -r workers/requirements.txt
-
-# 2) API  →  http://localhost:3001
-cd server && npm install && npm run dev
-
-# 3) Front  →  http://localhost:5173
-cd web && npm install && npm run dev
-```
-
-Abra **http://localhost:5173**, digite um nicho (ex: _"salão de estética"_), escolha a cidade/raio e clique em **Buscar leads sem site**. Alterne entre **🗺️ Mapa** e **🗂️ Kanban** na barra lateral.
+- 🗺️ **Mapa interativo** com pinos coloridos por status (Leaflet + tiles OpenStreetMap)
+- 🔍 **Filtro "sem site" nativo** — descarta automaticamente quem já tem site
+- 🧩 **Enriquecimento sob demanda** — e-mail, Instagram, Facebook e LinkedIn via busca cruzada
+- ⚡ **Tempo real (SSE)** — os contatos pingam na tela conforme são encontrados, sem travar
+- 🗂️ **Funil Kanban** — arraste leads entre `Novo · Qualificado · Contatado · Ganho · Descartado`
+- 🏙️ **Autocomplete de cidade** com geocoding gratuito (Nominatim)
+- 📤 **Exportação CSV / Excel** + **webhook** para integrar com seu CRM
+- 🗄️ **Persistência opcional** em PostgreSQL (roda em memória por padrão; ativa com `DATABASE_URL`)
 
 ---
 
-## ⚙️ Configuração (variáveis de ambiente, todas opcionais)
+## 📚 Documentação
 
-| Variável | Padrão | Função |
-|---|---|---|
-| `DATA_PROVIDER` | `osm` | `mock` usa dados fictícios offline (demo sem rede) |
-| `ENRICH_PROVIDER` | `python` | `mock` gera contatos fictícios sem chamar o DuckDuckGo |
-| `ENRICH_CONCURRENCY` | `2` | leads enriquecidos em paralelo (educado com o DDG) |
-| `ENRICH_BACKGROUND` | `true` | `false` = só enriquece quando o usuário clica no lead |
-| `PYTHON_BIN` | `py` / `python3` | binário do Python para os workers |
-| `DATABASE_URL` | _(vazio)_ | Postgres p/ persistir buscas, leads, enriquecimento e estágios. **Vazio = só memória.** Ex.: `postgresql://user:senha@host:5432/captacao` (veja `server/.env.example`) |
-
----
-
-## 🐳 Rodar 24/7 em casa (Docker no ZimaOS)
-
-Quando você quiser que o sistema fique **sempre ligado** (sem depender de abrir terminal e sem você ter que rodar `npm run dev`), suba os containers no seu home server. O `docker-compose.yml` na raiz monta tudo:
-
-- **`api`** — Node + worker Python no mesmo container (porque o enrich.py é spawnado em processo filho)
-- **`web`** — build estático servido por **nginx** (mais leve e seguro que rodar Vite em produção); o nginx faz proxy `/api/*` pro container da API, **com SSE preservado** (`proxy_buffering off`)
-
-Postgres **não** entra no compose — ele já roda como container separado no Zima. Os apps conversam com ele via `host.docker.internal:5432`.
-
-### Setup (uma vez, no ZimaOS)
-
-```bash
-git clone https://github.com/LorenzoCorrea/Captacao.git
-cd Captacao
-cp .env.example .env       # edite com a DATABASE_URL real
-docker compose up -d --build
-```
-
-Pronto. Acesse pelo IP do Zima na Tailscale (ex.: `http://100.74.62.35`). O nginx escuta na **80** — não precisa de porta no URL.
-
-### Compartilhar com o sócio
-
-No admin do Tailscale → 3 pontinhos da máquina `zimaos` → **Share...** → coloca o email dele. Ele cria conta grátis do Tailscale (até 100 dispositivos), instala o app, e acessa a **mesma URL**. Ele só enxerga essa máquina compartilhada — não tem acesso ao resto do seu tailnet.
-
-### Atualizando depois de mudar o código
-
-```bash
-cd Captacao
-git pull
-docker compose up -d --build
-```
-
-O Docker rebuilda só o que mudou (cache de camadas) e reinicia em segundos.
-
----
-
-## 🗄️ Persistência com PostgreSQL (opcional, recomendada)
-
-Sem `DATABASE_URL`, o app roda em memória — buscas duram 30 min e somem no F5/reinício. Com Postgres configurado, **tudo fica salvo**: buscas, leads, enriquecimento, estágios do Kanban, notas, follow-ups, tags e valor estimado.
-
-### Setup escolhido: PostgreSQL no Docker + ZimaOS + Tailscale
-
-A combinação é gratuita, autônoma (zero dependência de nuvem) e acessível de qualquer máquina sua via VPN privada:
-
-```
-[Seu PC] ──── Tailscale (VPN) ──── [ZimaOS] ──── [Container PostgreSQL]
-```
-
-- **ZimaOS** = sistema operacional do home server (gerencia containers Docker pela UI).
-- **PostgreSQL** = banco de dados (roda como container no ZimaOS).
-- **Tailscale** = rede privada que dá ao seu PC um IP `100.x.y.z` pra falar com o Zima de qualquer lugar.
-
-### Passo a passo (uma vez)
-
-**1. Suba o Postgres no ZimaOS** (App Store → Docker → `postgres:15`). Configure as variáveis do container:
-
-| Variável | Sugestão |
-|---|---|
-| `POSTGRES_USER` | um nome dedicado, ex.: `lorenzo` |
-| `POSTGRES_PASSWORD` | **senha forte gerada por gerenciador** (Bitwarden/1Password, 20+ chars aleatórios) |
-| `POSTGRES_DB` | `captacao` (banco dedicado pro projeto) |
-| Porta | `5432:5432` (mapeada pro host) |
-
-> ⚠️ **Nunca commite a senha em lugar nenhum.** Ela mora só no container e no seu `.env` local (que está no `.gitignore`).
-
-**2. Instale o Tailscale** no ZimaOS e em cada PC que vai acessar. Anote o IP do Zima na rede privada (algo como `100.74.x.x`) em [tailscale.com/admin/machines](https://login.tailscale.com/admin/machines).
-
-**3. (Opcional) Crie um banco dedicado** se ainda não fez via `POSTGRES_DB`. Conecte no Postgres como superuser e rode:
-```sql
-CREATE DATABASE captacao OWNER lorenzo;
-```
-
-**4. Configure o `.env`** no seu PC, dentro de `server/`:
-```bash
-cp .env.example .env   # Windows: copy .env.example .env
-```
-
-Edite o `.env` com a sua connection string:
-```
-DATABASE_URL=postgresql://lorenzo:SUA_SENHA@100.x.y.z:5432/captacao
-```
-
-**5. Reinicie a API.** No log você deve ver:
-```
-[db] schema pronto — persistência ATIVADA.
-```
-
-As tabelas são criadas automaticamente no primeiro boot — não precisa rodar migration nenhuma.
-
-### Como testar a conexão (antes de subir a API)
-
-```bash
-psql "postgresql://lorenzo:SUA_SENHA@100.x.y.z:5432/captacao" -c "\l"
-```
-
-| Erro | Causa provável |
-|---|---|
-| `connection refused` | Tailscale offline, IP errado, container fora do ar, ou porta não exposta |
-| `password authentication failed` | Senha errada ou usuário não criado |
-| Lista de databases aparece | ✅ Tudo OK, pode subir a API |
-
-### Boas práticas
-
-- 🔒 **Senha forte e exclusiva** — use gerador, não reaproveite de outros serviços
-- 🚫 **Não exponha a porta 5432 na internet** — Tailscale resolve sem precisar abrir nada no roteador
-- 💾 **Backup periódico** do volume Docker (ou `pg_dump` semanal pra um arquivo)
-- 🏷️ **Banco dedicado por projeto** — evita misturar `captacao` com outros projetos seus no mesmo Postgres
-
----
-
-## 🔌 Principais endpoints
-
-| Método | Rota | Descrição |
-|---|---|---|
-| `POST` | `/api/search` | Busca + filtro "sem site"; abre uma sessão |
-| `GET` | `/api/search/:id/stream` | Stream SSE do enriquecimento |
-| `GET` | `/api/geocode?q=` | Autocomplete de cidade (Nominatim) |
-| `POST` | `/api/search/:id/leads/:leadId/prioritize` | Enriquece um lead sob demanda |
-| `PATCH` | `/api/search/:id/leads/:leadId` | Move o lead de estágio no Kanban |
-| `GET` | `/api/search/:id/export?format=csv\|xlsx` | Baixa a planilha de leads |
-| `POST` | `/api/search/:id/webhook` | Envia os leads (JSON) para um CRM |
-
----
-
-## ⚠️ Limites dos serviços gratuitos
-
-- **Overpass** limita ~2 consultas simultâneas por IP e enfileira a resposta sob carga (alguns segundos). Há **cache de 10 min** por busca. Se vier "Overpass ocupado", espere um pouco ou reduza o raio.
-- **DuckDuckGo** pode limitar buscas em rajada — por isso a concorrência é baixa e há _jitter_ entre as chamadas. Em escala, troque por **Brave Search API** (free tier) ou Serper.dev.
-- **Nominatim** permite no máx. 1 req/seg — o back-end serializa as chamadas e há debounce no front.
-- **Cobertura do OSM** varia por região/nicho e **não traz avaliações**. Nichos bem mapeados (restaurantes, beleza, clínicas, dentistas) rendem mais resultados.
+- **[TUTORIAL.md](./TUTORIAL.md)** — passo a passo com prints pra quem nunca abriu um terminal.
+- **[docs/deploy-avancado.md](./docs/deploy-avancado.md)** — como deixar a ferramenta 24/7 em casa (Docker + PostgreSQL + VPN).
+- **[docs/rebrand-propostas.md](./docs/rebrand-propostas.md)** — propostas de novo nome e identidade visual (em decisão).
 
 ---
 
@@ -262,7 +244,7 @@ psql "postgresql://lorenzo:SUA_SENHA@100.x.y.z:5432/captacao" -c "\l"
 - [x] Autocomplete de cidade (Nominatim)
 - [x] Exportação CSV / Excel + webhook
 - [x] Funil Kanban (drag-and-drop)
-- [x] **Persistência em PostgreSQL** (buscas, leads, enriquecimento e estágios) — opcional via `DATABASE_URL`
+- [x] Persistência em PostgreSQL (buscas, leads, enriquecimento e estágios)
 - [ ] Autenticação e multi-tenant
 - [ ] Fila distribuída (BullMQ/Redis) para múltiplos workers
 - [ ] Proxies rotativos para enriquecimento em escala
@@ -278,5 +260,5 @@ psql "postgresql://lorenzo:SUA_SENHA@100.x.y.z:5432/captacao" -c "\l"
 ---
 
 <div align="center">
-<sub>Feito com ☕ e dados abertos do OpenStreetMap · contribuições ODbL</sub>
+<sub>Ferramenta oficial do curso <strong>Sites com IA do Zero</strong> · feita com ☕ e dados abertos do OpenStreetMap · contribuições ODbL</sub>
 </div>
