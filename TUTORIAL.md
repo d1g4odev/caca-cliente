@@ -1,3 +1,9 @@
+<div align="center">
+
+<img src="docs/assets/banner-horizontal.png" alt="Caça-Cliente — Sites com IA do Zero" width="100%" />
+
+</div>
+
 # 📖 Tutorial — Caça-Cliente
 
 > *O radar de negócios sem site — do clique ao WhatsApp.*
