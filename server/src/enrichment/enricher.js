@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import crypto from 'node:crypto';
 import path from 'node:path';
 import * as db from '../db.js';
+import { scoreLead } from '../utils/score.js';
 
 // Gerencia as sessões SSE E executa o enriquecimento real chamando o worker
 // Python (workers/enrich.py — DuckDuckGo, gratuito). Uma fila com concorrência
@@ -53,9 +54,15 @@ export function createSearch(leads, meta = {}) {
 // Snapshot dos leads (com enriquecimento atual) p/ exportação/webhook.
 export async function getSearchLeads(searchId) {
   const s = searches.get(searchId);
-  if (s) return { city: s.city, niche: s.niche, leads: [...s.leads.values()] };
-  return db.loadSearch(searchId); // sessão expirou/servidor reiniciou: tenta o banco
+  if (s) return { city: s.city, niche: s.niche, leads: withScore([...s.leads.values()]) };
+  const data = await db.loadSearch(searchId); // sessão expirou/servidor reiniciou: tenta o banco
+  if (data) data.leads = withScore(data.leads);
+  return data;
 }
+
+// Anexa o score calculado a cada lead antes de expor (snapshot imutável).
+// O score é derivado, nunca persistido como fonte da verdade.
+const withScore = (leads) => leads.map((l) => ({ ...l, score: scoreLead(l, l.enrichment) }));
 
 // Estágio do funil (Kanban). Fonte da verdade na sessão -> sai no export.
 export const STAGES = ['novo', 'qualificado', 'contatado', 'ganho', 'descartado'];
@@ -105,7 +112,7 @@ export async function reopenSearch(searchId) {
     searchId,
     query: s.query ?? { niche: s.niche, city: s.city },
     stats: { found: s.found, withoutWebsite: s.leads.size },
-    leads: [...s.leads.values()],
+    leads: withScore([...s.leads.values()]),
   };
 }
 
@@ -199,7 +206,12 @@ function spawnPython(lead, city) {
 }
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
-const payloadOf = (lead) => ({ leadId: lead.id, status: lead.enrichmentStatus, enrichment: lead.enrichment });
+const payloadOf = (lead) => ({
+  leadId: lead.id,
+  status: lead.enrichmentStatus,
+  enrichment: lead.enrichment,
+  score: scoreLead(lead, lead.enrichment),
+});
 const allSettled = (s) => [...s.leads.values()].every((l) => l.enrichmentStatus !== 'pending');
 
 function broadcast(session, event, data) {

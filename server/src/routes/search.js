@@ -5,6 +5,7 @@ import { geocodeCidade } from '../data/geocode.js';
 import { createSearch, attachStream, prioritizeLead, getSearchLeads, updateLead, reopenSearch } from '../enrichment/enricher.js';
 import { toCSV, toXLSX } from '../export/exporter.js';
 import { listSearches, statsConversao, dbEnabled } from '../db.js';
+import { scoreLead } from '../utils/score.js';
 
 const router = Router();
 const slug = (s) =>
@@ -42,7 +43,13 @@ router.post('/api/search', async (req, res) => {
       searchId,
       query: params,
       stats: { found, withoutWebsite: leads.length },
-      leads: leads.map((l) => ({ ...l, enrichmentStatus: 'pending', enrichment: null, stage: 'novo' })),
+      leads: leads.map((l) => ({
+        ...l,
+        enrichmentStatus: 'pending',
+        enrichment: null,
+        stage: 'novo',
+        score: scoreLead(l, null),
+      })),
     });
   } catch (e) {
     console.error('Falha na busca OSM:', e);

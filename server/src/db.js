@@ -5,6 +5,7 @@
 // O banco mora no home server (ZimaOS) e é acessado via Tailscale. A connection
 // string fica em server/.env (DATABASE_URL=postgresql://user:senha@100.x:5432/db).
 import pg from 'pg';
+import { scoreLead } from './utils/score.js';
 
 const { Pool } = pg;
 const url = process.env.DATABASE_URL;
@@ -137,7 +138,7 @@ export async function saveLeadFields(searchId, leadId, fields = {}) {
 }
 
 function rowToLead(r) {
-  return {
+  const lead = {
     id: r.lead_id, name: r.name, address: r.address, phone: r.phone,
     lat: r.lat, lng: r.lng, hasWebsite: r.has_website, source: r.source, niche: r.niche,
     rating: r.rating, reviewsCount: r.reviews_count,
@@ -145,6 +146,8 @@ function rowToLead(r) {
     notes: r.notes ?? '', followUpAt: r.follow_up_at ?? null,
     tags: r.tags ?? [], estimatedValue: r.estimated_value != null ? Number(r.estimated_value) : null,
   };
+  lead.score = scoreLead(lead, lead.enrichment);
+  return lead;
 }
 
 // Fallback para export/webhook quando a sessão já saiu da memória (TTL/restart).

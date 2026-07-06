@@ -1,4 +1,5 @@
 import ExcelJS from 'exceljs';
+import { scoreLead } from '../utils/score.js';
 
 // Colunas únicas para CSV e XLSX (mantém os dois formatos consistentes).
 const COLUMNS = [
@@ -12,6 +13,7 @@ const COLUMNS = [
   { header: 'Facebook', key: 'facebook' },
   { header: 'LinkedIn', key: 'linkedin' },
   { header: 'WhatsApp', key: 'whatsapp' },
+  { header: 'Score', key: 'score' },
   { header: 'Estágio', key: 'stage' },
   { header: 'Status', key: 'status' },
   { header: 'Confiança', key: 'confidence' },
@@ -34,6 +36,7 @@ function rowsFromLeads(leads) {
       facebook: e.facebook ?? '',
       linkedin: e.linkedin ?? '',
       whatsapp: e.whatsapp ?? '',
+      score: l.score ?? scoreLead(l, e),
       stage: l.stage ?? 'novo',
       status: l.enrichmentStatus ?? '',
       confidence: e.confidence ?? '',
