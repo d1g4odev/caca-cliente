@@ -6,7 +6,19 @@
 // profissional sem parecer formal demais. Sem textão. Sem criticar o lead.
 // Sempre pedir permissão antes de vender: "posso te mostrar?", "faz sentido?".
 
-const saudacao = (nome) => `Oi, ${nome}! Tudo bem?`;
+import { saudacao as saudacaoInteligente, extrairPrimeiroNomePessoa, detectarTipoNome } from './nome.js';
+
+// Saudação unificada: detecta PESSOA vs EMPRESA e extrai primeiro nome
+// preservando Dr./Dra. Pessoa -> "Oi, Carmem! Tudo bem?". Empresa -> "Oi, tudo bem?".
+const saudacao = (nome) => saudacaoInteligente(nome);
+
+// Primeiro nome para uso inline (ex: "Entendo, Carmem."). Pessoa -> primeiro
+// nome (com Dr./Dra. se houver). Empresa -> vazio (abertura sem nome).
+const primeiroNomeOuVazio = (nome) => {
+  const { tipo, primeiroNome } = detectarTipoNome(nome);
+  if (tipo !== 'pessoa') return '';
+  return primeiroNome;
+};
 
 // ─── Primeira abordagem (manual seção 3 e 4) ────────────────────────────────
 
@@ -66,13 +78,15 @@ export const esteticaProcedimentos = (lead) => {
   ].join('\n');
 };
 
-// Instituto ou clínica com setor administrativo (seção 4).
+// Instituto, clínica ou qualquer EMPRESA com setor administrativo (seção 4).
+// Abertura neutra porque o lead é empresa — saudação inteligente devolve
+// "Oi, tudo bem?". Funciona pra barbearia, ótica, pizzaria, instituto, etc.
 export const institutoClinica = (lead) => {
   const { nome } = lead;
   return [
-    `Boa tarde, ${nome}! Tudo bem?`,
+    saudacao(nome),
     'Me chamo Rodrigo, sou desenvolvedor de software. Entrei em contato pelo Instagram e me passaram esse número para falar com o setor administrativo.',
-    'Queria apresentar uma ideia simples: o perfil de vocês é muito profissional, e acredito que um site próprio, bem construído e no mesmo nível da imagem do instituto, poderia fortalecer ainda mais a presença digital.',
+    'Queria apresentar uma ideia simples: o perfil de vocês é muito profissional, e acredito que um site próprio, bem construído e no mesmo nível da imagem que vocês já passam, poderia fortalecer ainda mais a presença digital.',
     'Posso te mostrar alguns trabalhos que já desenvolvi?',
   ].join('\n');
 };
@@ -111,8 +125,9 @@ export const precoCurto = (_lead) => [
 
 export const objecaoAgoraNao = (lead) => {
   const { nome } = lead;
+  const pn = primeiroNomeOuVazio(nome);
   return [
-    `Entendo, ${nome}.`,
+    pn ? `Entendo, ${pn}.` : 'Entendo.',
     'Só pra deixar claro: não é só o site. Inclui também organizar sua presença para aparecer melhor no Google quando alguém pesquisar pelo seu serviço.',
     'O valor fica R$ 700,00, pagamento único, sem mensalidade e com suporte depois.',
     'Pelo tipo de procedimento que você oferece, um cliente novo já pode pagar esse investimento. Sem pressão, mas acredito que faria bastante sentido pro seu trabalho.',
@@ -134,8 +149,9 @@ export const objecaoMandaInstagram = (lead) => {
 
 export const objecaoSecretariaAnalisa = (lead) => {
   const { nome } = lead;
+  const pn = primeiroNomeOuVazio(nome);
   return [
-    `Claro, ${nome}. Sem problema.`,
+    pn ? `Claro, ${pn}. Sem problema.` : 'Claro, sem problema.',
     'Fiquem à vontade para analisar com calma. Obrigado pela atenção e fico à disposição caso queiram conversar melhor sobre a ideia.',
   ].join('\n');
 };
@@ -162,7 +178,7 @@ export const fechamentoLeve = (_lead) => [
 export const followUp = (lead) => {
   const { nome } = lead;
   return [
-    `Oi, ${nome}! Tudo bem?`,
+    saudacao(nome),
     'Voltei aqui pra saber se você teve oportunidade de ver a ideia que mandei. Sem pressa nenhuma — se fizer sentido, a gente retoma; se não, tudo certo também.',
     'Se quiser, posso montar uma prévia simples de como ficaria o seu site, pra você visualizar melhor.',
   ].join('\n');

@@ -3,6 +3,7 @@
 // (link quebrado, sem site) antes de cair no ângulo genérico do nicho.
 
 import { ANGULOS } from './angulos.js';
+import { detectarTipoNome } from './nome.js';
 import {
   perfilBonitoSemSite,
   linktreeForaDoAr,
@@ -29,14 +30,17 @@ const ehInstituto = (nicho) => {
 // 1. Link quebrado — oportunidade concreta, ganha de tudo.
 // 2. Nicho com template próprio (odontopediatra, estética, instituto) — o
 //    manual tem abordagem específica que aproveita o vocabulário do nicho.
-// 3. Sem site mas com Instagram — ângulo genérico "perfil bonito sem site".
-// 4. Sem site e sem Instagram — link só WhatsApp.
-// 5. Fallback — profissional da saúde genérico.
+// 3. Nome do lead é EMPRESA (barbearia, ótica, pizzaria, etc.) — usa o
+//    template de instituto/clinica que tem abertura neutra (manual seção 4).
+// 4. Sem site mas com Instagram — ângulo genérico "perfil bonito sem site".
+// 5. Sem site e sem Instagram — link só WhatsApp.
+// 6. Fallback — profissional da saúde genérico.
 export function selecionarAnguloAbordagem(lead) {
   if (lead.linkQuebrado) return ANGULOS.LINKTREE_FORA_DO_AR;
   if (ehOdontopediatra(lead.nicho)) return ANGULOS.ODONTOPEDIATRA;
   if (ehEstetica(lead.nicho)) return ANGULOS.ESTETICA_PROCEDIMENTOS;
   if (ehInstituto(lead.nicho)) return ANGULOS.INSTITUTO_CLINICA;
+  if (detectarTipoNome(lead.nome).tipo === 'empresa') return ANGULOS.INSTITUTO_CLINICA;
   if (lead.temSite === false && lead.temInstagram) return ANGULOS.PERFIL_BONITO_SEM_SITE;
   if (lead.temSite === false && !lead.temInstagram) return ANGULOS.LINK_SO_WHATSAPP;
   return ANGULOS.SAUDE_GERAL;
