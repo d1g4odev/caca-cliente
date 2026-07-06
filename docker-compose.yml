@@ -1,0 +1,51 @@
+# Sobe o sistema Captação inteiro no Zima (ou em qualquer host com Docker).
+# Como subir no ZimaOS:
+#   1. Copie este projeto pro Zima (git clone) e crie um .env (veja .env.example)
+#   2. docker compose up -d --build
+#   3. Acesse pelo IP da Tailscale do Zima: http://100.74.62.35
+#
+# O Postgres NÃO está aqui — ele já roda no Zima como container separado, e
+# este compose se conecta nele via host.docker.internal:5432 (veja extra_hosts).
+
+services:
+  # ── API Node + worker Python ──────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    restart: unless-stopped
+
+    # Lê DATABASE_URL e qualquer override do .env na raiz do projeto.
+    env_file:
+      - .env
+
+    # host.docker.internal aponta para o IP do host (Zima) — permite o
+    # container falar com o Postgres que roda fora do compose.
+    # Em Linux puro, esse mapeamento exige a flag abaixo (no Docker Desktop é automático).
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    # Saúde: se /api/status responder, está vivo. O nginx só roteia quando OK.
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3001/api/status').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # ── Front (build estático servido pelo nginx) ─────────────────────────────
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+
+    # Porta exposta no host. Em produção fica em 80 (HTTP padrão), assim você
+    # acessa só `http://100.74.62.35` sem precisar de :porta.
+    ports:
+      - "80:80"
+
+# Sem volumes — o estado mora todo no PostgreSQL (que está fora deste compose).

@@ -1,0 +1,341 @@
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; color: #1f2328; }
+
+/* ── Layout: lista à esquerda, mapa à direita (estilo busca imobiliária) ── */
+.app { display: grid; grid-template-columns: 400px 1fr; height: 100%; }
+.map-wrap { min-width: 0; }
+.map { height: 100%; width: 100%; }
+
+.sidebar { display: flex; flex-direction: column; border-right: 1px solid #e2e2e2; min-width: 0; }
+.sidebar-header { padding: 16px 16px 12px; border-bottom: 1px solid #eee; }
+.sidebar-header h1 { margin: 0 0 12px; font-size: 20px; }
+.sidebar-header h1 span { color: #1f6feb; }
+.stats { font-size: 13px; color: #57606a; margin: 10px 0 0; }
+
+/* ── Score de prospecção ── */
+.score { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.score--quente { background: #fde3d3; color: #b23c0a; }
+.score--morno { background: #fff1cf; color: #8a6100; }
+.score--frio { background: #eceef1; color: #6b7280; }
+.kanban-card .score { display: inline-block; margin: 3px 0; }
+
+/* ── Ordenação + filtros ── */
+.controls { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+.sort { font-size: 13px; color: #57606a; display: flex; align-items: center; gap: 8px; }
+.sort select { flex: 1; padding: 6px 8px; border: 1px solid #d0d7de; border-radius: 7px; font-size: 13px; }
+.filter-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.filter-chips button {
+  font-size: 12px; padding: 5px 10px; border-radius: 999px; cursor: pointer;
+  border: 1px solid #d0d7de; background: #fff; color: #57606a;
+}
+.filter-chips button.on { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+
+.exports { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 13px; color: #57606a; }
+.exports a {
+  text-decoration: none; font-weight: 600; font-size: 12px; color: #1f6feb;
+  border: 1px solid #1f6feb; border-radius: 6px; padding: 3px 10px;
+}
+.exports a:hover { background: #1f6feb; color: #fff; }
+
+/* ── Busca ── */
+.search-bar { display: flex; flex-direction: column; gap: 8px; }
+.search-bar input:not([type='range']), .search-bar select {
+  padding: 9px 10px; border: 1px solid #d0d7de; border-radius: 8px; font-size: 14px; width: 100%;
+}
+.niche-select { background: #fff; cursor: pointer; }
+
+/* Aviso de "site oficial descoberto" — lead que na verdade NÃO é bom prospecto */
+.card--has-site { opacity: 0.78; background: #fafbfc; }
+.card--has-site h3 { color: #57606a; text-decoration: line-through; text-decoration-thickness: 1px; }
+.badge-has-site {
+  display: inline-block; margin: 6px 0 0; padding: 4px 10px; border-radius: 6px;
+  background: #fff4e5; color: #8a4b00; border: 1px solid #f3c98b;
+  font-size: 12px; font-weight: 600; text-decoration: none;
+}
+.badge-has-site:hover { background: #ffe9c7; }
+
+/* Aviso quando OSM não tem cobertura desse nicho/região */
+.empty-coverage {
+  margin-top: 10px; padding: 12px 14px; border-radius: 10px;
+  background: #fff8e1; border: 1px solid #f3d27a; color: #5d4006;
+  font-size: 13.5px; line-height: 1.5;
+}
+.empty-coverage p { margin: 8px 0 0; }
+.empty-coverage em { color: #7a4a00; font-style: normal; font-weight: 600; }
+.empty-coverage .muted { color: #7a6433; font-size: 12.5px; }
+
+/* Aviso de banco desativado no HistoryPanel */
+.db-warning {
+  padding: 14px 16px; border-radius: 10px;
+  background: #fff8e1; border: 1px solid #f3d27a; color: #5d4006;
+  font-size: 13.5px; line-height: 1.5;
+}
+.db-warning p { margin: 8px 0 0; }
+.db-warning code {
+  background: rgba(0, 0, 0, 0.06); padding: 1px 6px; border-radius: 4px;
+  font-size: 12px; font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  word-break: break-all;
+}
+.db-warning .muted { color: #7a6433; }
+
+/* Mensagem de erro inline (substitui o alert) */
+.search-error {
+  display: flex; align-items: flex-start; gap: 8px;
+  margin-top: 10px; padding: 10px 12px; border-radius: 8px;
+  background: #fdecea; border: 1px solid #f5c2c0; color: #8a1f1c; font-size: 13px; line-height: 1.4;
+}
+.search-error button {
+  margin-left: auto; background: none; border: 0; color: #8a1f1c;
+  font-size: 14px; cursor: pointer; padding: 0 2px;
+}
+.radius { display: flex; align-items: center; gap: 8px; font-size: 13px; white-space: nowrap; color: #57606a; }
+.radius input[type='range'] { flex: 1; }
+
+/* ── Autocomplete de cidade (Nominatim) ── */
+.city-field { position: relative; }
+.suggestions {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 1200;
+  margin: 0; padding: 4px; list-style: none; background: #fff;
+  border: 1px solid #d0d7de; border-radius: 8px; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  max-height: 220px; overflow-y: auto;
+}
+.suggestion { padding: 8px 10px; border-radius: 6px; font-size: 13px; cursor: pointer; }
+.suggestion:hover { background: #f0f2f5; }
+.suggestion.muted { cursor: default; color: #8a8f98; }
+.search-bar button {
+  padding: 10px; border: 0; border-radius: 8px; background: #1f6feb; color: #fff;
+  font-weight: 600; font-size: 14px; cursor: pointer;
+}
+.search-bar button:disabled { opacity: 0.6; cursor: wait; }
+
+/* ── Alternador de visão (Mapa / Kanban) ── */
+.view-toggle { display: flex; gap: 6px; margin-top: 10px; }
+.view-toggle button {
+  flex: 1; padding: 7px; font-size: 13px; cursor: pointer;
+  border: 1px solid #d0d7de; border-radius: 7px; background: #fff; color: #57606a;
+}
+.view-toggle button.active { background: #1f6feb; color: #fff; border-color: #1f6feb; }
+
+/* ── Botão WhatsApp (reutilizado em lista, mapa e kanban) ── */
+.wa-btn {
+  display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+  background: #25d366; color: #fff; font-weight: 600; font-size: 13px;
+  border: 0; border-radius: 8px; padding: 7px 12px; cursor: pointer; margin-top: 8px;
+}
+.wa-btn:hover { background: #1ebe5b; }
+.wa-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.wa-btn--sm { padding: 5px 9px; font-size: 12px; }
+.link-btn { background: none; border: 0; color: #1f6feb; cursor: pointer; font-size: 12px; padding: 0; }
+
+/* ── Kanban (drag-and-drop nativo) ── */
+.kanban-wrap { height: 100%; display: flex; flex-direction: column; }
+.kanban-toolbar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 10px 16px; border-bottom: 1px solid #e2e2e2; background: #fff; font-size: 13px;
+}
+.kanban-toolbar .wa-btn { margin-top: 0; }
+.kanban-toolbar-info { color: #57606a; }
+.kanban-toolbar-hint { color: #8a8f98; font-size: 12px; }
+.kanban {
+  flex: 1; min-height: 0; display: flex; gap: 12px; padding: 16px;
+  overflow-x: auto; background: #f6f7f9;
+}
+.kanban-col {
+  flex: 0 0 230px; display: flex; flex-direction: column;
+  background: #eceef1; border-radius: 10px; max-height: 100%;
+}
+.kanban-col--over { outline: 2px dashed #1f6feb; outline-offset: -3px; background: #e3ebf7; }
+.kanban-col-head {
+  padding: 10px 12px; font-size: 13px; font-weight: 700; color: #3d3d3a;
+  display: flex; align-items: center; gap: 6px;
+}
+.kanban-count { background: #d8dee4; color: #57606a; border-radius: 999px; font-size: 11px; padding: 1px 7px; }
+.kanban-cards { padding: 0 8px 8px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+.kanban-card {
+  position: relative;
+  background: #fff; border: 1px solid #d8dee4; border-radius: 8px; padding: 9px 10px;
+  cursor: grab; font-size: 13px;
+}
+.kanban-check { position: absolute; top: 7px; right: 7px; width: 16px; height: 16px; cursor: pointer; }
+.kanban-card strong { display: block; padding-right: 22px; }
+.kanban-card:active { cursor: grabbing; }
+.kanban-card--sel { border-color: #1f6feb; box-shadow: 0 0 0 2px rgba(31, 111, 235, 0.25); }
+.kanban-card strong { font-size: 13.5px; }
+.kanban-contacts { display: flex; gap: 6px; margin-top: 6px; font-size: 12px; align-items: center; }
+.kanban-empty { color: #b0b4ba; text-align: center; font-size: 12px; padding: 12px 0; border: 1px dashed #d8dee4; border-radius: 6px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.dot--wait { background: #f0a02c; animation: pulse 1.4s ease-in-out infinite; }
+
+/* ── Lista de leads ── */
+.lead-list { overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.empty { padding: 32px 16px; color: #57606a; text-align: center; flex: 1; }
+
+.card {
+  border: 1px solid #d8dee4; border-radius: 10px; padding: 12px; cursor: pointer;
+  background: #fff; transition: border-color 0.15s, box-shadow 0.15s;
+}
+.card:hover { border-color: #1f6feb; }
+.card--selected { border-color: #1f6feb; box-shadow: 0 0 0 2px rgba(31, 111, 235, 0.25); }
+.card header { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.card h3 { margin: 0; font-size: 15px; }
+.rating { font-size: 12px; white-space: nowrap; color: #57606a; }
+.muted { color: #57606a; font-size: 13px; margin: 6px 0 0; }
+
+.contacts { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  font-size: 12px; padding: 3px 8px; border-radius: 999px;
+  background: #f0f2f5; color: #57606a; text-decoration: none;
+}
+.chip--ok { background: #e7f5e8; color: #2f6b33; }
+.chip--pending { background: #fff3d6; color: #8a6100; animation: pulse 1.4s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: 0.55; } }
+
+/* ── Pinos do mapa (divIcon) — a cor acompanha o status em tempo real ── */
+.pin {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 2.5px solid #fff; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+.pin--pending { background: #f0a02c; }   /* aguardando enriquecimento */
+.pin--done { background: #2da44e; }      /* contatos encontrados */
+.pin--not_found { background: #9aa2ab; } /* cascata não achou nada */
+.pin--selected {
+  transform: scale(1.3);
+  box-shadow: 0 0 0 4px rgba(31, 111, 235, 0.45), 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Badge "alvo ideal" (sem site + Instagram ativo) ── */
+.card--alvo { border-color: #8fe0ab; }
+.badge-alvo {
+  display: inline-block; margin-top: 8px; font-size: 11px; font-weight: 600;
+  color: #1b7a3d; background: #e7f7ec; border: 1px solid #b9e6c7;
+  padding: 2px 8px; border-radius: 999px;
+}
+
+/* ── Botão "editar mensagem" ── */
+.msg-edit-btn {
+  margin-top: 8px; width: 100%; padding: 7px; font-size: 12.5px; cursor: pointer;
+  border: 1px dashed #b8c0c9; border-radius: 7px; background: #fff; color: #57606a;
+}
+.msg-edit-btn:hover { border-color: #25d366; color: #1b7a3d; }
+
+/* ── Modal (editor da mensagem) ── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 2000; background: rgba(0, 0, 0, 0.45);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.modal {
+  background: #fff; border-radius: 12px; width: min(640px, 100%); max-height: 90vh;
+  display: flex; flex-direction: column; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+.modal-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; border-bottom: 1px solid #eee;
+}
+.modal-head h2 { margin: 0; font-size: 16px; }
+.modal-x { border: 0; background: none; font-size: 22px; line-height: 1; cursor: pointer; color: #57606a; }
+.modal-body { padding: 16px 18px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
+.field { display: flex; flex-direction: column; gap: 5px; font-size: 13px; color: #3d3d3a; }
+.field span em { color: #8a8f98; font-style: normal; font-size: 12px; }
+.field textarea {
+  border: 1px solid #d0d7de; border-radius: 8px; padding: 8px 10px; font-size: 13px;
+  font-family: inherit; resize: vertical; width: 100%;
+}
+.preview { background: #f6f7f9; border: 1px solid #e2e2e2; border-radius: 8px; padding: 10px 12px; }
+.preview span { font-size: 12px; color: #8a8f98; }
+.preview pre { margin: 6px 0 0; white-space: pre-wrap; font-family: inherit; font-size: 13px; color: #1f2328; }
+.modal-foot { display: flex; align-items: center; gap: 8px; padding: 12px 18px; border-top: 1px solid #eee; }
+.modal-foot .spacer { flex: 1; }
+.btn-primary { border: 0; border-radius: 8px; background: #1f6feb; color: #fff; font-weight: 600; font-size: 13px; padding: 8px 16px; cursor: pointer; }
+.btn-secondary { border: 1px solid #d0d7de; border-radius: 8px; background: #fff; color: #57606a; font-size: 13px; padding: 8px 14px; cursor: pointer; }
+
+/* ── Painel de conversão (dashboard) ── */
+.stats-panel { height: 100%; overflow-y: auto; padding: 20px 24px; background: #f6f7f9; }
+.stats-panel h2 { margin: 0 0 16px; font-size: 18px; }
+.stats-panel h3 { margin: 22px 0 8px; font-size: 14px; color: #3d3d3a; }
+.stats-cards { display: flex; flex-wrap: wrap; gap: 12px; }
+.stats-card {
+  background: #fff; border: 1px solid #e2e2e2; border-radius: 10px; padding: 12px 16px;
+  min-width: 90px; display: flex; flex-direction: column; gap: 2px;
+}
+.stats-card strong { font-size: 22px; }
+.stats-card span { font-size: 12px; color: #57606a; }
+.stats-card--win strong { color: #1b7a3d; }
+.stats-block { background: #fff; border: 1px solid #e2e2e2; border-radius: 10px; padding: 4px 14px 12px; margin-top: 14px; }
+.stats-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.stats-table th { text-align: left; font-weight: 600; color: #8a8f98; font-size: 11px; padding: 8px 6px; border-bottom: 1px solid #eee; }
+.stats-table td { padding: 7px 6px; border-bottom: 1px solid #f0f2f5; }
+.stats-key { font-weight: 600; text-transform: capitalize; max-width: 160px; }
+.stats-barcell { width: 45%; }
+.bar-wrap { position: relative; background: #eceef1; border-radius: 6px; height: 18px; min-width: 60px; }
+.bar { position: absolute; inset: 0 auto 0 0; background: #9ec5fe; border-radius: 6px; }
+.bar-wrap span { position: relative; padding-left: 6px; font-size: 11px; line-height: 18px; color: #1f2328; }
+.stats-ganho { font-weight: 700; color: #1b7a3d; }
+
+/* ── Modo disparo (WhatsApp em sequência) ── */
+.dispatch-btn {
+  margin-top: 10px; width: 100%; padding: 9px; font-size: 13px; font-weight: 600; cursor: pointer;
+  border: 0; border-radius: 8px; background: #25d366; color: #fff;
+}
+.dispatch-btn:hover { background: #1ebe5b; }
+.dispatch-progress { display: flex; align-items: center; gap: 10px; }
+.dispatch-bar { flex: 1; height: 8px; background: #eceef1; border-radius: 999px; overflow: hidden; }
+.dispatch-bar > div { height: 100%; background: #25d366; transition: width 0.2s; }
+.dispatch-progress span { font-size: 12px; color: #57606a; white-space: nowrap; }
+.dispatch-lead h3 { margin: 0 0 2px; font-size: 17px; }
+.dispatch-lead .muted { margin: 0; }
+.dispatch-hint { font-size: 12.5px; color: #57606a; margin: 0; }
+.dispatch-done { text-align: center; font-size: 15px; color: #1b7a3d; padding: 16px 0; }
+.dispatch-send { margin-top: 0 !important; }
+
+/* ── Ações do card (WhatsApp / e-mail / detalhes) ── */
+.card-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.card-actions .wa-btn { margin-top: 0; }
+.mail-btn {
+  display: inline-flex; align-items: center; gap: 5px; text-decoration: none;
+  font-size: 12px; font-weight: 600; border-radius: 8px; padding: 5px 9px;
+  background: #eaf1fb; color: #1f6feb; border: 1px solid #cfe0fb;
+}
+.mail-btn:hover { background: #1f6feb; color: #fff; }
+.details-btn {
+  font-size: 12px; border-radius: 8px; padding: 5px 9px; cursor: pointer;
+  background: #fff; color: #57606a; border: 1px solid #d0d7de;
+}
+.details-btn:hover { border-color: #1f6feb; color: #1f6feb; }
+
+/* ── Resumo de CRM no card ── */
+.crm-summary { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.crm-chip { font-size: 11px; padding: 2px 7px; border-radius: 999px; background: #eef1f4; color: #57606a; }
+.crm-chip--due { background: #fde3d3; color: #b23c0a; font-weight: 600; }
+.crm-chip--tag { background: #ece9fb; color: #5b4bce; }
+
+/* ── Detalhes do lead (CRM): campos lado a lado + tags ── */
+.field-row { display: flex; gap: 12px; }
+.field-row .field { flex: 1; }
+.field input[type='date'], .field input[type='number'] {
+  border: 1px solid #d0d7de; border-radius: 8px; padding: 8px 10px; font-size: 13px; font-family: inherit; width: 100%;
+}
+.tag-picker { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag-chip {
+  font-size: 12px; padding: 5px 10px; border-radius: 999px; cursor: pointer;
+  border: 1px solid #d0d7de; background: #fff; color: #57606a;
+}
+.tag-chip.on { background: #5b4bce; border-color: #5b4bce; color: #fff; }
+
+/* ── Histórico de buscas ── */
+.history-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.history-item {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 10px 12px; border: 1px solid #e2e2e2; border-radius: 8px; cursor: pointer;
+}
+.history-item:hover { border-color: #1f6feb; background: #f7faff; }
+.history-item .muted { margin: 2px 0 0; font-size: 12px; }
+.history-niche { text-transform: capitalize; }
+.history-open { color: #1f6feb; font-size: 13px; font-weight: 600; white-space: nowrap; }
+
+/* ── Responsivo simples: empilha em telas estreitas ── */
+@media (max-width: 760px) {
+  .app { grid-template-columns: 1fr; grid-template-rows: 45% 55%; }
+  .sidebar { order: 2; border-right: 0; border-top: 1px solid #e2e2e2; }
+  .map-wrap { order: 1; }
+}

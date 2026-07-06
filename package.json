@@ -1,0 +1,15 @@
+{
+  "name": "captacao",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sobe API + front juntos. O worker Python é chamado pela API sob demanda (não é um processo contínuo).",
+  "scripts": {
+    "setup": "npm install && npm --prefix server install && npm --prefix web install && py -m pip install -r workers/requirements.txt",
+    "dev": "concurrently -k -n api,web -c blue,green \"npm --prefix server run dev\" \"npm --prefix web run dev\"",
+    "dev:mock": "concurrently -k -n api,web -c blue,green \"cross-env DATA_PROVIDER=mock ENRICH_PROVIDER=mock npm --prefix server run dev\" \"npm --prefix web run dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "cross-env": "^7.0.3"
+  }
+}
