@@ -653,6 +653,14 @@ body {
 .msg-gen-error { display: flex; align-items: flex-start; gap: 6px; padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); background: var(--danger-soft); border: 1px solid var(--danger-border); color: var(--danger); font-size: var(--font-sm); border-left: 3px solid var(--danger); }
 .msg-gen-copied { font-size: var(--font-xs); color: var(--success-strong); font-weight: 600; padding: 4px 8px; }
 
+/* Aviso no MessageSettings sobre gerador inteligente vs template manual */
+.msg-settings-notice {
+  padding: var(--space-3); border-radius: var(--radius-md); font-size: var(--font-sm); line-height: 1.5;
+  background: var(--accent-soft); border: 1px solid var(--accent-border); color: var(--text);
+  border-left: 3px solid var(--accent);
+}
+.msg-settings-notice strong { color: var(--accent-strong); }
+
 /* ── Histórico de buscas ── */
 .history-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
 .history-item {

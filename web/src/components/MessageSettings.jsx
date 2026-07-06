@@ -43,6 +43,12 @@ export default function MessageSettings({ open, onClose }) {
           <button type="button" className="modal-x" onClick={onClose} aria-label="Fechar">×</button>
         </header>
         <div className="modal-body">
+          <div className="msg-settings-notice" role="note">
+            <strong>ℹ️ Template manual = fallback.</strong> O <strong>gerador inteligente</strong> (botão
+            "Gerar mensagem" no detalhe do lead, e o Modo Disparo) segue o <em>Manual Mestre Prospector</em> —
+            saudação por primeiro nome (pessoa) ou abertura neutra (empresa), ângulo por nicho, sem "posso te
+            mandar um áudio". Este template aqui só aparece quando o motor falha ou para personalização avançada.
+          </div>
           <label className="field">
             <span>Modelo da mensagem <em>(use {'{nome}'} e {'{beneficio}'})</em></span>
             <textarea rows={7} value={template} onChange={(e) => setTemplate(e.target.value)} />
