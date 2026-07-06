@@ -18,12 +18,14 @@
   --text-muted: #57606a;
   --text-subtle: #8a8f98;
 
-  /* Accent (azul produto) */
-  --accent: #1f6feb;
-  --accent-hover: #1a5fd0;
-  --accent-soft: #eaf1fb;
-  --accent-border: #cfe0fb;
-  --accent-ring: rgba(31, 111, 235, 0.25);
+  /* Accent (verde-neon da marca DevJuninho) */
+  --accent: #16a34a; /* verde-600 — AA large sobre branco (3.7:1) */
+  --accent-hover: #15803d; /* verde-700 — AA normal sobre branco (4.8:1) */
+  --accent-strong: #15803d; /* para texto sobre branco */
+  --accent-soft: #ecfdf5; /* verde-50 */
+  --accent-border: #bbf7d0; /* verde-200 */
+  --accent-ring: rgba(22, 163, 74, 0.28);
+  --accent-glow: 0 0 0 0 transparent; /* sem glow no light */
 
   /* WhatsApp */
   --wa: #25d366;
@@ -103,11 +105,13 @@
   --text-muted: #9198a1;
   --text-subtle: #6e7681;
 
-  --accent: #4493f8;
-  --accent-hover: #5ba2ff;
-  --accent-soft: #1a2533;
-  --accent-border: #2a4a6b;
-  --accent-ring: rgba(68, 147, 248, 0.35);
+  --accent: #4ade80; /* verde-400 — AAA sobre dark (8.9:1) */
+  --accent-hover: #22c55e; /* verde-500 */
+  --accent-strong: #4ade80;
+  --accent-soft: #0f2818; /* verde muito escuro */
+  --accent-border: #1f4d2e;
+  --accent-ring: rgba(74, 222, 128, 0.32);
+  --accent-glow: 0 0 12px rgba(74, 222, 128, 0.35); /* glow sutil no dark */
 
   --wa: #25d366;
   --wa-hover: #2fe075;
@@ -129,11 +133,11 @@
   --score-cold-fg: #9198a1;
   --score-warm-bg: #3a2e16;
   --score-warm-fg: #e3b341;
-  --score-hot-bg: #3a1f14;
-  --score-hot-fg: #f0883e;
+  --score-hot-bg: #0f2818;
+  --score-hot-fg: #4ade80;
   --score-cold-bar: #6e7681;
   --score-warm-bar: #d29922;
-  --score-hot-bar: #3fb950;
+  --score-hot-bar: #4ade80;
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.5);
@@ -220,7 +224,7 @@ body {
 
 .exports { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-2); font-size: var(--font-base); color: var(--text-muted); }
 .exports a {
-  text-decoration: none; font-weight: 600; font-size: var(--font-sm); color: var(--accent);
+  text-decoration: none; font-weight: 600; font-size: var(--font-sm); color: var(--accent-strong);
   border: 1px solid var(--accent); border-radius: var(--radius-md); padding: 3px 10px;
   transition: background var(--transition), color var(--transition);
 }
@@ -299,9 +303,10 @@ body {
 .search-bar button {
   padding: 10px; border: 0; border-radius: var(--radius-md); background: var(--accent); color: #fff;
   font-weight: 600; font-size: var(--font-md); cursor: pointer;
-  transition: background var(--transition);
+  transition: background var(--transition), box-shadow var(--transition);
 }
 .search-bar button:hover:not(:disabled) { background: var(--accent-hover); }
+[data-theme='dark'] .search-bar button { box-shadow: var(--accent-glow); }
 .search-bar button:disabled { opacity: 0.6; cursor: wait; }
 
 /* ── Alternador de visão (Mapa / Kanban / Stats) ── */
@@ -313,6 +318,7 @@ body {
 }
 .view-toggle button:hover { border-color: var(--accent); color: var(--text); }
 .view-toggle button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+[data-theme='dark'] .view-toggle button.active { box-shadow: var(--accent-glow); }
 
 /* ── Botão WhatsApp (reutilizado em lista, mapa e kanban) ── */
 .wa-btn {
@@ -324,7 +330,7 @@ body {
 .wa-btn:hover { background: var(--wa-hover); }
 .wa-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .wa-btn--sm { padding: 5px 9px; font-size: var(--font-sm); }
-.link-btn { background: none; border: 0; color: var(--accent); cursor: pointer; font-size: var(--font-sm); padding: 0; }
+.link-btn { background: none; border: 0; color: var(--accent-strong); cursor: pointer; font-size: var(--font-sm); padding: 0; }
 .link-btn:hover { text-decoration: underline; }
 
 /* ── Kanban (drag-and-drop nativo) ── */
@@ -495,8 +501,9 @@ body {
 .preview pre { margin: 6px 0 0; white-space: pre-wrap; font-family: inherit; font-size: var(--font-base); color: var(--text); }
 .modal-foot { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-3) var(--space-5); border-top: 1px solid var(--border); }
 .modal-foot .spacer { flex: 1; }
-.btn-primary { border: 0; border-radius: var(--radius-md); background: var(--accent); color: #fff; font-weight: 600; font-size: var(--font-base); padding: 8px 16px; cursor: pointer; transition: background var(--transition); }
+.btn-primary { border: 0; border-radius: var(--radius-md); background: var(--accent); color: #fff; font-weight: 600; font-size: var(--font-base); padding: 8px 16px; cursor: pointer; transition: background var(--transition), box-shadow var(--transition); }
 .btn-primary:hover { background: var(--accent-hover); }
+[data-theme='dark'] .btn-primary { box-shadow: var(--accent-glow); }
 .btn-secondary { border: 1px solid var(--border-strong); border-radius: var(--radius-md); background: var(--bg-elevated); color: var(--text-muted); font-size: var(--font-base); padding: 8px 14px; cursor: pointer; transition: background var(--transition), color var(--transition); }
 .btn-secondary:hover { background: var(--bg-muted); color: var(--text); }
 
@@ -546,7 +553,7 @@ body {
 .mail-btn {
   display: inline-flex; align-items: center; gap: 5px; text-decoration: none;
   font-size: var(--font-sm); font-weight: 600; border-radius: var(--radius-md); padding: 5px 9px;
-  background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent-border);
+  background: var(--accent-soft); color: var(--accent-strong); border: 1px solid var(--accent-border);
   transition: background var(--transition), color var(--transition);
 }
 .mail-btn:hover { background: var(--accent); color: #fff; }
@@ -555,7 +562,7 @@ body {
   background: var(--bg-elevated); color: var(--text-muted); border: 1px solid var(--border-strong);
   transition: border-color var(--transition), color var(--transition);
 }
-.details-btn:hover { border-color: var(--accent); color: var(--accent); }
+.details-btn:hover { border-color: var(--accent); color: var(--accent-strong); }
 
 /* ── Resumo de CRM no card ── */
 .crm-summary { display: flex; flex-wrap: wrap; gap: 5px; margin-top: var(--space-2); }
@@ -586,7 +593,7 @@ body {
 .msg-gen-title { font-size: var(--font-base); font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 6px; }
 .msg-gen-btn {
   display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
-  border: 1px solid var(--accent); background: var(--accent-soft); color: var(--accent);
+  border: 1px solid var(--accent); background: var(--accent-soft); color: var(--accent-strong);
   font-size: var(--font-sm); font-weight: 600; padding: 6px 12px; border-radius: var(--radius-md);
   transition: background var(--transition), color var(--transition);
 }
@@ -611,7 +618,7 @@ body {
 .history-item:hover { border-color: var(--accent); background: var(--accent-soft); }
 .history-item .muted { margin: 2px 0 0; font-size: var(--font-sm); }
 .history-niche { text-transform: capitalize; color: var(--text); }
-.history-open { color: var(--accent); font-size: var(--font-base); font-weight: 600; white-space: nowrap; }
+.history-open { color: var(--accent-strong); font-size: var(--font-base); font-weight: 600; white-space: nowrap; }
 
 /* ── Mobile: drawer off-canvas ── */
 .mobile-bar { display: none; }
