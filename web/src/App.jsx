@@ -296,6 +296,7 @@ export default function App() {
       {dispatchLeads && (
         <DispatchMode
           leads={dispatchLeads}
+          searchId={search?.searchId}
           onContacted={(id) => moveLead(id, 'contatado')}
           onClose={() => setDispatchLeads(null)}
         />
