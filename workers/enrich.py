@@ -31,6 +31,8 @@ UA = {
 }
 DDG = "https://html.duckduckgo.com/html/"
 TIMEOUT_LEAD = 9.0  # orçamento total por lead, em segundos
+SERP_RETRIES = 2   # tentativas após a primeira falha (total 3)
+SERP_BASE_MS = 600  # backoff base: 0.6s, 1.2s, 2.4s
 
 EMAIL_RE = re.compile(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
 # Resultados do DDG HTML usam <a class="result__a" href="https://destino-real">.
@@ -120,8 +122,31 @@ def _first_email(html: str) -> str | None:
 
 
 async def _serp(client: httpx.AsyncClient, query: str) -> str:
-    r = await client.post(DDG, data={"q": query}, headers=UA)
-    return r.text
+    """Consulta o DuckDuckGo HTML com retry e backoff exponencial.
+
+    DuckDuckGo eventualmente responde 418/429/202 (rate limit/anti-bot) ou
+    derruba a conexão. Retentar com backoff resolve a maioria dos casos sem
+    precisar de chave de API. Erros 4xx definitivos (ex: query malformada)
+    não são retentados.
+    """
+    last_err = None
+    for attempt in range(SERP_RETRIES + 1):
+        try:
+            r = await client.post(DDG, data={"q": query}, headers=UA)
+            # 202 = "anomaly" (anti-bot do DDG); 418/429 = rate limit. Vale retry.
+            if r.status_code in (202, 418, 429) and attempt < SERP_RETRIES:
+                last_err = RuntimeError(f"DDG HTTP {r.status_code}")
+                await asyncio.sleep(SERP_BASE_MS * (2 ** attempt) / 1000)
+                continue
+            r.raise_for_status()
+            return r.text
+        except (httpx.HTTPError, RuntimeError) as e:
+            last_err = e
+            if attempt < SERP_RETRIES:
+                await asyncio.sleep(SERP_BASE_MS * (2 ** attempt) / 1000)
+                continue
+            raise
+    raise last_err or RuntimeError("DDG indisponível")
 
 
 async def _enrich(lead: dict) -> dict:

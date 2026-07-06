@@ -5,6 +5,7 @@
 //   - cache dos resultados  (cache de 24h abaixo)
 //   - nada de autocomplete por tecla  (o front faz debounce de 450ms)
 import https from 'node:https';
+import { withRetry, isTransientHttpError } from '../utils/retry.js';
 
 const UA = 'CaptacaoLeadApp/0.1 (prospeccao B2B; lorenzocs02@hotmail.com)';
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -82,7 +83,16 @@ export async function geocodeCidade(q) {
   const hit = cache.get(key);
   if (hit && Date.now() - hit.ts < CACHE_TTL_MS) return hit.results;
 
-  const raw = await rateLimited(() => nominatimGet(q));
+  // Nominatim: 1 req/seg + retry com backoff em erros transientes (rede/5xx/429).
+  // 4xx (ex: query inválida) não vale retry — sobe direto.
+  const raw = await rateLimited(() =>
+    withRetry(() => nominatimGet(q), {
+      label: 'Nominatim',
+      retries: 2,
+      baseMs: 1200, // acima do limite de 1 req/seg do Nominatim
+      shouldRetry: isTransientHttpError,
+    })
+  );
   const seen = new Set();
   const results = [];
   for (const item of raw) {

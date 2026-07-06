@@ -53,9 +53,10 @@ router.post('/api/search', async (req, res) => {
     });
   } catch (e) {
     console.error('Falha na busca OSM:', e);
-    res.status(502).json({
-      error: 'Não consegui consultar o mapa agora (Overpass ocupado). Tente de novo em instantes ou reduza o raio.',
-    });
+    const msg = e?.name === 'RetryError'
+      ? `${e.message}. Tente novamente em instantes ou reduza o raio.`
+      : 'Não consegui consultar o mapa agora (Overpass ocupado). Tente de novo em instantes ou reduza o raio.';
+    res.status(502).json({ error: msg });
   }
 });
 
@@ -67,7 +68,10 @@ router.get('/api/geocode', async (req, res) => {
     res.json({ results: await geocodeCidade(q) });
   } catch (e) {
     console.error('Falha no geocode:', e);
-    res.status(502).json({ error: 'Geocoding indisponível agora.' });
+    const msg = e?.name === 'RetryError'
+      ? `${e.message}. Tente novamente em instantes.`
+      : 'Geocoding indisponível agora.';
+    res.status(502).json({ error: msg });
   }
 });
 

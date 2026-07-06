@@ -7,6 +7,7 @@
 // que é exatamente o filtro do produto ("negócios sem site").
 
 import https from 'node:https';
+import { withRetry, RetryError, isTransientHttpError } from '../utils/retry.js';
 
 const ENDPOINTS = [
   // Mirrors públicos do Overpass — se o primeiro estiver enfileirado/lento,
@@ -124,15 +125,26 @@ function overpassPost(url, query, timeoutMs) {
 }
 
 async function fetchOverpass(query) {
+  // Cada endpoint ganha retry com backoff (transient errors: rede, 429, 5xx).
+  // Falha em todos os endpoints -> RetryError amigável para o front.
   let lastErr;
   for (const url of ENDPOINTS) {
     try {
-      return await overpassPost(url, query, 25000);
+      return await withRetry(
+        (attempt) => overpassPost(url, query, 25000),
+        {
+          label: 'Overpass',
+          retries: 2,
+          baseMs: 700,
+          shouldRetry: isTransientHttpError,
+        }
+      );
     } catch (e) {
       lastErr = e; // tenta o próximo endpoint
     }
   }
-  throw lastErr ?? new Error('Overpass indisponível');
+  if (lastErr instanceof RetryError) throw lastErr;
+  throw new RetryError('Overpass', ENDPOINTS.length, lastErr);
 }
 
 function assembleAddress(t) {
