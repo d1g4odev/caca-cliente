@@ -6,7 +6,7 @@ export function leadScore(lead) {
   if (typeof lead?.score === 'number') return Math.max(0, Math.min(100, lead.score));
   const e = lead?.enrichment || {};
   let s = 0;
-  if (lead.phone) s += 30; // dá pra chamar no WhatsApp (canal principal do Lorenzo)
+  if (lead.phone) s += 30; // dá pra chamar no WhatsApp (canal principal de abordagem)
   if (e.instagram) s += 30; // tem Instagram mas não tem site = alvo ideal
   if (e.email) s += 20;
   if (e.facebook) s += 12;

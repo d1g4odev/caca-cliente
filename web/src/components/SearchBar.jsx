@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 // Centro deslocado p/ o bairro Bom Jesus (leste de Porto Alegre).
 const DEFAULT_CITY = { label: 'Porto Alegre, Rio Grande do Sul', lat: -30.0427211, lng: -51.1626625 };
 
-// Nichos pré-definidos (atalhos rápidos para os ramos que o Lorenzo mais prospecta).
+// Nichos pré-definidos (atalhos rápidos para os ramos que mais prospectam negócios sem site).
 // "Outros" libera o input pra digitar livremente. Lista ordenada por bom encaixe
 // no perfil de "negócio físico sem site" + cobertura no OpenStreetMap.
 const NICHE_PRESETS = [
