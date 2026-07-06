@@ -18,7 +18,7 @@ const ENDPOINTS = [
   'https://overpass.kumi.systems/api/interpreter',
 ];
 // Etiqueta do OSM: identifique a aplicação e um contato.
-const UA = 'CaptacaoLeadApp/0.1 (prospeccao B2B; lorenzocs02@hotmail.com)';
+const UA = 'CacaCliente/0.1 (prospeccao de negocios sem site; curso Sites com IA do Zero)';
 
 // Mapa nicho (PT-BR) -> tags OSM. `kw` são radicais SEM acento (casamos por
 // substring contra o nicho normalizado). Vários grupos podem casar e somar tags.
