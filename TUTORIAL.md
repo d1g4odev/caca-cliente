@@ -1,4 +1,6 @@
-# 📖 Tutorial — Captação
+# 📖 Tutorial — Caça-Cliente
+
+> *O radar de negócios sem site — do clique ao WhatsApp.*
 
 Guia completo, passo a passo, para **abrir** e **usar** a ferramenta — sem pressupor nada. Se você nunca abriu um terminal na vida, comece aqui.
 
@@ -27,12 +29,12 @@ E o editor que vamos usar:
 
 Se você ainda não baixou a ferramenta, baixe o arquivo `.zip` que o Rodrigo te passou no curso e **extraia** numa pasta fácil de achar.
 
-> 💡 **Dica:** extraia direto na pasta do usuário (Windows: `C:\Users\SeuNome\Captacao`; Mac: `/Users/SeuNome/Captacao`). Evite pastas profundas tipo `Downloads > Curso > Módulo 3 > Captacao` — quanto mais perto da raiz, melhor.
+> 💡 **Dica:** extraia direto na pasta do usuário (Windows: `C:\Users\SeuNome\Caca-Cliente`; Mac: `/Users/SeuNome/Caca-Cliente`). Evite pastas profundas tipo `Downloads > Curso > Módulo 3 > Caca-Cliente` — quanto mais perto da raiz, melhor.
 
 Se você está usando **Git** (avançado), pode clonar:
 ```bash
 git clone <repo-do-curso>.git
-cd Captacao
+cd Caca-Cliente
 ```
 
 ---
@@ -41,12 +43,12 @@ cd Captacao
 
 1. Abra o **VS Code**.
 2. No menu de cima, clique em **File** (Arquivo) → **Open Folder...** (Abrir Pasta...).
-3. Navegue até a pasta `Captacao` que você extraiu e clique em **Selecionar Pasta**.
+3. Navegue até a pasta `Caca-Cliente` que você extraiu e clique em **Selecionar Pasta**.
 4. Se aparecer "Do you trust the authors?" (Você confia nos autores?), clique em **Yes, I trust the authors**.
 
 ✅ Deu certo se, na barra lateral esquerda, você vê as pastas `server`, `web`, `workers` e arquivos como `README.md` e `package.json`.
 
-> ⚠️ **Atenção:** se você extraiu o zip e ficou uma pasta dentro da outra (tipo `Captacao-main/Captacao`), abra a **de dentro** — a que tem as pastas `server`, `web`, `workers`.
+> ⚠️ **Atenção:** se você extraiu o zip e ficou uma pasta dentro da outra (tipo `Caca-Cliente-main/Caca-Cliente`), abra a **de dentro** — a que tem as pastas `server`, `web`, `workers`.
 
 ---
 
@@ -59,14 +61,14 @@ O terminal é a "caixinha preta" onde digitamos comandos.
 
 ✅ Deu certo se uma janela aparecer na parte de baixo, terminando com algo como:
 ```
-PS C:\Users\SeuNome\Captacao>
+PS C:\Users\SeuNome\Caca-Cliente>
 ```
 ou no Mac:
 ```
-rodrigo@macbook Captacao %
+rodrigo@macbook Caca-Cliente %
 ```
 
-O importante é terminar em **`Captacao>`** (ou `Captacao %`).
+O importante é terminar em **`Caca-Cliente>`** (ou `Caca-Cliente %`).
 
 ---
 
@@ -248,5 +250,5 @@ Na barra à esquerda, em **Exportar**, baixe a planilha em **CSV** ou **Excel** 
 ---
 
 <div align="center">
-<sub>Tutorial do Captação — ferramenta oficial do curso <strong>Sites com IA do Zero</strong>.</sub>
+<sub>Tutorial do Caça-Cliente — ferramenta oficial do curso <strong>Sites com IA do Zero</strong>.</sub>
 </div>

@@ -1,8 +1,10 @@
 <div align="center">
 
-# 🎯 Captação
+# 🎯 Caça-Cliente
 
-### A ferramenta oficial do curso **Sites com IA do Zero** — encontre negócios **sem site** na sua cidade e feche seu primeiro cliente.
+### O radar de negócios sem site — do clique ao WhatsApp.
+
+*A ferramenta oficial do curso **Sites com IA do Zero** — encontre negócios **sem site** na sua cidade e feche seu primeiro cliente.*
 
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://python.org)
@@ -20,7 +22,7 @@ Você acabou de aprender a criar sites com IA. Agora precisa de **clientes** pra
 
 **A resposta é simples:** os negócios que **ainda não têm site**.
 
-O problema é que achar esses negócios na mão é lento — você teria que abrir o Google, digitar "barbearia em [sua cidade]", clicar em cada um, ver se tem ou não site, anotar o telefone... O **Captação** faz tudo isso pra você, **de graça**, em segundos:
+O problema é que achar esses negócios na mão é lento — você teria que abrir o Google, digitar "barbearia em [sua cidade]", clicar em cada um, ver se tem ou não site, anotar o telefone... O **Caça-Cliente** faz tudo isso pra você, **de graça**, em segundos:
 
 1. Você digita o **nicho** (ex.: _barbearia_) e a **cidade**.
 2. A ferramenta varre o **OpenStreetMap** (o "Google Maps" gratuito) e acha todos os estabelecimentos daquele ramo na região.
@@ -38,7 +40,7 @@ O problema é que achar esses negócios na mão é lento — você teria que abr
 
 ```bash
 git clone <repo-do-curso>.git
-cd Captacao
+cd Caca-Cliente
 npm run setup   # 1ª vez: instala tudo (raiz, server, web e o worker Python)
 npm run dev     # sobe a ferramenta em http://localhost:5173
 ```
