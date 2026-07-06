@@ -8,6 +8,7 @@ import MessageSettings from './components/MessageSettings.jsx';
 import DispatchMode from './components/DispatchMode.jsx';
 import LeadDetails from './components/LeadDetails.jsx';
 import HistoryPanel from './components/HistoryPanel.jsx';
+import ThemeToggle, { useTheme } from './components/ThemeToggle.jsx';
 import { leadScore } from './lib/score.js';
 import { useEnrichmentStream } from './hooks/useEnrichmentStream.js';
 
@@ -29,6 +30,8 @@ export default function App() {
   const [filters, setFilters] = useState({ phone: false, instagram: false, email: false, showWithSite: false });
   const toggleFilter = (k) => setFilters((f) => ({ ...f, [k]: !f[k] }));
   const [searchError, setSearchError] = useState(null); // erro inline (substitui alert)
+  const { theme, toggle: toggleTheme } = useTheme();
+  const [drawerOpen, setDrawerOpen] = useState(false); // mobile: sidebar off-canvas
 
   // Persiste o searchId no navegador pra sobreviver a F5: ao montar, tenta
   // reabrir a última busca (ainda em memória do back OU no banco quando ativo).
@@ -54,6 +57,7 @@ export default function App() {
     setLoading(true);
     setSelectedId(null);
     setSearchError(null);
+    setDrawerOpen(false);
     try {
       const r = await fetch('/api/search', {
         method: 'POST',
@@ -151,11 +155,14 @@ export default function App() {
 
   return (
     <div className="app">
-      <aside className="sidebar">
+      <aside className={`sidebar ${drawerOpen ? 'sidebar--open' : ''}`}>
         <header className="sidebar-header">
-          <h1>
-            Captação<span>.app</span>
-          </h1>
+          <div className="sidebar-header-row">
+            <h1>
+              Captação<span>.app</span>
+            </h1>
+            <ThemeToggle theme={theme} onToggle={toggleTheme} />
+          </div>
           <SearchBar onSearch={runSearch} loading={loading} />
           {searchError && (
             <div className="search-error" role="alert">
@@ -251,6 +258,12 @@ export default function App() {
       </aside>
 
       <main className="map-wrap">
+        <div className="mobile-bar">
+          <button type="button" className="menu-btn" onClick={() => setDrawerOpen(true)} aria-label="Abrir menu">
+            ☰
+          </button>
+        </div>
+        {drawerOpen && <div className="backdrop" onClick={() => setDrawerOpen(false)} />}
         {view === 'map' && (
           <MapPanel
             center={search ? [search.query.lat, search.query.lng] : CENTRO_PADRAO}
