@@ -2,7 +2,9 @@
 // Como TODOS os leads já não têm site, o que diferencia é contactabilidade +
 // sinais de presença online. (OSM não traz avaliações, então não entram aqui.)
 export function leadScore(lead) {
-  const e = lead.enrichment || {};
+  // Se o back (Turbina) já enviou lead.score, usa ele (precedência).
+  if (typeof lead?.score === 'number') return Math.max(0, Math.min(100, lead.score));
+  const e = lead?.enrichment || {};
   let s = 0;
   if (lead.phone) s += 30; // dá pra chamar no WhatsApp (canal principal do Lorenzo)
   if (e.instagram) s += 30; // tem Instagram mas não tem site = alvo ideal
@@ -16,4 +18,11 @@ export function scoreTier(score) {
   if (score >= 60) return { key: 'quente', label: 'Quente' };
   if (score >= 35) return { key: 'morno', label: 'Morno' };
   return { key: 'frio', label: 'Frio' };
+}
+
+// Token de cor da barra de score, por faixa
+export function scoreBarClass(score) {
+  if (score >= 60) return 'score-bar-fill--quente';
+  if (score >= 35) return 'score-bar-fill--morno';
+  return 'score-bar-fill--frio';
 }

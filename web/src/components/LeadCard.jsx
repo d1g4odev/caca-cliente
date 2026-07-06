@@ -1,10 +1,10 @@
 import { waLink } from '../lib/whatsapp.js';
 import { mailtoLink } from '../lib/email.js';
-import { leadScore, scoreTier } from '../lib/score.js';
+import { leadScore, scoreTier, scoreBarClass } from '../lib/score.js';
+import { fmtMoney } from '../lib/format.js';
 
 const stop = (ev) => ev.stopPropagation();
 const hoje = () => new Date().toISOString().slice(0, 10);
-const fmtMoney = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
 
 export default function LeadCard({ lead, selected, onSelect, onOpenDetails }) {
   const e = lead.enrichment;
@@ -19,8 +19,12 @@ export default function LeadCard({ lead, selected, onSelect, onOpenDetails }) {
     <article className={`card ${selected ? 'card--selected' : ''} ${alvoIdeal ? 'card--alvo' : ''} ${e?.discoveredWebsite ? 'card--has-site' : ''}`} onClick={() => onSelect(lead.id)}>
       <header>
         <h3>{lead.name}</h3>
-        <span className={`score score--${tier.key}`} title={`Score de prospecção: ${score}/100`}>
-          {tier.label} · {score}
+        <span className="score-bar" title={`Score de prospecção: ${score}/100`}>
+          <span className={`score score--${tier.key}`}>{tier.label}</span>
+          <span className="score-bar-track">
+            <span className={`score-bar-fill ${scoreBarClass(score)}`} style={{ width: `${score}%` }} />
+          </span>
+          <span className="muted" style={{ fontSize: 11 }}>{score}</span>
         </span>
       </header>
       {e?.discoveredWebsite && (

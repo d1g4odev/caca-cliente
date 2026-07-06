@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { waLink, WA_LIMIT } from '../lib/whatsapp.js';
-import { leadScore, scoreTier } from '../lib/score.js';
+import { leadScore, scoreTier, scoreBarClass } from '../lib/score.js';
+import { fmtMoneyCompact } from '../lib/format.js';
 
 // Estágios do funil (espelham o back-end em enricher.js -> STAGES).
 const STAGES = [
@@ -19,6 +20,16 @@ export default function KanbanBoard({ leads, selectedId, onSelect, onMove, onDis
     const m = Object.fromEntries(STAGES.map((s) => [s.key, []]));
     for (const l of leads) (m[l.stage] ?? m.novo).push(l);
     return m;
+  }, [leads]);
+
+  // Valor total estimado por coluna (soma de estimatedValue dos leads)
+  const totalsByStage = useMemo(() => {
+    const t = Object.fromEntries(STAGES.map((s) => [s.key, 0]));
+    for (const l of leads) {
+      const stage = l.stage && t[l.stage] != null ? l.stage : 'novo';
+      t[stage] += Number(l.estimatedValue) || 0;
+    }
+    return t;
   }, [leads]);
 
   function toggleChoose(id) {
@@ -79,7 +90,13 @@ export default function KanbanBoard({ leads, selectedId, onSelect, onMove, onDis
             }}
           >
             <header className="kanban-col-head">
-              {st.label} <span className="kanban-count">{byStage[st.key].length}</span>
+              <div className="kanban-col-head-left">
+                <span>{st.label}</span>
+                <span className="kanban-count">{byStage[st.key].length}</span>
+              </div>
+              {totalsByStage[st.key] > 0 && (
+                <span className="kanban-col-value" title="Valor total estimado">{fmtMoneyCompact(totalsByStage[st.key])}</span>
+              )}
             </header>
             <div className="kanban-cards">
               {byStage[st.key].map((l) => {
@@ -91,7 +108,11 @@ export default function KanbanBoard({ leads, selectedId, onSelect, onMove, onDis
                     key={l.id}
                     className={`kanban-card ${l.id === selectedId ? 'kanban-card--sel' : ''}`}
                     draggable
-                    onDragStart={(e) => e.dataTransfer.setData('text/plain', l.id)}
+                    onDragStart={(e) => {
+                      e.dataTransfer.setData('text/plain', l.id);
+                      e.currentTarget.classList.add('kanban-card--dragging');
+                    }}
+                    onDragEnd={(e) => e.currentTarget.classList.remove('kanban-card--dragging')}
                     onClick={() => onSelect(l.id)}
                   >
                     {wa && (
@@ -105,7 +126,12 @@ export default function KanbanBoard({ leads, selectedId, onSelect, onMove, onDis
                       />
                     )}
                     <strong>{l.name}</strong>
-                    <span className={`score score--${tier.key}`} title={`Score ${score}/100`}>{tier.label}</span>
+                    <span className="score-bar" title={`Score ${score}/100`}>
+                      <span className={`score score--${tier.key}`}>{tier.label}</span>
+                      <span className="score-bar-track">
+                        <span className={`score-bar-fill ${scoreBarClass(score)}`} style={{ width: `${score}%` }} />
+                      </span>
+                    </span>
                     {l.phone && <div className="muted">📞 {l.phone}</div>}
                     <div className="kanban-contacts">
                       {l.enrichmentStatus === 'pending' && <span className="dot dot--wait" title="buscando contatos…" />}
