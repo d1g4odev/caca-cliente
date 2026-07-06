@@ -146,8 +146,8 @@ Na barra à esquerda, em **Exportar**, baixe a planilha em **CSV** ou **Excel** 
 **O WhatsApp não abre quando clico no botão.**
 - Confira se o lead tem telefone (alguns negócios no OSM não têm). Se tem e mesmo assim não abre, confira se o seu navegador não está bloqueando pop-ups pra `wa.me`.
 
-**A mensagem do WhatsApp veio com "Lorenzo" no texto.**
-- Esse é o template padrão antigo. Clique em **✏️ Mensagem do WhatsApp** no topo e edite o template — coloque seu nome no lugar. A config fica salva no seu navegador.
+**A mensagem do WhatsApp veio com "[Seu nome]" no texto.**
+- Esse é o template padrão de fábrica. Clique em **✏️ Editar mensagem do WhatsApp** no topo e coloque o seu nome no lugar de `[Seu nome]`. A config fica salva no seu navegador.
 
 ### Avançado
 

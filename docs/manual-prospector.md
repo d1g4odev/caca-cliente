@@ -1,6 +1,6 @@
 # Manual Mestre — Prospector do Juninho
 
-> Base de conhecimento oficial do **gerador de mensagens de abordagem** do Captação.
+> Base de conhecimento oficial do **gerador de mensagens de abordagem** do Caça-Cliente.
 > Guia de prospecção e fechamento para vender sites e sistemas personalizados para
 > profissionais da saúde, clínicas, consultórios, institutos e negócios locais.
 > Toda mensagem gerada pelo sistema DEVE seguir este manual.

@@ -1,8 +1,8 @@
-# Sobe o sistema Captação inteiro no Zima (ou em qualquer host com Docker).
-# Como subir no ZimaOS:
-#   1. Copie este projeto pro Zima (git clone) e crie um .env (veja .env.example)
+# Sobe o sistema Caça-Cliente inteiro no home server (ou em qualquer host com Docker).
+# Como subir no home server (ex.: ZimaOS):
+#   1. Copie este projeto pro servidor (git clone) e crie um .env (veja .env.example)
 #   2. docker compose up -d --build
-#   3. Acesse pelo IP da Tailscale do Zima: http://100.74.62.35
+#   3. Acesse pelo IP da VPN privada do servidor: http://100.74.62.35
 #
 # O Postgres NÃO está aqui — ele já roda no Zima como container separado, e
 # este compose se conecta nele via host.docker.internal:5432 (veja extra_hosts).

@@ -19,7 +19,7 @@ Postgres **não** entra no compose — ele já roda como container separado no s
 
 ```bash
 git clone <repo-do-curso>.git
-cd Captacao
+cd Caca-Cliente
 cp .env.example .env       # edite com a DATABASE_URL real
 docker compose up -d --build
 ```
@@ -29,7 +29,7 @@ Pronto. Acesse pelo IP do servidor na sua VPN privada (ex.: `http://100.74.62.35
 ### Atualizando depois de mudar o código
 
 ```bash
-cd Captacao
+cd Caca-Cliente
 git pull
 docker compose up -d --build
 ```
