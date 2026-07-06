@@ -160,7 +160,7 @@ export default function App() {
         <header className="sidebar-header">
           <div className="sidebar-header-row">
             <h1>
-              Captação<span>.app</span>
+              Caça-Cliente
             </h1>
             <ThemeToggle theme={theme} onToggle={toggleTheme} />
           </div>
