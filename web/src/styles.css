@@ -177,8 +177,30 @@ body {
 .sidebar-header { padding: var(--space-4) var(--space-4) var(--space-3); border-bottom: 1px solid var(--border); }
 .sidebar-header h1 { margin: 0 0 var(--space-3); font-size: var(--font-2xl); font-weight: 700; letter-spacing: -0.01em; }
 .sidebar-header h1 span { color: var(--accent); }
-.sidebar-header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-2); }
+.sidebar-header-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
+.brand-mark { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand-mascot-header { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; box-shadow: var(--shadow-sm); }
+.brand-wordmark { display: flex; flex-direction: column; line-height: 1.1; min-width: 0; }
+.brand-wordmark h1 { margin: 0; font-size: var(--font-xl); font-weight: 700; letter-spacing: -0.01em; color: var(--text); }
+.brand-wordmark span { font-size: 10px; color: var(--text-subtle); font-weight: 500; }
 .stats { font-size: var(--font-base); color: var(--text-muted); margin: var(--space-3) 0 0; }
+
+/* ── Rodapé da sidebar (marca do curso) ── */
+.sidebar-foot { margin-top: auto; padding: var(--space-3) var(--space-4); border-top: 1px solid var(--border); }
+.brand-link {
+  display: flex; flex-direction: column; gap: 4px; text-decoration: none; color: var(--text-muted);
+  transition: color var(--transition);
+}
+.brand-link:hover { color: var(--text); }
+.brand-tagline { font-size: 10px; color: var(--text-subtle); text-transform: uppercase; letter-spacing: 0.06em; }
+.brand-logo { display: flex; align-items: center; gap: 8px; }
+.brand-logo--dark { display: none; }
+[data-theme='dark'] .brand-logo--dark { display: block; }
+[data-theme='dark'] .brand-logo--light { display: none; }
+.brand-mascot { border-radius: 50%; object-fit: cover; }
+.brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+.brand-text strong { font-size: 12px; color: var(--text); font-weight: 600; }
+.brand-sub { font-size: 10px; color: var(--text-subtle); }
 
 /* ── Toggle de tema ── */
 .theme-toggle {

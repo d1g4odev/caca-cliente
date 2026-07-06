@@ -9,6 +9,7 @@ import DispatchMode from './components/DispatchMode.jsx';
 import LeadDetails from './components/LeadDetails.jsx';
 import HistoryPanel from './components/HistoryPanel.jsx';
 import ThemeToggle, { useTheme } from './components/ThemeToggle.jsx';
+import Brand from './components/Brand.jsx';
 import { leadScore } from './lib/score.js';
 import { useEnrichmentStream } from './hooks/useEnrichmentStream.js';
 
@@ -159,9 +160,13 @@ export default function App() {
       <aside className={`sidebar ${drawerOpen ? 'sidebar--open' : ''}`}>
         <header className="sidebar-header">
           <div className="sidebar-header-row">
-            <h1>
-              Caça-Cliente
-            </h1>
+            <div className="brand-mark">
+              <img src="/brand/icon.png" alt="" className="brand-mascot-header" width={32} height={32} />
+              <span className="brand-wordmark">
+                <h1>Caça-Cliente</h1>
+                <span>O radar de negócios sem site</span>
+              </span>
+            </div>
             <ThemeToggle theme={theme} onToggle={toggleTheme} />
           </div>
           <SearchBar onSearch={runSearch} loading={loading} />
@@ -256,6 +261,7 @@ export default function App() {
           )}
         </header>
         <LeadList leads={visibleLeads} selectedId={selectedId} onSelect={selectLead} onOpenDetails={setDetailId} loading={loading} />
+        <Brand />
       </aside>
 
       <main className="map-wrap">
