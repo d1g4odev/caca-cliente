@@ -92,6 +92,7 @@ export default function App() {
   const selectLead = useCallback(
     (id) => {
       setSelectedId(id);
+      setDrawerOpen(false); // mobile: fecha o drawer ao selecionar
       const lead = leads.find((l) => l.id === id);
       if (lead?.enrichmentStatus === 'pending' && search) {
         // enriquecimento sob demanda: interagiu → fura a fila
