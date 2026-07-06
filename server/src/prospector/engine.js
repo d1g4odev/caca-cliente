@@ -77,10 +77,11 @@ function inferirTipoPorEstagio(estagio) {
 }
 
 // Validação mínima do lead. Não levanta — preenche defaults pra não quebrar
-// templates que dependem de nome/instagram.
+// templates que dependem de nome/instagram. Nome vazio é preservado como
+// vazio; saudacao() cai em abertura neutra ("Oi, tudo bem?") nesse caso.
 function normalizarLead(input) {
   const lead = {
-    nome: (input.nome || 'tudo bem').toString().trim(),
+    nome: (input.nome || '').toString().trim(),
     nicho: (input.nicho || '').toString().trim(),
     cidade: (input.cidade || '').toString().trim(),
     temSite: input.temSite ?? null,

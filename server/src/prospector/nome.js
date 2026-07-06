@@ -7,6 +7,13 @@
 // preservamos o título + primeiro nome ("Dra. Ana"). Se vier só nome, usamos
 // o primeiro ("Carmem"). Se for empresa, a saudação é neutra (manual seção 4).
 
+// Capitaliza a primeira letra de uma palavra (preservando o resto). Usado pra
+// normalizar títulos e nomes que vêm lowercase do scraping ("dra. ana").
+const capitalizar = (s) => {
+  if (!s) return s;
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
+
 const KEYWORDS_EMPRESA = [
   'clinica', 'clínica',
   'salao', 'salão',
@@ -106,8 +113,15 @@ export function detectarTipoNome(nome) {
 
   const palavras = original.split(/\s+/).filter(Boolean);
   if (palavras.length < 2) {
-    // Uma palavra só — provável pessoa (ou apelido).
-    return { tipo: 'pessoa', primeiroNome: palavras[0] };
+    // Uma palavra só. Se for título (Dr./Dra./Sr./Sra.) sozinho, é input
+    // incompleto — trata como desconhecido (abertura neutra) pra evitar
+    // saudação quebrada tipo "Oi, Dra.! Tudo bem?".
+    const unicaLower = palavras[0].toLowerCase().replace(/[.,]/g, '');
+    if (TITULOS.includes(unicaLower)) {
+      return { tipo: 'desconhecido', primeiroNome: '' };
+    }
+    // Senão, é apelido ou primeiro nome — pessoa.
+    return { tipo: 'pessoa', primeiroNome: capitalizar(palavras[0]) };
   }
   if (palavras.length > 5) {
     // Mais de 5 palavras sem keyword — provável empresa com nome longo.
@@ -127,15 +141,17 @@ export function extrairPrimeiroNomePessoa(nome) {
   const primeiraLower = palavras[0].toLowerCase().replace(/[.,]/g, '');
   if (TITULOS.includes(primeiraLower)) {
     // "Dr." / "Dra." / "Sr." etc — preserva título (com ponto original) + próximo nome.
+    // Normaliza capitalização: "dra." -> "Dra.", "ana" -> "Ana".
     const tituloOriginal = palavras[0]; // "Dra." ou "dra."
-    const tituloFormatado = /^[A-Z]/.test(tituloOriginal)
-      ? tituloOriginal
-      : tituloOriginal.charAt(0).toUpperCase() + tituloOriginal.slice(1);
-    const segundo = palavras[1] || '';
-    return segundo ? `${tituloFormatado} ${segundo}` : tituloFormatado;
+    const tituloFormatado = capitalizar(tituloOriginal);
+    // Se não tem segundo nome, devolve só o título (saudacao() trata o caso
+    // de título sozinho como empresa/neutro pra evitar "Oi, Dra.! Tudo bem?").
+    if (palavras.length < 2) return '';
+    const segundo = capitalizar(palavras[1]);
+    return `${tituloFormatado} ${segundo}`;
   }
 
-  return palavras[0];
+  return capitalizar(palavras[0]);
 }
 
 // Saudação pronta para usar nos templates. Pessoa -> "Oi, <primeiroNome>!
