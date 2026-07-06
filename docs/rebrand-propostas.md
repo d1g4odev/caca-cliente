@@ -2,7 +2,7 @@
 
 > **DECISÃO REGISTRADA (2026-07-05):** O Rodrigo escolheu a **Opção 2 — Caça-Cliente**, com a tagline ***"O radar de negócios sem site — do clique ao WhatsApp."*** As renomeações no código, docs e UI foram aplicadas em commits atômicos subsequentes (ver `git log --oneline`).
 
-> **Objetivo original:** reposicionar o produto como a ferramenta oficial dos alunos do Rodrigo para encontrar negócios sem site e vender sites para eles. O nome anterior "Captação" era genérico demais (descreve a ação, não a identidade) e carregava referências ao autor original (Lorenzo) que precisavam sair.
+> **Objetivo original:** reposicionar o produto como a ferramenta oficial dos alunos do Rodrigo para encontrar negócios sem site e vender sites para eles. O nome anterior "Captação" era genérico demais (descreve a ação, não a identidade) e carregava referências ao autor original que precisavam sair.
 
 Este documento apresenta **3 opções de nome + tagline** com a racional por trás de cada uma. A decisão foi da **Opção 2** — as outras duas ficam registradas abaixo como histórico.
 
@@ -127,7 +127,7 @@ Qualquer uma das três funciona. A decisão é de **posicionamento** — o que o
    - `docs:` atualiza TUTORIAL.md. ✅
    - `feat:` renomeia o projeto no `package.json` (campo `name`). ✅
    - `feat:` atualiza o `<h1>` no `App.jsx` e o `<title>` no `index.html`. ✅
-   - `feat:` remove a referência ao "Lorenzo" no template padrão do WhatsApp (`web/src/lib/whatsapp.js`). ✅
+   - `feat:` remove a assinatura antiga no template padrão do WhatsApp (`web/src/lib/whatsapp.js`). ✅
 4. Vitral é avisado para revisar qualquer copy visual que faça referência ao nome antigo. ✅
 5. Turbina e Mascate são avisados de que o nome mudou (mas a lógica de backend não é afetada). ✅
 
