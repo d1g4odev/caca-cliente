@@ -1,5 +1,5 @@
 {
-  "name": "captacao",
+  "name": "caca-cliente",
   "version": "0.1.0",
   "private": true,
   "description": "Sobe API + front juntos. O worker Python é chamado pela API sob demanda (não é um processo contínuo).",
