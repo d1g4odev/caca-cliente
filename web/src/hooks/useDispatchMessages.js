@@ -31,17 +31,24 @@ export function useDispatchMessages({ searchId, leads }) {
         if (!cache.current.has(l.id)) cache.current.set(l.id, { loading: true });
       }
 
-      // Tenta o endpoint de lote primeiro
+      // Tenta o endpoint de lote primeiro (chunk de 50 — limite do servidor, 413 se exceder)
       if (searchId) {
         try {
-          const r = await fetch(`/api/search/${encodeURIComponent(searchId)}/messages/batch`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tipo: 'abordagem', leadIds: leads.map((l) => l.id) }),
-          });
-          if (r.ok) {
-            const data = await r.json();
-            if (!cancelled) {
+          const ids = leads.map((l) => l.id);
+          const CHUNK = 50;
+          const chunks = [];
+          for (let k = 0; k < ids.length; k += CHUNK) chunks.push(ids.slice(k, k + CHUNK));
+
+          for (const chunk of chunks) {
+            if (cancelled) return;
+            const r = await fetch(`/api/search/${encodeURIComponent(searchId)}/messages/batch`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ tipo: 'abordagem', leadIds: chunk }),
+            });
+            if (r.ok) {
+              const data = await r.json();
+              if (cancelled) return;
               for (const g of data.geracoes || []) {
                 cache.current.set(g.leadId, {
                   mensagem: g.mensagem,
@@ -55,13 +62,16 @@ export function useDispatchMessages({ searchId, leads }) {
                 const lead = leads.find((l) => l.id === f.leadId);
                 if (lead) aplicarFallback(lead, f.erro);
               }
-              setLoading(false);
-              return;
+            } else if (r.status !== 404 && r.status !== 501) {
+              throw new Error(`Lote falhou: ${r.status}`);
+            } else {
+              // 404/501 = endpoint de lote ainda não implementado pelo Turbina → cai no individual
+              break;
             }
           }
-          // 404/501 = endpoint de lote ainda não implementado pelo Turbina → cai no individual
-          if (r.status !== 404 && r.status !== 501) {
-            throw new Error(`Lote falhou: ${r.status}`);
+          if (!cancelled) {
+            setLoading(false);
+            return;
           }
         } catch {
           // cai para o endpoint individual abaixo
