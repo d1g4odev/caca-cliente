@@ -6,11 +6,13 @@ try { process.loadEnvFile(fileURLToPath(new URL('../.env', import.meta.url))); }
 
 // Imports dinâmicos: garantem que o .env já está em process.env quando o db.js inicializa o pool.
 const { default: searchRouter } = await import('./routes/search.js');
+const { default: messagesRouter } = await import('./routes/messages.js');
 const { initDb } = await import('./db.js');
 
 const app = express();
 app.use(express.json());
 app.use(searchRouter);
+app.use(messagesRouter);
 
 await initDb();
 
