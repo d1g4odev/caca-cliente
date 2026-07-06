@@ -8,9 +8,11 @@ const norm = (s) => (s || '').normalize('NFD').replace(/\p{Diacritic}/gu, '').to
 
 // ── Conteúdo padrão (usado enquanto o usuário não personaliza) ──
 // O template aceita as variáveis {nome} e {beneficio}.
-const DEFAULT_TEMPLATE = `Oi, {nome}, tudo bem? Aqui é o Lorenzo!
+// IMPORTANTE: o aluno deve editar o template em "✏️ Editar mensagem do WhatsApp"
+// e colocar o próprio nome no lugar de [Seu nome] antes de começar a abordar.
+const DEFAULT_TEMPLATE = `Oi, {nome}, tudo bem? Aqui é o [Seu nome]!
 
-Sou desenvolvedor web e ajudo negócios a se posicionarem melhor na internet. Estava dando uma olhada no perfil de vocês e tive uma ideia: {beneficio}.
+Crio sites com IA e ajudo negócios a aparecerem mais na internet. Estava olhando o perfil de vocês e tive uma ideia: {beneficio}.
 
 Faz sentido conversarmos rapidinho sobre isso? Posso te mandar um áudio curto explicando melhor a ideia? 😉`;
 
