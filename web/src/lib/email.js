@@ -19,11 +19,11 @@ export function mailtoLink(email, nome, niche) {
   const assunto = `Um site para ${nome || 'o seu negócio'}?`;
   const corpo = `Olá! Tudo bem?
 
-Sou o Lorenzo, desenvolvedor web. Conheci o ${nome || 'seu negócio'} e percebi que vocês ainda não têm um site — e ${beneficio(niche)}.
+Sou o [Seu nome], crio sites com IA. Conheci o ${nome || 'seu negócio'} e percebi que vocês ainda não têm um site — e ${beneficio(niche)}.
 
 Posso te mandar algumas ideias rápidas, sem compromisso. Faz sentido conversarmos?
 
 Abraço,
-Lorenzo`;
+[Seu nome]`;
   return `mailto:${email}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
 }
