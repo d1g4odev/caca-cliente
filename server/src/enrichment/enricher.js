@@ -1,4 +1,5 @@
 import { spawn } from 'node:child_process';
+import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import crypto from 'node:crypto';
 import path from 'node:path';
@@ -11,7 +12,15 @@ import { scoreLead } from '../utils/score.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SCRIPT = path.resolve(__dirname, '../../../workers/enrich.py');
-const PY = process.env.PYTHON_BIN || (process.platform === 'win32' ? 'py' : 'python3');
+// Prioridade: PYTHON_BIN > venv criado pelo `npm run setup` > python do sistema.
+const VENV_PY = path.resolve(
+  __dirname,
+  '../../../workers/.venv',
+  process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python'
+);
+const PY =
+  process.env.PYTHON_BIN ||
+  (existsSync(VENV_PY) ? VENV_PY : process.platform === 'win32' ? 'py' : 'python3');
 
 const MAX_CONCURRENCY = Number(process.env.ENRICH_CONCURRENCY ?? 2);
 const BACKGROUND = process.env.ENRICH_BACKGROUND !== 'false'; // pré-aquece todos por padrão

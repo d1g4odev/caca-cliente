@@ -10,6 +10,8 @@
 
 Guia completo, passo a passo, para **abrir** e **usar** a ferramenta — sem pressupor nada. Se você nunca abriu um terminal na vida, comece aqui.
 
+> 🤖 **Prefere que uma IA instale pra você?** Veja **[INSTALAR-COM-IA.md](./INSTALAR-COM-IA.md)** — é um prompt pronto pra copiar e colar no Cursor, Claude Code ou Copilot, e ela faz tudo sozinha.
+
 > 💡 **Já sabe usar terminal?** Pule direto pro [Passo 4](#-passo-4--ligar-a-ferramenta) — o resumo é `npm run setup` (1ª vez) e `npm run dev`.
 
 ---
@@ -23,7 +25,7 @@ A ferramenta precisa de dois programas instalados no computador:
 1. **Node.js** (versão 18 ou mais nova) → https://nodejs.org (baixe a versão "LTS").
 2. **Python** (versão 3.10 ou mais nova) → https://python.org/downloads (na instalação, marque a caixa **"Add Python to PATH"**).
 
-> 💡 Para conferir se já estão instalados, abra o terminal (veja o Passo 3) e digite `node --version` e `py --version`. Se aparecer um número de versão, está tudo certo.
+> 💡 Para conferir se já estão instalados, abra o terminal (veja o Passo 3) e digite `node --version` e depois `py --version` (Windows) ou `python3 --version` (Mac/Linux). Se aparecer um número de versão, está tudo certo. De qualquer forma, o `npm run setup` do Passo 4 também confere isso por você e avisa o que falta.
 
 E o editor que vamos usar:
 
@@ -33,14 +35,14 @@ E o editor que vamos usar:
 
 ## 🟦 Passo 1 — Baixar a ferramenta
 
-Se você ainda não baixou a ferramenta, baixe o arquivo `.zip` que o Rodrigo te passou no curso e **extraia** numa pasta fácil de achar.
+Baixe a ferramenta em https://github.com/d1g4odev/caca-cliente — clique no botão verde **Code** → **Download ZIP** — e **extraia** numa pasta fácil de achar.
 
-> 💡 **Dica:** extraia direto na pasta do usuário (Windows: `C:\Users\SeuNome\Caca-Cliente`; Mac: `/Users/SeuNome/Caca-Cliente`). Evite pastas profundas tipo `Downloads > Curso > Módulo 3 > Caca-Cliente` — quanto mais perto da raiz, melhor.
+> 💡 **Dica:** extraia direto na pasta do usuário (Windows: `C:\Users\SeuNome\caca-cliente`; Mac: `/Users/SeuNome/caca-cliente`). Evite pastas profundas tipo `Downloads > Curso > Módulo 3 > caca-cliente` — quanto mais perto da raiz, melhor.
 
 Se você está usando **Git** (avançado), pode clonar:
 ```bash
-git clone <repo-do-curso>.git
-cd Caca-Cliente
+git clone https://github.com/d1g4odev/caca-cliente.git
+cd caca-cliente
 ```
 
 ---
@@ -49,12 +51,12 @@ cd Caca-Cliente
 
 1. Abra o **VS Code**.
 2. No menu de cima, clique em **File** (Arquivo) → **Open Folder...** (Abrir Pasta...).
-3. Navegue até a pasta `Caca-Cliente` que você extraiu e clique em **Selecionar Pasta**.
+3. Navegue até a pasta `caca-cliente` que você extraiu e clique em **Selecionar Pasta**.
 4. Se aparecer "Do you trust the authors?" (Você confia nos autores?), clique em **Yes, I trust the authors**.
 
 ✅ Deu certo se, na barra lateral esquerda, você vê as pastas `server`, `web`, `workers` e arquivos como `README.md` e `package.json`.
 
-> ⚠️ **Atenção:** se você extraiu o zip e ficou uma pasta dentro da outra (tipo `Caca-Cliente-main/Caca-Cliente`), abra a **de dentro** — a que tem as pastas `server`, `web`, `workers`.
+> ⚠️ **Atenção:** se você extraiu o zip e ficou uma pasta dentro da outra (tipo `caca-cliente-main/caca-cliente`), abra a **de dentro** — a que tem as pastas `server`, `web`, `workers`.
 
 ---
 
@@ -67,14 +69,14 @@ O terminal é a "caixinha preta" onde digitamos comandos.
 
 ✅ Deu certo se uma janela aparecer na parte de baixo, terminando com algo como:
 ```
-PS C:\Users\SeuNome\Caca-Cliente>
+PS C:\Users\SeuNome\caca-cliente>
 ```
 ou no Mac:
 ```
-rodrigo@macbook Caca-Cliente %
+rodrigo@macbook caca-cliente %
 ```
 
-O importante é terminar em **`Caca-Cliente>`** (ou `Caca-Cliente %`).
+O importante é terminar em **`caca-cliente>`** (ou `caca-cliente %`).
 
 ---
 

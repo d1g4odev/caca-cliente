@@ -36,14 +36,22 @@ O problema é que achar esses negócios na mão é lento — você teria que abr
 
 ---
 
-## 🚀 Começando em 1 comando
+## 🤖 Instalação automática com IA (recomendado)
+
+O jeito mais fácil: deixe a **sua IA** (Cursor, Claude Code, Windsurf, Copilot) instalar tudo pra você. É um prompt só — copiar, colar e responder.
+
+### 👉 **[INSTALAR-COM-IA.md](./INSTALAR-COM-IA.md)** — copie o prompt de lá e cole na sua IA.
+
+---
+
+## 🚀 Instalação manual em 1 comando
 
 **Pré-requisitos:** [Node.js 18+](https://nodejs.org) e [Python 3.10+](https://python.org/downloads) instalados.
 
 ```bash
-git clone <repo-do-curso>.git
-cd Caca-Cliente
-npm run setup   # 1ª vez: instala tudo (raiz, server, web e o worker Python)
+git clone https://github.com/d1g4odev/caca-cliente.git
+cd caca-cliente
+npm run setup   # 1ª vez: confere pré-requisitos e instala tudo (raiz, server, web e o worker Python)
 npm run dev     # sobe a ferramenta em http://localhost:5173
 ```
 
@@ -124,9 +132,12 @@ Na barra à esquerda, em **Exportar**, baixe a planilha em **CSV** ou **Excel** 
 ### Instalação
 
 **O comando `npm run setup` deu erro.**
+- Leia a mensagem — o setup confere Node e Python e **diz em português exatamente o que falta e onde baixar**. Corrija e rode de novo.
 - Confira se você tem o **Node.js 18+** instalado: rode `node --version` no terminal. Se aparecer um número menor que 18, baixe a versão LTS em [nodejs.org](https://nodejs.org).
 - Confira se você tem o **Python 3.10+**: rode `py --version` (Windows) ou `python3 --version` (Mac/Linux). Se não aparecer nada, instale em [python.org](https://python.org/downloads) e marque **"Add Python to PATH"** na instalação (Windows).
+- No Linux, se reclamar de `venv`: rode `sudo apt install python3-venv` e repita o setup.
 - Se o erro for de permissão no Windows, tente abrir o terminal como administrador.
+- **Dica:** cole a mensagem de erro inteira na sua IA e peça pra ela resolver — veja [INSTALAR-COM-IA.md](./INSTALAR-COM-IA.md).
 
 **O comando `npm run dev` não faz nada / abre e fecha.**
 - Veja se aparece alguma mensagem de erro no terminal. Se aparecer "porta em uso" ou "port 5173 is in use", feche outros programas que possam estar usando essa porta (ou outro `npm run dev` que você deixou aberto).
@@ -234,6 +245,7 @@ flowchart LR
 
 ## 📚 Documentação
 
+- **[INSTALAR-COM-IA.md](./INSTALAR-COM-IA.md)** — instalação automática: um prompt pra colar na sua IA e ela instala tudo.
 - **[TUTORIAL.md](./TUTORIAL.md)** — passo a passo com prints pra quem nunca abriu um terminal.
 - **[docs/deploy-avancado.md](./docs/deploy-avancado.md)** — como deixar a ferramenta 24/7 em casa (Docker + PostgreSQL + VPN).
 - **[docs/rebrand-propostas.md](./docs/rebrand-propostas.md)** — propostas de novo nome e identidade visual (em decisão).
