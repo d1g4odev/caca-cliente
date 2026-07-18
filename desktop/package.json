@@ -1,0 +1,21 @@
+{
+  "name": "caca-cliente-desktop",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Caça-Cliente — app desktop (Electron). A versão daqui é a versão oficial do app distribuído.",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "express": "^4.19.2",
+    "pg": "^8.21.0"
+  },
+  "devDependencies": {
+    "electron": "^43.1.1",
+    "electron-builder": "^26.15.3"
+  }
+}

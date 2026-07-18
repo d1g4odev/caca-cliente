@@ -4,7 +4,7 @@ import { gerarEstabelecimentos } from '../data/mockPlaces.js';
 import { geocodeCidade } from '../data/geocode.js';
 import { createSearch, attachStream, prioritizeLead, getSearchLeads, updateLead, reopenSearch } from '../enrichment/enricher.js';
 import { toCSV, toXLSX } from '../export/exporter.js';
-import { listSearches, statsConversao, dbEnabled } from '../db.js';
+import { listSearches, statsConversao, dbEnabled, dbKind } from '../db.js';
 import { scoreLead } from '../utils/score.js';
 
 const router = Router();
@@ -149,8 +149,8 @@ router.get('/api/searches', async (_req, res) => {
   res.json({ dbEnabled, searches: await listSearches() });
 });
 
-// Diz se a persistência está ativa (DATABASE_URL configurada e pool aberto).
-router.get('/api/status', (_req, res) => res.json({ dbEnabled }));
+// Diz se a persistência está ativa e qual driver (postgres/sqlite/memory).
+router.get('/api/status', (_req, res) => res.json({ dbEnabled, dbKind, version: process.env.APP_VERSION ?? null }));
 
 // Estatísticas de conversão para o dashboard (null se o banco estiver desligado).
 router.get('/api/stats', async (_req, res) => {

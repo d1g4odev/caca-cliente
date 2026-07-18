@@ -10,26 +10,37 @@
 
 Guia completo, passo a passo, para **abrir** e **usar** a ferramenta — sem pressupor nada. Se você nunca abriu um terminal na vida, comece aqui.
 
-> 🤖 **Prefere que uma IA instale pra você?** Veja **[INSTALAR-COM-IA.md](./INSTALAR-COM-IA.md)** — é um prompt pronto pra copiar e colar no Cursor, Claude Code ou Copilot, e ela faz tudo sozinha.
+---
 
-> 💡 **Já sabe usar terminal?** Pule direto pro [Passo 4](#-passo-4--ligar-a-ferramenta) — o resumo é `npm run setup` (1ª vez) e `npm run dev`.
+## Qual caminho você prefere?
+
+### Caminho 1 — Baixar o app (recomendado)
+
+Sem terminal, sem instalar nada além do app. Só baixar e usar.
+
+> 👉 **[docs/instalar-app.md](./docs/instalar-app.md)** — guia completo de instalação no Windows, Mac ou Linux.
+
+### Caminho 2 — Rodar do código-fonte (via terminal)
+
+Se você é desenvolvedor, prefere Git, ou quer contribuir com o código. **É o tutorial abaixo.**
+
+> 🤖 **Prefere que uma IA instale pra você?** Veja **[INSTALAR-COM-IA.md](./INSTALAR-COM-IA.md)** — é um prompt pronto pra copiar e colar no Cursor, Claude Code ou Copilot, e ela faz tudo sozinha.
 
 ---
 
-# Parte 1 — Como abrir a ferramenta
+# Parte 1 — Como abrir a ferramenta (código-fonte)
 
 ## ✅ Antes de começar (instalar uma vez só)
 
-A ferramenta precisa de dois programas instalados no computador:
+A ferramenta precisa de um programa instalado no computador:
 
-1. **Node.js** (versão 18 ou mais nova) → https://nodejs.org (baixe a versão "LTS").
-2. **Python** (versão 3.10 ou mais nova) → https://python.org/downloads (na instalação, marque a caixa **"Add Python to PATH"**).
-
-> 💡 Para conferir se já estão instalados, abra o terminal (veja o Passo 3) e digite `node --version` e depois `py --version` (Windows) ou `python3 --version` (Mac/Linux). Se aparecer um número de versão, está tudo certo. De qualquer forma, o `npm run setup` do Passo 4 também confere isso por você e avisa o que falta.
+1. **Node.js** (versão 22 ou mais nova) → https://nodejs.org (baixe a versão "LTS").
 
 E o editor que vamos usar:
 
-3. **Visual Studio Code (VS Code)** → https://code.visualstudio.com
+2. **Visual Studio Code (VS Code)** → https://code.visualstudio.com
+
+> 💡 Para conferir se o Node já está instalado, abra o terminal (veja o Passo 3) e digite `node --version`. Se aparecer um número de versão, está tudo certo. O `npm run setup` do Passo 4 também confere isso por você e avisa se faltar.
 
 ---
 
@@ -54,9 +65,9 @@ cd caca-cliente
 3. Navegue até a pasta `caca-cliente` que você extraiu e clique em **Selecionar Pasta**.
 4. Se aparecer "Do you trust the authors?" (Você confia nos autores?), clique em **Yes, I trust the authors**.
 
-✅ Deu certo se, na barra lateral esquerda, você vê as pastas `server`, `web`, `workers` e arquivos como `README.md` e `package.json`.
+✅ Deu certo se, na barra lateral esquerda, você vê as pastas `server`, `web`, `desktop` e arquivos como `README.md` e `package.json`.
 
-> ⚠️ **Atenção:** se você extraiu o zip e ficou uma pasta dentro da outra (tipo `caca-cliente-main/caca-cliente`), abra a **de dentro** — a que tem as pastas `server`, `web`, `workers`.
+> ⚠️ **Atenção:** se você extraiu o zip e ficou uma pasta dentro da outra (tipo `caca-cliente-main/caca-cliente`), abra a **de dentro** — a que tem as pastas `server`, `web`, `desktop`.
 
 ---
 
@@ -140,11 +151,10 @@ http://localhost:5173
 
 ---
 
-## 💾 (Opcional) Banco de dados — para os leads não sumirem
+## 💾 Banco de dados
 
-Por padrão, a ferramenta funciona, mas as buscas **somem quando você desliga**. Para salvar tudo num banco de dados (PostgreSQL), veja **[docs/deploy-avancado.md](./docs/deploy-avancado.md)**.
-
-Sem banco configurado, a ferramenta continua funcionando normalmente — só não guarda o histórico de buscas antigas.
+- **App desktop:** os dados salvam automaticamente em SQLite — nada se perde.
+- **Código-fonte:** sem banco configurado, a ferramenta funciona, mas as buscas **somem quando você desliga**. Para salvar tudo, veja **[docs/deploy-avancado.md](./docs/deploy-avancado.md)** (PostgreSQL opcional).
 
 ---
 
@@ -212,8 +222,6 @@ Antes de começar a abordar, clique no botão **✏️ Mensagem do WhatsApp** no
 
 A config fica salva no seu navegador (localStorage) — você só precisa fazer isso uma vez.
 
-> ⚠️ **Importante:** o template padrão vem com o nome do autor original. **Edite e coloque seu nome** antes de começar a abordar leads.
-
 ### 7. Chamar no WhatsApp
 
 No cartão de um lead com telefone, clique em **💬 WhatsApp**. Abre uma conversa **com a mensagem já escrita** (e personalizada conforme o ramo do negócio). Você só revisa e aperta enviar.
@@ -240,7 +248,7 @@ Na barra à esquerda, em **Exportar**, baixe a planilha em **CSV** ou **Excel** 
 | O navegador diz "não foi possível acessar" | Confira se o terminal com `npm run dev` está aberto e mostrando as duas linhas do Passo 5. |
 | "Overpass ocupado" ao buscar | É o serviço de mapas gratuito sob carga. Espere alguns segundos e tente de novo, ou reduza o raio. |
 | Poucos resultados | Alguns nichos são mais bem mapeados (restaurantes, beleza, clínicas, dentistas). Tente um raio maior. |
-| Os leads somem ao reiniciar | Normal sem banco de dados. Veja a seção "Banco de dados" acima. |
+| Os leads somem ao reiniciar | Se estiver usando o **app desktop**, não somem (SQLite). Se estiver rodando pelo **código-fonte** sem banco, é normal. Veja seção "Banco de dados" acima. |
 | O WhatsApp não abre | Confira se o lead tem telefone. Se tem e mesmo assim não abre, confira se o navegador não está bloqueando pop-ups pra `wa.me`. |
 | A mensagem veio com nome errado | Clique em **✏️ Mensagem do WhatsApp** no topo e edite o template — coloque seu nome. |
 
@@ -253,7 +261,7 @@ Na barra à esquerda, em **Exportar**, baixe a planilha em **CSV** ou **Excel** 
 - **Aborde os "Alvo ideal" primeiro:** são os leads sem site mas com Instagram ativo — já têm presença digital mínima, entendem o valor de aparecer online.
 - **Não dispare 50 mensagens iguais no mesmo dia.** O WhatsApp pode bloquear seu número. Use o Modo disparo (até 10 por vez) e personalize a mensagem pra cada lead.
 - **Mova no Kanban conforme avança.** A ferramenta é um CRM — quanto mais você usa, mais ela te ajuda a não perder leads no caminho.
-- **Configure o banco de dados** se quiser histórico de buscas. Veja **[docs/deploy-avancado.md](./docs/deploy-avancado.md)**.
+- **Configure o PostgreSQL** se quiser histórico de buscas no modo código-fonte. Veja **[docs/deploy-avancado.md](./docs/deploy-avancado.md)**.
 
 ---
 

@@ -10,6 +10,10 @@
 
 ---
 
+> ⚠️ **Só quer USAR a ferramenta?** Nem precisa de IA — baixe o **app desktop pronto** em **[docs/instalar-app.md](./docs/instalar-app.md)**. Sem terminal, sem configuração, só instalar e usar. O guia abaixo é para quem quer mexer no código-fonte.
+
+---
+
 ## Como funciona
 
 Você vai colar **um único prompt** na sua IA e ela faz todo o trabalho: confere o que falta no seu computador, baixa a ferramenta, instala tudo e liga. No final, é só abrir o navegador.
@@ -21,7 +25,7 @@ Você vai colar **um único prompt** na sua IA e ela faz todo o trabalho: confer
   - **Claude Code** → https://claude.com/claude-code
   - **Windsurf** → https://windsurf.com
   - **GitHub Copilot** no VS Code (modo Agent)
-- Só isso. A IA cuida do resto (inclusive de instalar Node e Python se faltarem).
+- Só isso. A IA cuida do resto (inclusive de instalar o Node se faltar).
 
 > ⚠️ **ChatGPT no navegador NÃO serve** — ele não consegue rodar comandos no seu computador. Se você só tem ele, siga o **[TUTORIAL.md](./TUTORIAL.md)**, que ensina o caminho manual passo a passo (é tranquilo também).
 
@@ -44,12 +48,9 @@ Siga EXATAMENTE este roteiro:
 2. PRÉ-REQUISITOS (verifique um por um; só instale o que faltar, me avisando antes)
    - git  → se faltar: Windows `winget install Git.Git` · macOS `xcode-select --install` ·
      Linux `sudo apt install git`
-   - Node.js 18+ (`node --version`) → se faltar/for antigo: Windows
+   - Node.js 22+ (`node --version`) → se faltar/for antigo: Windows
      `winget install OpenJS.NodeJS.LTS` · macOS `brew install node` (instale o Homebrew
      antes se precisar) · Linux: via https://nodejs.org (versão LTS)
-   - Python 3.10+ (`py --version` no Windows, `python3 --version` no resto) → se faltar:
-     Windows `winget install Python.Python.3.12` · macOS `brew install python` ·
-     Linux `sudo apt install python3 python3-venv python3-pip`
    - Se instalar qualquer um deles, feche e reabra o terminal (ou recarregue o PATH)
      antes de continuar, e confira a versão de novo.
 
@@ -61,9 +62,9 @@ Siga EXATAMENTE este roteiro:
 
 4. INSTALAR
    - Rode: npm run setup
-   - Esse comando já confere Node/Python, instala as dependências e prepara o worker
-     Python num ambiente isolado (workers/.venv). Ele imprime mensagens de erro claras
-     em português — se falhar, leia a mensagem, corrija a causa e rode de novo.
+   - Esse comando instala as dependências do servidor e do front-end. Ele imprime
+     mensagens de erro claras em português — se falhar, leia a mensagem, corrija a
+     causa e rode de novo.
 
 5. LIGAR E VERIFICAR
    - Rode: npm run dev   (deixe rodando; não encerre o processo)

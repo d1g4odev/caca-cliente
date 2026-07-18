@@ -4,6 +4,10 @@ __pycache__/
 *.pyc
 .venv/
 .DS_Store
+
+# Electron (desktop/)
+desktop/node_modules/
+desktop/dist/
 .env
 .env.*
 !.env.example

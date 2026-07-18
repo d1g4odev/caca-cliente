@@ -8,11 +8,11 @@
 
 *A ferramenta oficial do curso **Sites com IA do Zero** — encontre negócios **sem site** na sua cidade e feche seu primeiro cliente.*
 
-[![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js&logoColor=white)](https://nodejs.org)
-[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://python.org)
+[![Node.js](https://img.shields.io/badge/Node.js-22+-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)](https://react.dev)
-[![Custo](https://img.shields.io/badge/custo-R$%200-2ea44f)](#-quanto-custa)
+[![Custo](https://img.shields.io/badge/custo-R%24%200-2ea44f)](#-quanto-custa)
 [![Status](https://img.shields.io/badge/status-MVP-1f6feb)](#-roadmap)
+[![Desktop](https://img.shields.io/badge/app-Instal%C3%A1vel-6f42c1)](#%EF%B8%8F-baixar-o-app-recomendado)
 
 </div>
 
@@ -36,22 +36,37 @@ O problema é que achar esses negócios na mão é lento — você teria que abr
 
 ---
 
-## 🤖 Instalação automática com IA (recomendado)
+## ⬇️ Baixar o app (recomendado)
 
-O jeito mais fácil: deixe a **sua IA** (Cursor, Claude Code, Windsurf, Copilot) instalar tudo pra você. É um prompt só — copiar, colar e responder.
+**O jeito mais fácil: baixe o instalador pronto.** Sem abrir terminal, sem instalar Node.js, sem configuração. O banco de dados já vem embutido (SQLite) — seus leads ficam salvos automaticamente.
 
-### 👉 **[INSTALAR-COM-IA.md](./INSTALAR-COM-IA.md)** — copie o prompt de lá e cole na sua IA.
+| Seu sistema | Arquivo para baixar |
+|---|---|
+| **Windows** | `CacaCliente-X.Y.Z-win-x64.exe` |
+| **Mac Apple Silicon** (M1/M2/M3/M4) | `CacaCliente-X.Y.Z-mac-arm64.dmg` |
+| **Mac Intel** | `CacaCliente-X.Y.Z-mac-x64.dmg` |
+| **Linux** | `CacaCliente-X.Y.Z-linux-x86_64.AppImage` |
+
+### 👉 **[Baixar da página de Releases](https://github.com/d1g4odev/caca-cliente/releases/latest)**
+
+🔹 **~100 MB** (tamanho normal de app desktop — já vem com navegador embutido).\
+🔹 **Dados salvos em SQLite** — feche e abra de novo que nada se perde.\
+🔹 **Guia completo de instalação → [docs/instalar-app.md](./docs/instalar-app.md)** — passo a passo com prints, SmartScreen, Gatekeeper, backup e atualização.
+
+> 💡 **Sem tempo?** Baixe, instale e em 2 minutos já está usando. O app é exatamente a mesma ferramenta — mesma tela, mesmas buscas, mesmas funcionalidades. Só que sem precisar de terminal.
 
 ---
 
-## 🚀 Instalação manual em 1 comando
+## 🚀 Rodar do código-fonte (para devs)
 
-**Pré-requisitos:** [Node.js 18+](https://nodejs.org) e [Python 3.10+](https://python.org/downloads) instalados.
+Se você é desenvolvedor e prefere rodar pelo terminal:
+
+**Pré-requisito:** [Node.js 22+](https://nodejs.org) instalado.
 
 ```bash
 git clone https://github.com/d1g4odev/caca-cliente.git
 cd caca-cliente
-npm run setup   # 1ª vez: confere pré-requisitos e instala tudo (raiz, server, web e o worker Python)
+npm run setup   # 1ª vez: instala tudo (raiz, server, web e desktop)
 npm run dev     # sobe a ferramenta em http://localhost:5173
 ```
 
@@ -129,13 +144,21 @@ Na barra à esquerda, em **Exportar**, baixe a planilha em **CSV** ou **Excel** 
 
 ## ❓ FAQ — erros e dúvidas comuns
 
-### Instalação
+### Instalação (app desktop)
+
+**O Windows bloqueou o instalador (SmartScreen).**
+- É normal em app novo sem certificado pago. Clique em **"Mais informações"** → **"Executar assim mesmo"**. Veja o guia completo em [docs/instalar-app.md](./docs/instalar-app.md).
+
+**O Mac diz que o app não pode ser aberto.**
+- Clique com **botão direito** no app → **Abrir**. Na janela que aparece, clique em **Abrir** de novo. Precisa fazer isso só na primeira vez.
+
+**O app não abre / tela fica em branco.**
+- Feche e abra de novo. Se persistir, baixe a versão mais nova em [releases/latest](https://github.com/d1g4odev/caca-cliente/releases/latest).
+
+### Instalação (código-fonte)
 
 **O comando `npm run setup` deu erro.**
-- Leia a mensagem — o setup confere Node e Python e **diz em português exatamente o que falta e onde baixar**. Corrija e rode de novo.
-- Confira se você tem o **Node.js 18+** instalado: rode `node --version` no terminal. Se aparecer um número menor que 18, baixe a versão LTS em [nodejs.org](https://nodejs.org).
-- Confira se você tem o **Python 3.10+**: rode `py --version` (Windows) ou `python3 --version` (Mac/Linux). Se não aparecer nada, instale em [python.org](https://python.org/downloads) e marque **"Add Python to PATH"** na instalação (Windows).
-- No Linux, se reclamar de `venv`: rode `sudo apt install python3-venv` e repita o setup.
+- Confira se você tem o **Node.js 22+** instalado: rode `node --version` no terminal. Se aparecer um número menor que 22, baixe a versão LTS em [nodejs.org](https://nodejs.org).
 - Se o erro for de permissão no Windows, tente abrir o terminal como administrador.
 - **Dica:** cole a mensagem de erro inteira na sua IA e peça pra ela resolver — veja [INSTALAR-COM-IA.md](./INSTALAR-COM-IA.md).
 
@@ -153,8 +176,9 @@ Na barra à esquerda, em **Exportar**, baixe a planilha em **CSV** ou **Excel** 
 **Vieram poucos resultados.**
 - Alguns nichos são mais bem mapeados no OpenStreetMap (restaurantes, beleza, clínicas, dentistas). Tente um raio maior ou uma cidade próxima.
 
-**Os leads sumiram quando reiniciei o PC.**
-- Sem banco de dados configurado, as buscas ficam só em memória (30 min). Pra salvar tudo, configure o PostgreSQL — veja **[docs/deploy-avancado.md](./docs/deploy-avancado.md)**.
+**Os leads somem quando reinicio o PC?**
+- **Não** — se você estiver usando o **app desktop**, os dados ficam salvos em SQLite automaticamente. Nada se perde.
+- Se estiver rodando pelo **código-fonte** sem banco configurado, as buscas ficam só em memória. Nesse caso, configure o PostgreSQL — veja **[docs/deploy-avancado.md](./docs/deploy-avancado.md)**.
 
 **O WhatsApp não abre quando clico no botão.**
 - Confira se o lead tem telefone (alguns negócios no OSM não têm). Se tem e mesmo assim não abre, confira se o seu navegador não está bloqueando pop-ups pra `wa.me`.
@@ -165,10 +189,10 @@ Na barra à esquerda, em **Exportar**, baixe a planilha em **CSV** ou **Excel** 
 ### Avançado
 
 **Quero deixar a ferramenta 24/7 em casa (sem depender de terminal aberto).**
-- Veja **[docs/deploy-avancado.md](./docs/deploy-avancado.md)** — tem o passo a passo de Docker + PostgreSQL + VPN privada.
+- Veja **[docs/deploy-avancado.md](./docs/deploy-avancado.md)** — tem o passo a passo de Docker + PostgreSQL + servidor caseiro.
 
 **Quero compartilhar a ferramenta com meu sócio.**
-- Mesmo link acima. Com a VPN privada configurada, você compartilha o acesso à máquina do seu home server com o email dele.
+- A maneira mais simples: cada um baixa o app desktop no seu próprio PC. Os dados ficam locais. Para compartilhar a mesma base, veja o guia avançado de deploy.
 
 ---
 
@@ -179,10 +203,10 @@ Na barra à esquerda, em **Exportar**, baixe a planilha em **CSV** ou **Excel** 
 - Dados de negócios: **OpenStreetMap** (gratuito, colaborativo).
 - Geocoding (autocomplete de cidade): **Nominatim** (gratuito).
 - Enriquecimento de contatos: **DuckDuckGo** (gratuito).
-- Banco de dados: **PostgreSQL** (gratuito, opcional).
-- VPN privada pra acesso remoto: **Tailscale** (gratuito até 100 dispositivos, opcional).
+- Banco de dados: **SQLite** (grátis, embutido no app) — nada de assinatura de nuvem.
+- PostgreSQL + Docker: opcionais para quem quer deploy avançado e 24/7.
 
-O único custo é a sua internet e, se você quiser deixar 24/7, um home server (qualquer PC velho ou Raspberry Pi serve).
+O único custo é a sua internet e, se você quiser montar um servidor 24/7, qualquer PC velho ou Raspberry Pi serve.
 
 ---
 
@@ -192,7 +216,9 @@ O único custo é a sua internet e, se você quiser deixar 24/7, um home server 
 |---|---|
 | **Front-end** | React + Vite + react-leaflet |
 | **Back-end / API** | Node.js + Express (SSE) |
-| **Worker de extração** | Python (httpx, asyncio) |
+| **Worker de extração** | JS (embutido no servidor) |
+| **App desktop** | Electron + electron-builder |
+| **Banco local** | SQLite (nativo, sem dependências) |
 | **Dados de negócios** | OpenStreetMap — Overpass API |
 | **Geocoding** | OpenStreetMap — Nominatim |
 | **Enriquecimento** | DuckDuckGo (busca cruzada) |
@@ -209,10 +235,10 @@ flowchart LR
     end
     subgraph BE["⚙️ Back-end · Node.js"]
         API["API REST + SSE"]
-        Q["Fila + enriquecimento<br/>(concorrência limitada)"]
+        ENR["Enriquecimento<br/>(embutido no servidor)"]
     end
-    subgraph PY["🐍 Worker · Python"]
-        ENR["enrich.py"]
+    subgraph DB["💾 Dados"]
+        SQLITE[("SQLite local<br/>persistência automática")]
     end
     OSM[("🗺️ OpenStreetMap<br/>Overpass + Nominatim")]
     DDG[("🔎 DuckDuckGo")]
@@ -220,13 +246,14 @@ flowchart LR
 
     UI -->|"POST /api/search"| API
     API -->|"busca + filtro sem-site"| OSM
-    API --> Q --> ENR
+    API --> ENR
     ENR -->|"e-mail · redes sociais"| DDG
     ENR -.->|"SSE: evento enrichment"| UI
+    API <--> SQLITE
     API --> OUT
 ```
 
-**Fluxo em duas fases:** a busca (`POST /api/search`) é **síncrona e rápida** — devolve os negócios sem site e os pinos aparecem na hora. O enriquecimento roda **em segundo plano** e cada lead pronto é empurrado para a tela via **Server-Sent Events**, sem recarregar nada.
+**Fluxo em duas fases:** a busca (`POST /api/search`) é **síncrona e rápida** — devolve os negócios sem site e os pinos aparecem na hora. O enriquecimento roda **em segundo plano** e cada lead pronto é empurrado para a tela via **Server-Sent Events**, sem recarregar nada. Tudo persistido em **SQLite** — nada se perde ao fechar o app.
 
 ---
 
@@ -239,7 +266,7 @@ flowchart LR
 - 🗂️ **Funil Kanban** — arraste leads entre `Novo · Qualificado · Contatado · Ganho · Descartado`
 - 🏙️ **Autocomplete de cidade** com geocoding gratuito (Nominatim)
 - 📤 **Exportação CSV / Excel** + **webhook** para integrar com seu CRM
-- 🗄️ **Persistência opcional** em PostgreSQL (roda em memória por padrão; ativa com `DATABASE_URL`)
+- 💾 **Persistência automática em SQLite** (nada de perder leads ao fechar)
 
 ---
 
@@ -247,19 +274,21 @@ flowchart LR
 
 - **[INSTALAR-COM-IA.md](./INSTALAR-COM-IA.md)** — instalação automática: um prompt pra colar na sua IA e ela instala tudo.
 - **[TUTORIAL.md](./TUTORIAL.md)** — passo a passo com prints pra quem nunca abriu um terminal.
-- **[docs/deploy-avancado.md](./docs/deploy-avancado.md)** — como deixar a ferramenta 24/7 em casa (Docker + PostgreSQL + VPN).
-- **[docs/rebrand-propostas.md](./docs/rebrand-propostas.md)** — propostas de novo nome e identidade visual (em decisão).
+- **[docs/instalar-app.md](./docs/instalar-app.md)** — como baixar e instalar o app desktop (Windows/Mac/Linux).
+- **[docs/deploy-avancado.md](./docs/deploy-avancado.md)** — como deixar a ferramenta 24/7 em casa (Docker + PostgreSQL opcional).
 
 ---
 
 ## 🗺️ Roadmap
 
 - [x] Busca de negócios sem site (Overpass) + filtro
-- [x] Enriquecimento de contatos (Python + DuckDuckGo)
+- [x] Enriquecimento de contatos (JS + DuckDuckGo)
 - [x] Tempo real via SSE + mapa Leaflet
 - [x] Autocomplete de cidade (Nominatim)
 - [x] Exportação CSV / Excel + webhook
 - [x] Funil Kanban (drag-and-drop)
+- [x] App desktop instalável (Windows, Mac, Linux)
+- [x] Persistência local em SQLite (sem perder dados)
 - [x] Persistência em PostgreSQL (buscas, leads, enriquecimento e estágios)
 - [ ] Autenticação e multi-tenant
 - [ ] Fila distribuída (BullMQ/Redis) para múltiplos workers
@@ -269,7 +298,7 @@ flowchart LR
 
 ## 📌 Observações
 
-- Projeto em estágio **MVP**. Sem `DATABASE_URL`, as sessões ficam em memória e somem ao reiniciar; com Postgres configurado, buscas/leads/estágios são persistidos (a fila e o stream SSE seguem em memória, por serem estado de runtime).
+- Projeto em estágio **MVP**. O app desktop já vem com **SQLite embutido** — seus dados persistem automaticamente. O PostgreSQL é opcional para deploy 24/7 com Docker (veja [docs/deploy-avancado.md](./docs/deploy-avancado.md)).
 - Tiles do OSM são gratuitos mas têm política de uso justo; em produção use um provedor de tiles (MapTiler) ou self-host.
 - Coleta de contatos para prospecção: registre a origem do dado (campo `source`), ofereça _opt-out_ e trate apenas o necessário (**LGPD**).
 

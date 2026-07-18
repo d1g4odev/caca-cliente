@@ -1,0 +1,49 @@
+# Empacotamento do Caça-Cliente desktop.
+#   npm --prefix desktop run dist -- --mac   (local)
+#   CI: .github/workflows/release-desktop.yml publica nas Releases em tag v*
+appId: gg.doti.caca-cliente
+productName: Caça-Cliente
+# ASCII no nome do artefato: cedilha em instalador NSIS/URL de release dá bug.
+artifactName: CacaCliente-${version}-${os}-${arch}.${ext}
+
+# Nenhuma dependência nativa (node:sqlite é builtin) — não recompilar nada.
+npmRebuild: false
+nodeGypRebuild: false
+
+directories:
+  buildResources: build
+
+# Sem asar: arquivos reais no disco — imports ESM do server e express.static
+# funcionam sem nenhum caso especial. Custo de startup é irrelevante aqui.
+asar: false
+
+files:
+  - main.js
+  - package.json
+  - from: ../server/src
+    to: server/src
+  - from: ../web/dist
+    to: web/dist
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+nsis:
+  # Instalador clássico "avançar-avançar-concluir" — o que o aluno conhece.
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+
+mac:
+  target:
+    - target: dmg
+      arch: [arm64, x64]
+
+linux:
+  target:
+    - target: AppImage
+      arch: [x64]
+  category: Office
+
+publish:
+  provider: github

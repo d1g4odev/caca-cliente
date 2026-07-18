@@ -179,6 +179,24 @@ body {
 .map-wrap { min-width: 0; position: relative; }
 .map { height: 100%; width: 100%; }
 
+/* ── Banner de nova versão (fixo no topo, sobrepõe o app) ── */
+.update-banner {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 5000; height: 30px;
+  display: flex; align-items: center; gap: 4px;
+  padding: 0 var(--space-4); font-size: var(--font-sm);
+  background: var(--accent-soft); border-bottom: 1px solid var(--accent-border);
+  color: var(--text);
+}
+.update-banner a { color: var(--accent-strong); font-weight: 600; text-decoration: none; white-space: nowrap; }
+.update-banner a:hover { text-decoration: underline; }
+.update-banner-x {
+  margin-left: auto; border: 0; background: none; color: var(--text-muted);
+  cursor: pointer; font-size: 14px; line-height: 1;
+  padding: 4px 6px; border-radius: var(--radius-sm);
+  transition: background var(--transition), color var(--transition);
+}
+.update-banner-x:hover { color: var(--text); background: var(--bg-muted); }
+
 .sidebar { display: flex; flex-direction: column; border-right: 1px solid var(--border); min-width: 0; min-height: 0; overflow: hidden; background: var(--bg-elevated); }
 .sidebar-header { padding: var(--space-4) var(--space-4) var(--space-3); border-bottom: 1px solid var(--border); }
 .sidebar-header h1 { margin: 0 0 var(--space-3); font-size: var(--font-2xl); font-weight: 700; letter-spacing: -0.01em; }

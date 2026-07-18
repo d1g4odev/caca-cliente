@@ -6,7 +6,8 @@
   "scripts": {
     "setup": "node scripts/setup.mjs",
     "dev": "concurrently -k -n api,web -c blue,green \"npm --prefix server run dev\" \"npm --prefix web run dev\"",
-    "dev:mock": "concurrently -k -n api,web -c blue,green \"cross-env DATA_PROVIDER=mock ENRICH_PROVIDER=mock npm --prefix server run dev\" \"npm --prefix web run dev\""
+    "dev:mock": "concurrently -k -n api,web -c blue,green \"cross-env DATA_PROVIDER=mock ENRICH_PROVIDER=mock npm --prefix server run dev\" \"npm --prefix web run dev\"",
+    "desktop": "npm --prefix web run build && npm --prefix desktop start -- --dev"
   },
   "devDependencies": {
     "concurrently": "^9.1.0",

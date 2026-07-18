@@ -9,6 +9,7 @@ import DispatchMode from './components/DispatchMode.jsx';
 import LeadDetails from './components/LeadDetails.jsx';
 import HistoryPanel from './components/HistoryPanel.jsx';
 import Onboarding from './components/Onboarding.jsx';
+import UpdateBanner from './components/UpdateBanner.jsx';
 import ThemeToggle, { useTheme } from './components/ThemeToggle.jsx';
 import Brand from './components/Brand.jsx';
 import Welcome from './components/Welcome.jsx';
@@ -189,7 +190,9 @@ export default function App() {
   }, [leads, filters, sortBy]);
 
   return (
-    <div className="app">
+    <>
+      <UpdateBanner />
+      <div className="app">
       <aside className={`sidebar ${drawerOpen ? 'sidebar--open' : ''}`}>
         <header className="sidebar-header">
           <div className="sidebar-header-row">
@@ -348,6 +351,6 @@ export default function App() {
       )}
       {historyOpen && <HistoryPanel onOpen={openSearch} onClose={() => setHistoryOpen(false)} />}
       {onboardingOpen && <Onboarding onDone={() => setOnboardingOpen(false)} />}
-    </div>
+    </div></>
   );
 }
