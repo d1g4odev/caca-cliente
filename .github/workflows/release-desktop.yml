@@ -1,0 +1,55 @@
+name: release-desktop
+
+# Builda e publica os instaladores (Windows NSIS, macOS DMG, Linux AppImage)
+# nas Releases do GitHub a cada tag v*. Fluxo:
+#   1. bump da version em desktop/package.json
+#   2. git tag v0.2.0 && git push origin v0.2.0
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  smoke-db:
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Smoke da camada SQLite
+        run: node scripts/db-smoke.mjs
+
+  release:
+    needs: smoke-db
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            web/package-lock.json
+            desktop/package-lock.json
+      - name: Build do front
+        run: |
+          npm --prefix web ci
+          npm --prefix web run build
+      - name: Deps do desktop
+        run: npm --prefix desktop ci
+      - name: Empacotar e publicar
+        working-directory: desktop
+        run: npx electron-builder --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Sem code signing por ora — não tentar descobrir certificado no mac.
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
