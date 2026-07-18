@@ -36,7 +36,20 @@ export const DEFAULT_MSG_CONFIG = {
   template: DEFAULT_TEMPLATE,
   beneficios: DEFAULT_BENEFICIOS,
   beneficioPadrao: DEFAULT_BENEFICIO_PADRAO,
+  seuNome: '',
+  seuInstagram: '',
 };
+
+// Substitui os placeholders de identidade ([Seu nome] e [seu-instagram]) pelo
+// perfil salvo na config. Sem perfil preenchido, mantém o placeholder — que
+// serve de lembrete visual pro aluno editar antes de enviar.
+export function aplicarPerfil(texto, cfg = loadMsgConfig()) {
+  if (!texto) return texto;
+  let out = texto;
+  if (cfg.seuNome) out = out.replaceAll('[Seu nome]', cfg.seuNome);
+  if (cfg.seuInstagram) out = out.replaceAll('[seu-instagram]', cfg.seuInstagram.replace(/^@/, ''));
+  return out;
+}
 
 // ── Persistência da config no navegador ──
 const STORAGE_KEY = 'captacao.msgConfig';
@@ -82,9 +95,10 @@ function beneficio(niche, cfg) {
 
 // Monta a mensagem final aplicando a config (personalizada ou padrão).
 export function montarMensagem(nome, niche, cfg = loadMsgConfig()) {
-  return (cfg.template || DEFAULT_TEMPLATE)
+  const msg = (cfg.template || DEFAULT_TEMPLATE)
     .replaceAll('{nome}', nome ?? '')
     .replaceAll('{beneficio}', beneficio(niche, cfg));
+  return aplicarPerfil(msg, cfg);
 }
 
 // Normaliza telefone BR para o formato do wa.me (DDI 55 + DDD + número, só dígitos).

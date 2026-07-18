@@ -640,7 +640,13 @@ body {
 
 /* ── Gerador de mensagem (IA) ── */
 .msg-gen { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-3); border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg-muted); }
-.msg-gen-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
+.msg-gen-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); flex-wrap: wrap; }
+.msg-gen-tipo {
+  flex: 1; min-width: 160px; max-width: 240px; cursor: pointer;
+  border: 1px solid var(--border-strong); background: var(--bg-elevated); color: var(--text);
+  font-size: var(--font-sm); padding: 6px 8px; border-radius: var(--radius-md);
+}
+.msg-gen-tipo:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-ring); }
 .msg-gen-title { font-size: var(--font-base); font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 6px; }
 .msg-gen-btn {
   display: inline-flex; align-items: center; gap: 6px; cursor: pointer;

@@ -1,5 +1,23 @@
 import { useEffect, useState } from 'react';
-import { waLinkWithMessage } from '../lib/whatsapp.js';
+import { aplicarPerfil, waLinkWithMessage } from '../lib/whatsapp.js';
+
+// Tipos que o motor sabe gerar (server/src/prospector/engine.js), com rótulo
+// amigável. 'auto' deixa o motor inferir pelo estágio do Kanban.
+const TIPOS_UI = [
+  ['auto', '🤖 Automático (pelo estágio)'],
+  ['abordagem', '👋 1ª abordagem'],
+  ['follow_up', '🔁 Follow-up'],
+  ['portfolio', '🖼 Enviar portfólio'],
+  ['preco', '💰 Preço (completo)'],
+  ['preco_curto', '💰 Preço (curto)'],
+  ['objecao_agora_nao', '🙅 Respondeu "agora não"'],
+  ['objecao_vo_pensar', '🤔 Respondeu "vou pensar"'],
+  ['objecao_manda_instagram', '📷 Pediu seu Instagram'],
+  ['objecao_secretaria', '📋 Secretária vai analisar'],
+  ['reuniao_online', '💻 Propor reunião online'],
+  ['reuniao_presencial', '🤝 Propor reunião presencial'],
+  ['fechamento', '✅ Fechamento leve'],
+];
 
 // Detalhes/CRM de um lead: anotações, data de retorno (follow-up), tags e valor
 // estimado. Salva via PATCH (que persiste no banco quando configurado).
@@ -17,6 +35,7 @@ export default function LeadDetails({ lead, searchId, onSave, onClose }) {
   const [msgData, setMsgData] = useState(null); // { mensagem, angulo, tipo, proximaAcao }
   const [msgError, setMsgError] = useState('');
   const [copied, setCopied] = useState(false);
+  const [tipoSel, setTipoSel] = useState('auto');
 
   useEffect(() => {
     if (!lead) return;
@@ -29,6 +48,7 @@ export default function LeadDetails({ lead, searchId, onSave, onClose }) {
     setMsgData(null);
     setMsgError('');
     setCopied(false);
+    setTipoSel('auto');
   }, [lead]);
 
   if (!lead) return null;
@@ -40,14 +60,18 @@ export default function LeadDetails({ lead, searchId, onSave, onClose }) {
     setMsgError('');
     setCopied(false);
     try {
-      const url = `/api/leads/${encodeURIComponent(lead.id)}/message${searchId ? `?searchId=${encodeURIComponent(searchId)}` : ''}`;
+      const params = new URLSearchParams();
+      if (searchId) params.set('searchId', searchId);
+      if (tipoSel !== 'auto') params.set('tipo', tipoSel);
+      const qs = params.toString();
+      const url = `/api/leads/${encodeURIComponent(lead.id)}/message${qs ? `?${qs}` : ''}`;
       const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
       if (!r.ok) {
         const body = await r.json().catch(() => ({}));
         throw new Error(body.error || `Erro ${r.status} ao gerar mensagem`);
       }
       const data = await r.json();
-      setMsgData(data);
+      setMsgData({ ...data, mensagem: aplicarPerfil(data.mensagem) });
       setMsgState('success');
     } catch (e) {
       setMsgError(e.message || 'Não consegui gerar a mensagem.');
@@ -120,6 +144,16 @@ export default function LeadDetails({ lead, searchId, onSave, onClose }) {
           <div className="msg-gen">
             <div className="msg-gen-head">
               <span className="msg-gen-title">✨ Mensagem de abordagem</span>
+              <select
+                className="msg-gen-tipo"
+                value={tipoSel}
+                onChange={(e) => setTipoSel(e.target.value)}
+                aria-label="Tipo de mensagem"
+              >
+                {TIPOS_UI.map(([v, label]) => (
+                  <option key={v} value={v}>{label}</option>
+                ))}
+              </select>
               <button
                 type="button"
                 className="msg-gen-btn"

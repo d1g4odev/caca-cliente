@@ -1,5 +1,7 @@
 // Link mailto: com assunto e corpo prontos — 1ª abordagem por e-mail (sem risco
 // de ban, ao contrário do WhatsApp em massa). Abre o cliente de e-mail do usuário.
+import { aplicarPerfil } from './whatsapp.js';
+
 const norm = (s) => (s || '').normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
 
 // A oferta é SEMPRE site / landing page / site institucional pra apresentar o
@@ -27,5 +29,5 @@ Posso te mandar algumas ideias rápidas, sem compromisso. Faz sentido conversarm
 
 Abraço,
 [Seu nome]`;
-  return `mailto:${email}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+  return `mailto:${email}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(aplicarPerfil(corpo))}`;
 }

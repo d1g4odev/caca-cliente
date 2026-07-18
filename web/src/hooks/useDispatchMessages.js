@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { mensagemFallbackManual } from '../lib/nome.js';
+import { aplicarPerfil } from '../lib/whatsapp.js';
 
 // Hook que gerencia a geração de mensagens para o Modo Disparo.
 // Estratégia (em ordem de preferência):
@@ -51,7 +52,7 @@ export function useDispatchMessages({ searchId, leads }) {
               if (cancelled) return;
               for (const g of data.geracoes || []) {
                 cache.current.set(g.leadId, {
-                  mensagem: g.mensagem,
+                  mensagem: aplicarPerfil(g.mensagem),
                   angulo: g.angulo,
                   proximaAcao: g.proximaAcao,
                   fonte: 'motor',
@@ -95,7 +96,7 @@ export function useDispatchMessages({ searchId, leads }) {
               const data = await r.json();
               if (!cancelled) {
                 cache.current.set(lead.id, {
-                  mensagem: data.mensagem,
+                  mensagem: aplicarPerfil(data.mensagem),
                   angulo: data.angulo,
                   proximaAcao: data.proximaAcao,
                   fonte: 'motor',
@@ -117,7 +118,7 @@ export function useDispatchMessages({ searchId, leads }) {
 
     function aplicarFallback(lead, motivo) {
       cache.current.set(lead.id, {
-        mensagem: mensagemFallbackManual(lead.name, lead.niche),
+        mensagem: aplicarPerfil(mensagemFallbackManual(lead.name, lead.niche)),
         angulo: null,
         proximaAcao: null,
         fonte: 'fallback',

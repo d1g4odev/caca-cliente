@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-  loadMsgConfig, saveMsgConfig, resetMsgConfig, DEFAULT_MSG_CONFIG,
+  loadMsgConfig, saveMsgConfig, DEFAULT_MSG_CONFIG,
   beneficiosToText, beneficiosFromText, montarMensagem,
 } from '../lib/whatsapp.js';
 
@@ -10,6 +10,8 @@ export default function MessageSettings({ open, onClose }) {
   const [template, setTemplate] = useState('');
   const [beneficios, setBeneficios] = useState('');
   const [padrao, setPadrao] = useState('');
+  const [seuNome, setSeuNome] = useState('');
+  const [seuInstagram, setSeuInstagram] = useState('');
 
   useEffect(() => {
     if (!open) return;
@@ -17,19 +19,28 @@ export default function MessageSettings({ open, onClose }) {
     setTemplate(cfg.template);
     setBeneficios(beneficiosToText(cfg.beneficios));
     setPadrao(cfg.beneficioPadrao);
+    setSeuNome(cfg.seuNome || '');
+    setSeuInstagram(cfg.seuInstagram || '');
   }, [open]);
 
   if (!open) return null;
 
-  const cfgAtual = { template, beneficios: beneficiosFromText(beneficios), beneficioPadrao: padrao };
+  const cfgAtual = {
+    template,
+    beneficios: beneficiosFromText(beneficios),
+    beneficioPadrao: padrao,
+    seuNome: seuNome.trim(),
+    seuInstagram: seuInstagram.trim().replace(/^@/, ''),
+  };
   const preview = montarMensagem('Studio Aurora', 'salão de estética', cfgAtual);
 
   function salvar() {
     saveMsgConfig(cfgAtual);
     onClose();
   }
+  // Volta o pitch de fábrica NA TELA (sem tocar no storage — só persiste no
+  // Salvar). Perfil (nome/Instagram) é preservado de propósito.
   function restaurar() {
-    resetMsgConfig();
     setTemplate(DEFAULT_MSG_CONFIG.template);
     setBeneficios(beneficiosToText(DEFAULT_MSG_CONFIG.beneficios));
     setPadrao(DEFAULT_MSG_CONFIG.beneficioPadrao);
@@ -49,6 +60,20 @@ export default function MessageSettings({ open, onClose }) {
             saudação por primeiro nome (pessoa) ou abertura neutra (empresa), ângulo por nicho, sem "posso te
             mandar um áudio". Este template aqui só aparece quando o motor falha ou para personalização avançada.
           </div>
+          <div className="field-row">
+            <label className="field">
+              <span>👤 Seu nome</span>
+              <input type="text" value={seuNome} onChange={(e) => setSeuNome(e.target.value)} placeholder="Ex: João" />
+            </label>
+            <label className="field">
+              <span>📷 Seu Instagram <em>(sem @)</em></span>
+              <input type="text" value={seuInstagram} onChange={(e) => setSeuInstagram(e.target.value)} placeholder="Ex: joao.dev" />
+            </label>
+          </div>
+          <span className="muted" style={{ margin: 0, fontSize: 12 }}>
+            Preenche automaticamente o <code>[Seu nome]</code> e o <code>@[seu-instagram]</code> em TODAS as
+            mensagens — do gerador inteligente, do Modo Disparo e do e-mail. Configure uma vez e esqueça.
+          </span>
           <label className="field">
             <span>Modelo da mensagem <em>(use {'{nome}'} e {'{beneficio}'})</em></span>
             <textarea rows={7} value={template} onChange={(e) => setTemplate(e.target.value)} />
