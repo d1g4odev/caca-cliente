@@ -54,6 +54,12 @@ export default function App() {
     })();
   }, []);
 
+  // Cinto de segurança: ao selecionar um lead, garante que o mapa fique visível
+  useEffect(() => {
+    if (!selectedId) return;
+    document.querySelector('.map-wrap')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, [selectedId]);
+
   // FASE 1 — busca síncrona: pinos e cards aparecem de imediato
   const runSearch = useCallback(async (params) => {
     setLoading(true);
