@@ -164,7 +164,7 @@ export const reuniaoOnline = (_lead) => [
 ].join('\n');
 
 export const reuniaoPresencial = (_lead) => [
-  'Se preferirem, podemos marcar uma reunião presencial rápida para eu apresentar melhor a ideia, entender como vocês trabalham hoje, quais sistemas utilizam, quais necessidades têm no dia a dia e mostrar como um site ou até uma solução personalizada poderia ajudar.',
+  'Se preferirem, podemos marcar uma reunião presencial rápida para eu apresentar melhor a ideia, entender como vocês trabalham hoje e mostrar como um site institucional, feito pra apresentar o trabalho e os serviços de vocês, poderia ajudar.',
 ].join('\n');
 
 export const fechamentoLeve = (_lead) => [

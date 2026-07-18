@@ -17,18 +17,20 @@ Crio sites com IA e ajudo negócios a aparecerem mais na internet. Estava olhand
 Faz sentido conversarmos rapidinho sobre isso? Posso te mandar um áudio curto explicando melhor a ideia? 😉`;
 
 // Gancho de valor por ramo. `kw` são radicais SEM acento (casam por substring).
+// A oferta é SEMPRE site / landing page / site institucional pra apresentar o
+// trabalho — nunca sistema, agendamento, pedidos online ou automação.
 const DEFAULT_BENEFICIOS = [
-  { kw: ['estetic', 'beleza', 'salao', 'barbear', 'manicure', 'sobrancelha', 'cabelei', 'spa', 'unha', 'depila'], txt: 'um site com agendamento online poderia encher a agenda de vocês e atrair mais clientes' },
-  { kw: ['restaurante', 'lanchonete', 'pizz', 'hamburg', 'cafe', 'bar', 'bistro', 'padaria', 'comida', 'gastr'], txt: 'um site com cardápio digital e pedidos online poderia trazer mais clientes e facilitar o delivery' },
-  { kw: ['advog', 'advocacia', 'jurid'], txt: 'um site profissional poderia passar mais credibilidade e captar mais clientes pro escritório' },
-  { kw: ['clinic', 'consultor', 'medic', 'saude', 'dent', 'odonto', 'fisio', 'psicol'], txt: 'um site com agendamento poderia atrair mais pacientes e organizar os atendimentos' },
-  { kw: ['nutri'], txt: 'um site poderia atrair mais pacientes e mostrar seu trabalho com mais autoridade' },
-  { kw: ['academia', 'fitness', 'pilates', 'crossfit', 'muscula'], txt: 'um site poderia atrair mais alunos e facilitar as matrículas' },
-  { kw: ['pet', 'veterin'], txt: 'um site poderia atrair mais clientes e facilitar os agendamentos' },
-  { kw: ['contab', 'contador'], txt: 'um site profissional poderia passar mais credibilidade e captar mais clientes' },
-  { kw: ['imobili', 'corretor', 'imovel'], txt: 'um site com os imóveis de vocês poderia gerar mais contatos e fechar mais negócios' },
+  { kw: ['estetic', 'beleza', 'salao', 'barbear', 'manicure', 'sobrancelha', 'cabelei', 'spa', 'unha', 'depila'], txt: 'um site pra mostrar o trabalho de vocês, com fotos dos resultados, os serviços e o botão direto pro WhatsApp, poderia atrair muito mais clientes' },
+  { kw: ['restaurante', 'lanchonete', 'pizz', 'hamburg', 'cafe', 'bar', 'bistro', 'padaria', 'comida', 'gastr'], txt: 'um site institucional pra apresentar o cardápio, o espaço e a história de vocês poderia trazer mais clientes de quem procura no Google' },
+  { kw: ['advog', 'advocacia', 'jurid'], txt: 'um site institucional pra apresentar o escritório e as áreas de atuação poderia passar mais credibilidade e captar mais clientes' },
+  { kw: ['clinic', 'consultor', 'medic', 'saude', 'dent', 'odonto', 'fisio', 'psicol'], txt: 'um site profissional pra apresentar os atendimentos e a estrutura de vocês poderia passar mais confiança pra quem procura no Google' },
+  { kw: ['nutri'], txt: 'um site pra apresentar seu trabalho e seus atendimentos poderia te dar mais autoridade e atrair mais pacientes' },
+  { kw: ['academia', 'fitness', 'pilates', 'crossfit', 'muscula'], txt: 'um site pra apresentar a estrutura, as modalidades e os planos poderia atrair muito mais alunos' },
+  { kw: ['pet', 'veterin'], txt: 'um site pra apresentar os serviços e o cuidado de vocês com os pets poderia passar mais confiança e atrair mais clientes' },
+  { kw: ['contab', 'contador'], txt: 'um site institucional pra apresentar os serviços do escritório poderia passar mais credibilidade e captar mais clientes' },
+  { kw: ['imobili', 'corretor', 'imovel'], txt: 'um site pra apresentar a imobiliária e os imóveis em destaque poderia gerar mais contatos e passar mais profissionalismo' },
 ];
-const DEFAULT_BENEFICIO_PADRAO = 'um site profissional poderia ajudar vocês a atrair mais clientes e automatizar o atendimento';
+const DEFAULT_BENEFICIO_PADRAO = 'um site profissional (uma landing page bem feita) pra apresentar o trabalho de vocês poderia passar mais confiança e atrair mais clientes de quem procura no Google';
 
 export const DEFAULT_MSG_CONFIG = {
   template: DEFAULT_TEMPLATE,
