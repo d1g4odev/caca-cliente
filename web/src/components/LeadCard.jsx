@@ -10,6 +10,7 @@ export default function LeadCard({ lead, selected, onSelect, onOpenDetails }) {
   const e = lead.enrichment;
   const wa = waLink(lead.phone, lead.name, lead.niche);
   const mail = mailtoLink(e?.email, lead.name, lead.niche);
+  const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(`"${lead.name}"${lead.address ? ` ${lead.address}` : ''}`)}`;
   const score = leadScore(lead);
   const tier = scoreTier(score);
   const alvoIdeal = Boolean(e?.instagram); // sem site (todos são) + Instagram ativo = melhor prospecto
@@ -64,6 +65,7 @@ export default function LeadCard({ lead, selected, onSelect, onOpenDetails }) {
           <a className="mail-btn" href={mail} onClick={stop}>✉️ E-mail</a>
         )}
         <button type="button" className="details-btn" onClick={(ev) => { stop(ev); onOpenDetails?.(lead.id); }}>📝 Detalhes</button>
+        <a className="details-btn" href={searchUrl} target="_blank" rel="noreferrer" onClick={stop} title="Pesquisar no Google" aria-label="Pesquisar no Google">🔍 Buscar</a>
       </div>
 
       <footer className="contacts">

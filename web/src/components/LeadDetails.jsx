@@ -53,6 +53,7 @@ export default function LeadDetails({ lead, searchId, onSave, onClose }) {
 
   if (!lead) return null;
 
+  const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(`"${lead.name}"${lead.address ? ` ${lead.address}` : ''}`)}`;
   const toggleTag = (t) => setTags((prev) => (prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]));
 
   async function gerarMensagem() {
@@ -114,7 +115,10 @@ export default function LeadDetails({ lead, searchId, onSave, onClose }) {
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <header className="modal-head">
           <h2>{lead.name}</h2>
-          <button type="button" className="modal-x" onClick={onClose} aria-label="Fechar">×</button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <a className="details-btn" href={searchUrl} target="_blank" rel="noreferrer" title="Pesquisar no Google" aria-label="Pesquisar no Google">🔍 Buscar</a>
+            <button type="button" className="modal-x" onClick={onClose} aria-label="Fechar">×</button>
+          </div>
         </header>
         <div className="modal-body">
           <label className="field">
