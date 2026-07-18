@@ -622,8 +622,8 @@ body {
 .crm-chip--tag { background: var(--purple-soft); color: var(--purple); }
 
 /* ── Detalhes do lead (CRM): campos lado a lado + tags ── */
-.field-row { display: flex; gap: var(--space-3); }
-.field-row .field { flex: 1; }
+.field-row { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+.field-row .field { flex: 1; min-width: 100px; }
 .field input[type='date'], .field input[type='number'] {
   border: 1px solid var(--border-strong); border-radius: var(--radius-md); padding: 8px 10px; font-size: var(--font-base); font-family: inherit; width: 100%;
   background: var(--bg-elevated); color: var(--text);
@@ -713,4 +713,30 @@ body {
   .kanban-col { flex: 0 0 200px; }
   .filter-chips button { padding: 7px 12px; }
   .view-toggle button { padding: 9px; }
+  /* ── Mobile refinements ── */
+  .sidebar-header { overflow-y: auto; }
+  .modal { width: 100vw; max-height: 95dvh; border-radius: var(--radius-lg); }
+  .modal-head, .modal-foot { padding: var(--space-3) var(--space-4); }
+  .modal-body { padding: var(--space-3) var(--space-4); }
+  /* Touch targets >= 44px */
+  .filter-chips button, .view-toggle button, .card-actions button,
+  .card-actions a, .msg-edit-btn, .dispatch-btn, .btn-primary,
+  .btn-secondary, .tag-chip, .details-btn, .mail-btn, .wa-btn--sm,
+  .msg-gen-btn, .msg-edit-btn { min-height: 44px; }
+  .msg-gen-tipo { min-height: 44px; min-width: 100%; }
+  /* Stats panel compacto */
+  .stats-panel { padding: var(--space-3); }
+  .stats-card { min-width: 70px; padding: var(--space-2) var(--space-3); }
+  .stats-card strong { font-size: 18px; }
+  /* Kanban ajuste mobile */
+  .kanban { padding: var(--space-2); gap: var(--space-2); }
+  .kanban-col { flex: 0 0 180px; }
+  /* No horizontal overflow */
+  .sidebar, .map-wrap { overflow-x: hidden; }
+  /* Card actions sem quebra */
+  .card-actions { gap: 4px; }
+  /* Onboarding compacto */
+  .modal-body img[alt=""] { width: 56px; height: 56px; }
+  .msg-settings-notice { font-size: var(--font-xs); }
+  .exports a { padding: 6px 12px; }
 }
