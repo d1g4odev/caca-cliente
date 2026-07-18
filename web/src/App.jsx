@@ -47,7 +47,7 @@ export default function App() {
     if (!sid) return;
     (async () => {
       try {
-        const r = await fetch(`/api/search/${sid}/leads`);
+        const r = await fetch(`/api/search/${encodeURIComponent(sid)}/leads`);
         if (!r.ok) { localStorage.removeItem('captacao.lastSearchId'); return; }
         const data = await r.json();
         setSearch(data);
@@ -108,7 +108,7 @@ export default function App() {
       const lead = leads.find((l) => l.id === id);
       if (lead?.enrichmentStatus === 'pending' && search) {
         // enriquecimento sob demanda: interagiu → fura a fila
-        fetch(`/api/search/${search.searchId}/leads/${id}/prioritize`, { method: 'POST' }).catch(() => {});
+        fetch(`/api/search/${encodeURIComponent(search.searchId)}/leads/${encodeURIComponent(id)}/prioritize`, { method: 'POST' }).catch(() => {});
       }
     },
     [leads, search]
@@ -137,7 +137,7 @@ export default function App() {
         })
       );
       if (search) {
-        fetch(`/api/search/${search.searchId}/leads/${leadId}`, {
+        fetch(`/api/search/${encodeURIComponent(search.searchId)}/leads/${encodeURIComponent(leadId)}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(patch),
@@ -151,7 +151,7 @@ export default function App() {
   // Reabre uma busca salva (do histórico): re-hidrata do banco e popula a tela
   const openSearch = useCallback(async (searchId) => {
     try {
-      const r = await fetch(`/api/search/${searchId}/leads`);
+      const r = await fetch(`/api/search/${encodeURIComponent(searchId)}/leads`);
       if (!r.ok) throw new Error('Não consegui abrir essa busca.');
       const data = await r.json();
       setSearch(data);
@@ -253,10 +253,10 @@ export default function App() {
                 <>
                   <div className="exports">
                     <span>Exportar:</span>
-                    <a href={`/api/search/${search.searchId}/export?format=csv`} download>
+                    <a href={`/api/search/${encodeURIComponent(search.searchId)}/export?format=csv`} download>
                       CSV
                     </a>
-                    <a href={`/api/search/${search.searchId}/export?format=xlsx`} download>
+                    <a href={`/api/search/${encodeURIComponent(search.searchId)}/export?format=xlsx`} download>
                       Excel
                     </a>
                   </div>

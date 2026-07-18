@@ -1,6 +1,7 @@
 // Processo principal do app desktop. Sobe o MESMO server Express do projeto
 // (import direto, sem child process — SSE e env funcionam de graça) numa porta
-// dinâmica de loopback e abre uma janela apontando pra ele.
+// FIXA de loopback (origem estável entre aberturas) e abre uma janela
+// apontando pra ele.
 //
 // Dev do desktop (usa o repo):  npm --prefix desktop start -- --dev
 //   (requer web/dist buildado:  npm --prefix web run build)
@@ -10,6 +11,27 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DEV = process.argv.includes('--dev');
+
+// Porta fixa: a origem http://127.0.0.1:PORTA precisa ser sempre a mesma
+// entre aberturas do app, senão o localStorage do front (perfil, onboarding,
+// última busca) zera a cada reabertura. Só varia se 47245 estiver ocupada
+// (outra instância morrendo devagar, outro app do aluno etc).
+const FIXED_PORT = 47245;
+const PORT_RETRIES = 10; // tenta 47245..47254
+
+async function startServerOnFixedPort(startServer) {
+  let lastErr;
+  for (let i = 0; i < PORT_RETRIES; i++) {
+    const port = FIXED_PORT + i;
+    try {
+      return await startServer({ port, host: '127.0.0.1' });
+    } catch (e) {
+      if (e?.code !== 'EADDRINUSE') throw e;
+      lastErr = e;
+    }
+  }
+  throw lastErr;
+}
 
 // Uma instância só: reabrir o app foca a janela existente.
 if (!app.requestSingleInstanceLock()) {
@@ -41,7 +63,7 @@ if (!app.requestSingleInstanceLock()) {
       const { startServer } = await import(
         pathToFileURL(path.join(base, 'server', 'src', 'app.js')).href
       );
-      const { port } = await startServer({ port: 0, host: '127.0.0.1' });
+      const { port } = await startServerOnFixedPort(startServer);
 
       win = new BrowserWindow({
         width: 1280,

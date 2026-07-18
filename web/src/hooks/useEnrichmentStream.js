@@ -9,7 +9,7 @@ export function useEnrichmentStream(searchId, onEvent) {
 
   useEffect(() => {
     if (!searchId) return;
-    const es = new EventSource(`/api/search/${searchId}/stream`);
+    const es = new EventSource(`/api/search/${encodeURIComponent(searchId)}/stream`);
     es.addEventListener('enrichment', (e) => cb.current(JSON.parse(e.data)));
     es.addEventListener('done', () => es.close());
     return () => es.close();
