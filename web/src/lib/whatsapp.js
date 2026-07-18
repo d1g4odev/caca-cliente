@@ -63,7 +63,19 @@ const STORAGE_KEY = 'captacao.msgConfig';
 export function loadMsgConfig() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return { ...DEFAULT_MSG_CONFIG, ...JSON.parse(raw) };
+    if (raw) {
+      const cfg = { ...DEFAULT_MSG_CONFIG, ...JSON.parse(raw) };
+      // Migração: o template de fábrica antigo tinha "posso te mandar um áudio
+      // curto" (proibido pelo manual). Se o aluno salvou a config antes da
+      // troca e NÃO personalizou o texto (ainda contém a frase de fábrica),
+      // atualiza pro default novo. Template genuinamente customizado sem a
+      // frase proibida é preservado.
+      if (cfg.template && cfg.template.includes('áudio curto')) {
+        cfg.template = DEFAULT_TEMPLATE;
+        saveMsgConfig(cfg);
+      }
+      return cfg;
+    }
   } catch { /* localStorage indisponível: usa o padrão */ }
   return DEFAULT_MSG_CONFIG;
 }
