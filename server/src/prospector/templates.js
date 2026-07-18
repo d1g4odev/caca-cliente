@@ -85,7 +85,7 @@ export const institutoClinica = (lead) => {
   const { nome } = lead;
   return [
     saudacao(nome),
-    'Me chamo Rodrigo, sou desenvolvedor de software. Entrei em contato pelo Instagram e me passaram esse número para falar com o setor administrativo.',
+    'Me chamo [Seu nome], sou desenvolvedor de software. Entrei em contato pelo Instagram e me passaram esse número para falar com o setor administrativo.',
     'Queria apresentar uma ideia simples: o perfil de vocês é muito profissional, e acredito que um site próprio, bem construído e no mesmo nível da imagem que vocês já passam, poderia fortalecer ainda mais a presença digital.',
     'Posso te mostrar alguns trabalhos que já desenvolvi?',
   ].join('\n');
@@ -139,13 +139,11 @@ export const objecaoVouPensar = (_lead) => [
   'Pra facilitar, posso montar uma prévia simples de como ficaria o seu site. Assim você consegue visualizar melhor antes de decidir.',
 ].join('\n');
 
-export const objecaoMandaInstagram = (lead) => {
-  const { instagram } = lead;
-  return [
-    `Meu Instagram pessoal é @${instagram || 'rodrigo.dev'}. Ainda estou organizando o perfil da marca, então por enquanto uso esse.`,
-    'Se fizer sentido pra você, podemos agendar uma reunião online rápida. Até lá, eu já monto uma prévia de como poderia ficar o seu site, para você visualizar melhor a ideia.',
-  ].join('\n');
-};
+// [seu-instagram] é placeholder: o aluno troca pelo @ dele antes de enviar.
+export const objecaoMandaInstagram = (_lead) => [
+  'Meu Instagram pessoal é @[seu-instagram]. Ainda estou organizando o perfil da marca, então por enquanto uso esse.',
+  'Se fizer sentido pra você, podemos agendar uma reunião online rápida. Até lá, eu já monto uma prévia de como poderia ficar o seu site, para você visualizar melhor a ideia.',
+].join('\n');
 
 export const objecaoSecretariaAnalisa = (lead) => {
   const { nome } = lead;
