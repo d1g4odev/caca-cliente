@@ -3,6 +3,7 @@
   "version": "0.2.0",
   "private": true,
   "description": "Caça-Cliente — app desktop (Electron). A versão daqui é a versão oficial do app distribuído.",
+  "repository": "github:d1g4odev/caca-cliente",
   "type": "module",
   "main": "main.js",
   "scripts": {
