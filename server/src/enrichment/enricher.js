@@ -1,26 +1,11 @@
-import { spawn } from 'node:child_process';
-import { existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import crypto from 'node:crypto';
-import path from 'node:path';
 import * as db from '../db.js';
 import { scoreLead } from '../utils/score.js';
+import { enrichLead } from './enrichWorker.js';
 
-// Gerencia as sessões SSE E executa o enriquecimento real chamando o worker
-// Python (workers/enrich.py — DuckDuckGo, gratuito). Uma fila com concorrência
-// limitada mantém o ritmo educado com o DDG (menos bloqueio) sem travar a UI.
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const SCRIPT = path.resolve(__dirname, '../../../workers/enrich.py');
-// Prioridade: PYTHON_BIN > venv criado pelo `npm run setup` > python do sistema.
-const VENV_PY = path.resolve(
-  __dirname,
-  '../../../workers/.venv',
-  process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python'
-);
-const PY =
-  process.env.PYTHON_BIN ||
-  (existsSync(VENV_PY) ? VENV_PY : process.platform === 'win32' ? 'py' : 'python3');
+// Gerencia as sessões SSE E executa o enriquecimento real (enrichWorker.js —
+// DuckDuckGo, gratuito). Uma fila com concorrência limitada mantém o ritmo
+// educado com o DDG (menos bloqueio) sem travar a UI.
 
 const MAX_CONCURRENCY = Number(process.env.ENRICH_CONCURRENCY ?? 2);
 const BACKGROUND = process.env.ENRICH_BACKGROUND !== 'false'; // pré-aquece todos por padrão
@@ -224,7 +209,7 @@ function pump(session) {
 
 async function runOne(session, lead) {
   await sleep(200 + Math.random() * 800); // jitter: educado com o DuckDuckGo
-  const enrichment = USE_MOCK ? mockEnrichment(lead) : await spawnPython(lead, session.city);
+  const enrichment = USE_MOCK ? mockEnrichment(lead) : await enrichLead({ name: lead.name, city: session.city, phone: lead.phone });
 
   lead.enrichment = enrichment;
   lead.linkQuebrado = enrichment ? Boolean(enrichment.linkBroken) : false;
@@ -234,28 +219,6 @@ async function runOne(session, lead) {
   broadcast(session, 'enrichment', payloadOf(lead));
   if (db.dbEnabled) session.dbReady.then(() => db.saveEnrichment(session.id, lead)).catch(() => {});
   if (allSettled(session)) broadcast(session, 'done', { searchId: session.id });
-}
-
-function spawnPython(lead, city) {
-  return new Promise((resolve) => {
-    const payload = JSON.stringify({ name: lead.name, city, phone: lead.phone, place_id: lead.id });
-    const child = spawn(PY, [SCRIPT, payload], {
-      env: { ...process.env, PYTHONUTF8: '1', PYTHONIOENCODING: 'utf-8' },
-      windowsHide: true,
-    });
-    let out = '';
-    const kill = setTimeout(() => child.kill(), 20000); // rede travada não trava a fila
-    child.stdout.on('data', (d) => (out += d));
-    child.on('error', () => (clearTimeout(kill), resolve(null))); // py ausente etc.
-    child.on('close', () => {
-      clearTimeout(kill);
-      try {
-        resolve(JSON.parse(out.trim().split(/\r?\n/).pop()));
-      } catch {
-        resolve(null);
-      }
-    });
-  });
 }
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
