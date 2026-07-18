@@ -2,8 +2,10 @@
 #   npm --prefix desktop run dist -- --mac   (local)
 #   CI: .github/workflows/release-desktop.yml publica nas Releases em tag v*
 appId: gg.doti.caca-cliente
-productName: Caça-Cliente
-# ASCII no nome do artefato: cedilha em instalador NSIS/URL de release dá bug.
+# ASCII no executável: cedilha no nome do binário empacotado quebra o boot no
+# macOS (SIGTRAP, pânico Rust em cxxbridge1$string$drop). O nome bonito com ç
+# continua na janela (main.js) e no front — só o binário/instalador é ASCII.
+productName: Caca-Cliente
 artifactName: CacaCliente-${version}-${os}-${arch}.${ext}
 
 # Nenhuma dependência nativa (node:sqlite é builtin) — não recompilar nada.
