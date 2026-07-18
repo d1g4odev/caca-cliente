@@ -15,7 +15,7 @@
 // "Nicho com boa cobertura" = nicho que casa com algum grupo do mapa de tags
 // OSM (osmProvider.js). Nichos genéricos ("comércio", "serviços") não pontuam.
 
-import { isValidWhatsApp } from './phone.js';
+import { isValidWhatsApp, isMobileBR } from './phone.js';
 
 // Espelha os radicais do osmProvider.js — se o nicho casa, é um nicho "quente"
 // (tem volume no OSM e portanto mais leads para prospectar).
@@ -42,12 +42,21 @@ const NICHE_KEYWORDS = [
 
 const normalize = (s) => (s ?? '').toString().normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
 
-function hasPhone(lead, enrichment) {
-  // Telefone do OSM (lead.phone) OU whatsapp do enriquecimento.
-  if (lead?.phone && isValidWhatsApp(lead.phone)) return true;
-  if (enrichment?.whatsapp && isValidWhatsApp(enrichment.whatsapp)) return true;
-  // Telefone "sujo" (não normalizou, mas existe) conta como meia-presença.
-  if (lead?.phone && lead.phone.replace(/\D/g, '').length >= 8) return true;
+function hasWhatsApp(lead, enrichment) {
+  if (lead?.waInvalid) return false;
+  if (isMobileBR(lead?.phone)) return true;
+  if (enrichment?.whatsapp && isMobileBR(enrichment.whatsapp)) return true;
+  return false;
+}
+
+function hasLandlineOnly(lead, enrichment) {
+  if (lead?.waInvalid) return false;
+  // Fixo válido (12 dígitos após normalização)
+  const onlyFixo = (v) => isValidWhatsApp(v) && !isMobileBR(v);
+  if (lead?.phone && onlyFixo(lead.phone)) return true;
+  if (enrichment?.whatsapp && onlyFixo(enrichment.whatsapp)) return true;
+  // Telefone "sujo" com dígitos mas que não normaliza (conta como meia-presença)
+  if (lead?.phone && lead.phone.replace(/\D/g, '').length >= 8 && !isValidWhatsApp(lead.phone)) return true;
   return false;
 }
 
@@ -77,7 +86,8 @@ function isHotNiche(niche) {
 export function scoreLead(lead = {}, enrichment = null) {
   let score = 0;
 
-  if (hasPhone(lead, enrichment)) score += 30;
+  if (hasWhatsApp(lead, enrichment)) score += 30;
+  else if (hasLandlineOnly(lead, enrichment)) score += 12;
   if (hasInstagram(enrichment)) score += 20;
   if (hasEmail(enrichment)) score += 15;
   if (!hasConfirmedWebsite(lead, enrichment)) score += 25;

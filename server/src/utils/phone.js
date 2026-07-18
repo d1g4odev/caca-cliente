@@ -56,3 +56,10 @@ export function toWhatsAppUrl(input) {
 export function isValidWhatsApp(input) {
   return normalizeWhatsApp(input) !== null;
 }
+
+// Verdadeiro apenas para celular BR (13 dígitos após normalização, com 9º dígito).
+// Fixo (12 dígitos) retorna false — útil para scoring diferenciado.
+export function isMobileBR(input) {
+  const n = normalizeWhatsApp(input);
+  return n !== null && n.length === 13;
+}

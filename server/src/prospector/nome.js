@@ -17,7 +17,7 @@ const capitalizar = (s) => {
 const KEYWORDS_EMPRESA = [
   'clinica', 'clínica',
   'salao', 'salão',
-  'studio', 'studío',
+  'studio', 'studío', 'estudio', 'estúdio',
   'barbearia',
   'restaurante',
   'pizzaria',
@@ -26,7 +26,7 @@ const KEYWORDS_EMPRESA = [
   'mercado',
   'farmacia', 'farmácia',
   'otica', 'ótica',
-  'petshop', 'pet shop',
+  'petshop', 'pet shop', 'pet', 'shop',
   'oficina',
   'auto',
   'imobiliaria', 'imobiliária',
@@ -49,15 +49,26 @@ const KEYWORDS_EMPRESA = [
   'cafeteria',
   'lanchonete',
   'estetica', 'estética',
-  'estudio', 'estúdio',
   'agencia', 'agência',
   'construtora',
   'distribuidora',
   'representacoes', 'representações',
   'comercio', 'comércio',
+  'acai', 'açaí',
 ];
 
 const TITULOS = ['dr', 'dra', 'dr.', 'dra.', 'sr', 'sra', 'srta', 'prof', 'profa'];
+
+// Converte nome inteiro em caixa alta para title case.
+// "DRA MARIA SOUZA" → "Dra. Maria Souza". Títulos (dr, dra, sr, sra)
+// ganham ponto final automaticamente.
+const titleCase = (s) => {
+  return s.split(/\s+/).map(w => {
+    const limpo = w.toLowerCase().replace(/[.,]/g, '');
+    const cap = capitalizar(limpo);
+    return TITULOS.includes(limpo) ? cap + '.' : cap;
+  }).join(' ');
+};
 
 const normalize = (s) => (s || '')
   .toLowerCase()
@@ -70,8 +81,16 @@ const apenasLetras = (s) => /^[a-zà-ÿ.\s]+$/i.test((s || '').trim());
 // Detecta se o nome tem indicadores de empresa: keyword de negócio, número,
 // sigla mista (letras+números), sufixo jurídico (LTDA/EIRELI/MEI/CIA) ou &.
 export function detectarTipoNome(nome) {
-  const original = (nome || '').trim();
+  let original = (nome || '').trim();
   if (!original) return { tipo: 'desconhecido', primeiroNome: '' };
+
+  // BUG QA #2: nome inteiro em CAIXA ALTA → normalizar pra title case
+  // antes de classificar, para evitar que o teste de sigla (\b[A-Z]{2,}\b)
+  // capture nomes como ANA PAULA, MARIA DAS DORES, DRA MARIA.
+  // Siglas reais em caixa mista (ex: IMB Consultoria) continuam detectadas.
+  if (original.length >= 2 && original === original.toUpperCase()) {
+    original = titleCase(original);
+  }
 
   const lower = original.toLowerCase();
   const norm = normalize(original);

@@ -32,6 +32,7 @@ export default function LeadDetails({ lead, searchId, onSave, onClose }) {
   const [phone, setPhone] = useState('');
   const [instagram, setInstagram] = useState('');
   const [email, setEmail] = useState('');
+  const [waInvalid, setWaInvalid] = useState(false);
 
   // Estado do gerador de mensagem
   const [msgState, setMsgState] = useState('idle'); // 'idle' | 'loading' | 'success' | 'error'
@@ -49,6 +50,7 @@ export default function LeadDetails({ lead, searchId, onSave, onClose }) {
     setPhone(lead.phone ?? '');
     setInstagram(lead.enrichment?.instagram ?? '');
     setEmail(lead.enrichment?.email ?? '');
+    setWaInvalid(!!lead.waInvalid);
     // reset gerador ao trocar de lead
     setMsgState('idle');
     setMsgData(null);
@@ -120,6 +122,7 @@ export default function LeadDetails({ lead, searchId, onSave, onClose }) {
       phone: phone || null,
       instagram: instagram || null,
       email: email || null,
+      waInvalid,
     });
     onClose();
   }
@@ -165,6 +168,10 @@ export default function LeadDetails({ lead, searchId, onSave, onClose }) {
                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@exemplo.com" />
               </label>
             </div>
+            <label className="field" style={{ flexDirection: 'row', alignItems: 'center', gap: 6, fontSize: 'var(--font-sm)', color: 'var(--text-muted)', marginTop: 6 }}>
+              <input type="checkbox" checked={waInvalid} onChange={(e) => setWaInvalid(e.target.checked)} style={{ margin: 0 }} />
+              Este número não recebe WhatsApp
+            </label>
           </div>
           <div className="field">
             <span>🏷️ Tags</span>

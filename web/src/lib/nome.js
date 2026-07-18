@@ -18,7 +18,7 @@ const KEYWORDS_EMPRESA = [
   'mercado',
   'farmacia', 'farmácia',
   'otica', 'ótica',
-  'petshop',
+  'petshop', 'pet shop', 'pet', 'shop',
   'oficina',
   'auto',
   'imobiliaria', 'imobiliária',
@@ -46,6 +46,7 @@ const KEYWORDS_EMPRESA = [
   'distribuidora',
   'representacoes', 'representações',
   'comercio', 'comércio',
+  'acai', 'açaí',
 ];
 
 const TITULOS = ['dr', 'dra', 'dr.', 'dra.', 'sr', 'sra', 'srta', 'prof', 'profa'];
@@ -63,9 +64,28 @@ const capitalizar = (s) => {
   return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
+// Converte nome inteiro em caixa alta para title case.
+// "DRA MARIA SOUZA" → "Dra. Maria Souza". Títulos (dr, dra, sr, sra)
+// ganham ponto final automaticamente.
+const titleCase = (s) => {
+  return s.split(/\s+/).map(w => {
+    const limpo = w.toLowerCase().replace(/[.,]/g, '');
+    const cap = capitalizar(limpo);
+    return TITULOS.includes(limpo) ? cap + '.' : cap;
+  }).join(' ');
+};
+
 export function detectarTipoNome(nome) {
-  const original = (nome || '').trim();
+  let original = (nome || '').trim();
   if (!original) return { tipo: 'desconhecido', primeiroNome: '' };
+
+  // BUG QA #2: nome inteiro em CAIXA ALTA → normalizar pra title case
+  // antes de classificar, para evitar que o teste de sigla (\b[A-Z]{2,}\b)
+  // capture nomes como ANA PAULA, MARIA DAS DORES, DRA MARIA.
+  // Siglas reais em caixa mista (ex: IMB Consultoria) continuam detectadas.
+  if (original.length >= 2 && original === original.toUpperCase()) {
+    original = titleCase(original);
+  }
 
   const lower = original.toLowerCase();
 

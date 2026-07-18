@@ -4,17 +4,18 @@
 // Limite de leads por disparo em massa (evita derrubar/bloquear o número).
 export const WA_LIMIT = 10;
 
+import { saudacao } from './nome.js';
+
 const norm = (s) => (s || '').normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
 
 // ── Conteúdo padrão (usado enquanto o usuário não personaliza) ──
-// O template aceita as variáveis {nome} e {beneficio}.
-// IMPORTANTE: o aluno deve editar o template em "✏️ Editar mensagem do WhatsApp"
-// e colocar o próprio nome no lugar de [Seu nome] antes de começar a abordar.
-const DEFAULT_TEMPLATE = `Oi, {nome}, tudo bem? Aqui é o [Seu nome]!
+// O template aceita as variáveis {saudacao}, {nome} e {beneficio}.
+// O [Seu nome] é preenchido automaticamente pelo perfil (onboarding / tela ✏️).
+const DEFAULT_TEMPLATE = `{saudacao}
 
-Crio sites com IA e ajudo negócios a aparecerem mais na internet. Estava olhando o perfil de vocês e tive uma ideia: {beneficio}.
+Aqui é o [Seu nome]. Crio sites com IA e ajudo negócios a aparecerem mais na internet. Estava olhando o perfil de vocês e tive uma ideia: {beneficio}.
 
-Faz sentido conversarmos rapidinho sobre isso? Posso te mandar um áudio curto explicando melhor a ideia? 😉`;
+Posso te mostrar uma ideia rápida?`;
 
 // Gancho de valor por ramo. `kw` são radicais SEM acento (casam por substring).
 // A oferta é SEMPRE site / landing page / site institucional pra apresentar o
@@ -101,18 +102,34 @@ function beneficio(niche, cfg) {
 // Monta a mensagem final aplicando a config (personalizada ou padrão).
 export function montarMensagem(nome, niche, cfg = loadMsgConfig()) {
   const msg = (cfg.template || DEFAULT_TEMPLATE)
+    .replaceAll('{saudacao}', saudacao(nome))
     .replaceAll('{nome}', nome ?? '')
     .replaceAll('{beneficio}', beneficio(niche, cfg));
   return aplicarPerfil(msg, cfg);
 }
 
 // Normaliza telefone BR para o formato do wa.me (DDI 55 + DDD + número, só dígitos).
+// Mantido em paridade com server/src/utils/phone.js (regras estritas).
+const SPECIAL_PREFIXES = ['0800', '0300', '0500', '0900', '100', '190', '192', '193', '197', '198', '199'];
 export function normalizePhoneBR(phone) {
   if (!phone) return null;
-  let d = String(phone).replace(/\D/g, '').replace(/^0+/, '');
-  if (d.length < 10) return null; // sem DDD não dá pra montar
-  if ((d.length === 12 || d.length === 13) && d.startsWith('55')) return d;
-  return '55' + d;
+  const raw = String(phone).replace(/\D/g, '');
+  if (!raw) return null;
+  // Rejeita serviços especiais/emergência (checar antes de tirar zero à esquerda)
+  if (SPECIAL_PREFIXES.some((p) => raw.startsWith(p))) return null;
+  const digits = raw.replace(/^0+/, '');
+  if (!digits) return null;
+  let n = digits;
+  // Se já veio com código do Brasil (55) e comprimento certo (12 fixo / 13 cel), mantém
+  if (!(n.startsWith('55') && (n.length === 12 || n.length === 13))) {
+    // Sem 55: precisa ter 10 (fixo) ou 11 (celular) dígitos
+    if (n.length !== 10 && n.length !== 11) return null;
+    n = '55' + n;
+  }
+  // DDD válido: 11 a 99
+  const ddd = Number(n.slice(2, 4));
+  if (ddd < 11 || ddd > 99) return null;
+  return n;
 }
 
 export function waLink(phone, nome, niche) {

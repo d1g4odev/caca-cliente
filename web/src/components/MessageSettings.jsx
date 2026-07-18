@@ -63,8 +63,8 @@ export default function MessageSettings({ open, onClose }) {
           <div className="msg-settings-notice" role="note">
             <strong>ℹ️ Template manual = fallback.</strong> O <strong>gerador inteligente</strong> (botão
             "Gerar mensagem" no detalhe do lead, e o Modo Disparo) segue o <em>Manual Mestre Prospector</em> —
-            saudação por primeiro nome (pessoa) ou abertura neutra (empresa), ângulo por nicho, sem "posso te
-            mandar um áudio". Este template aqui só aparece quando o motor falha ou para personalização avançada.
+            saudação por <code>{'{saudacao}'}</code> (primeiro nome p/ pessoa, neutro p/ empresa), ângulo por nicho.
+            Este template aqui só aparece quando o motor falha ou para personalização avançada.
           </div>
           <div className="field-row">
             <label className="field">
@@ -94,7 +94,7 @@ export default function MessageSettings({ open, onClose }) {
             Os <code>[link-1]</code> e <code>[link-2]</code> dos templates são substituídos automaticamente pelos sites acima.
           </span>
           <label className="field">
-            <span>Modelo da mensagem <em>(use {'{nome}'} e {'{beneficio}'})</em></span>
+            <span>Modelo da mensagem <em>(use {'{saudacao}'}, {'{nome}'} e {'{beneficio}'})</em></span>
             <textarea rows={7} value={template} onChange={(e) => setTemplate(e.target.value)} />
           </label>
           <label className="field">

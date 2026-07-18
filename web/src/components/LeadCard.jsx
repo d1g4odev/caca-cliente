@@ -8,7 +8,7 @@ const hoje = () => new Date().toISOString().slice(0, 10);
 
 export default function LeadCard({ lead, selected, onSelect, onOpenDetails }) {
   const e = lead.enrichment;
-  const wa = waLink(lead.phone, lead.name, lead.niche);
+  const wa = lead.waInvalid ? null : waLink(lead.phone, lead.name, lead.niche);
   const mail = mailtoLink(e?.email, lead.name, lead.niche);
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(`"${lead.name}"${lead.address ? ` ${lead.address}` : ''}`)}`;
   const score = leadScore(lead);
@@ -43,7 +43,7 @@ export default function LeadCard({ lead, selected, onSelect, onOpenDetails }) {
         <p className="muted">⭐ {lead.rating} ({lead.reviewsCount} avaliações)</p>
       )}
       <p className="muted">{lead.address}</p>
-      {lead.phone && <p className="muted">📞 {lead.phone}</p>}
+      {lead.phone && <p className="muted">📞 {lead.phone}{lead.waInvalid && ' 📵'}</p>}
 
       {(lead.followUpAt || lead.estimatedValue != null || (lead.tags && lead.tags.length > 0)) && (
         <div className="crm-summary">

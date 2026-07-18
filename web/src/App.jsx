@@ -16,6 +16,7 @@ import { leadScore } from './lib/score.js';
 import { useEnrichmentStream } from './hooks/useEnrichmentStream.js';
 
 const CENTRO_PADRAO = [-30.0427211, -51.1626625]; // Porto Alegre (bairro Bom Jesus)
+const hoje = () => new Date().toISOString().slice(0, 10);
 
 export default function App() {
   const [search, setSearch] = useState(null); // { searchId, query, stats }
@@ -30,7 +31,7 @@ export default function App() {
   const [sortBy, setSortBy] = useState('score'); // 'score' | 'nome'
   // showWithSite começa FALSO: o produto é prospectar quem NÃO tem site,
   // então esconder por padrão quem o enriquecimento detectou que tem.
-  const [filters, setFilters] = useState({ phone: false, instagram: false, email: false, showWithSite: false });
+  const [filters, setFilters] = useState({ phone: false, instagram: false, email: false, showWithSite: false, showFollowUp: false });
   const toggleFilter = (k) => setFilters((f) => ({ ...f, [k]: !f[k] }));
   const [searchError, setSearchError] = useState(null); // erro inline (substitui alert)
   const { theme, toggle: toggleTheme } = useTheme();
@@ -163,19 +164,25 @@ export default function App() {
   }, []);
 
   const enriched = useMemo(() => leads.filter((l) => l.enrichmentStatus !== 'pending').length, [leads]);
+  const overdueCount = useMemo(() => leads.filter((l) => l.followUpAt && l.followUpAt <= hoje()).length, [leads]);
 
   // Lista exibida = filtrada + ordenada (vale p/ mapa, lista e Kanban)
   const visibleLeads = useMemo(() => {
-    const arr = leads.filter((l) => {
+    let arr = leads.filter((l) => {
       // Esconde leads que o enriquecimento descobriu que TÊM site (falso "sem site" do OSM)
       if (!filters.showWithSite && l.enrichment?.discoveredWebsite) return false;
-      if (filters.phone && !l.phone) return false;
+      // Filtro "só com WhatsApp": exclui sem telefone E waInvalid
+      if (filters.phone && (!l.phone || l.waInvalid)) return false;
       // Enquanto o enriquecimento não terminou, não escondemos o lead: ele ainda
       // pode ganhar o contato. Só filtramos quando já existe um veredito.
       if (filters.instagram && l.enrichmentStatus !== 'pending' && !l.enrichment?.instagram) return false;
       if (filters.email && l.enrichmentStatus !== 'pending' && !l.enrichment?.email) return false;
       return true;
     });
+    if (filters.showFollowUp) {
+      arr = arr.filter((l) => l.followUpAt && l.followUpAt <= hoje());
+      return [...arr].sort((a, b) => (a.followUpAt || '').localeCompare(b.followUpAt || ''));
+    }
     if (sortBy === 'score') return [...arr].sort((a, b) => leadScore(b) - leadScore(a));
     if (sortBy === 'nome') return [...arr].sort((a, b) => a.name.localeCompare(b.name));
     return arr;
@@ -276,6 +283,11 @@ export default function App() {
                       >
                         ⚠️ Incluir quem tem site
                       </button>
+                      {overdueCount > 0 && (
+                        <button type="button" className={filters.showFollowUp ? 'on' : ''} onClick={() => toggleFilter('showFollowUp')}>
+                          🔔 {overdueCount} retorno{overdueCount > 1 ? 's' : ''} pendente{overdueCount > 1 ? 's' : ''}
+                        </button>
+                      )}
                     </div>
                   </div>
                   <button type="button" className="dispatch-btn" onClick={() => setDispatchLeads(visibleLeads)}>
@@ -314,7 +326,7 @@ export default function App() {
         {view === 'kanban' && (
           <KanbanBoard leads={visibleLeads} selectedId={selectedId} onSelect={selectLead} onMove={moveLead} onDispatch={setDispatchLeads} />
         )}
-        {view === 'stats' && <StatsPanel />}
+        {view === 'stats' && <StatsPanel leads={leads} />}
       </main>
 
       <MessageSettings open={msgOpen} onClose={() => setMsgOpen(false)} />

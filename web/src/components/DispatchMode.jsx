@@ -11,7 +11,7 @@ import { useDispatchMessages } from '../hooks/useDispatchMessages.js';
 // individual — NÃO usa mais o template legado de whatsapp.js como fonte
 // primária. O template legado só aparece como fallback discreto se a API falhar.
 export default function DispatchMode({ leads, searchId, onContacted, onClose }) {
-  const fila = leads.filter((l) => waLink(l.phone, l.name, l.niche)); // só quem tem WhatsApp
+  const fila = leads.filter((l) => !l.waInvalid && waLink(l.phone, l.name, l.niche)); // só quem tem WhatsApp válido
   const [i, setI] = useState(0);
   const { loading, usedFallback, getMensagem } = useDispatchMessages({ searchId, leads: fila });
 

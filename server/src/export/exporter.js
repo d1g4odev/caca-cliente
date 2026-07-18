@@ -1,5 +1,6 @@
 import ExcelJS from 'exceljs';
 import { scoreLead } from '../utils/score.js';
+import { isValidWhatsApp } from '../utils/phone.js';
 
 // Colunas únicas para CSV e XLSX (mantém os dois formatos consistentes).
 const COLUMNS = [
@@ -35,7 +36,7 @@ function rowsFromLeads(leads) {
       instagram: e.instagram ?? '',
       facebook: e.facebook ?? '',
       linkedin: e.linkedin ?? '',
-      whatsapp: e.whatsapp ?? '',
+      whatsapp: isValidWhatsApp(l.phone) ? l.phone : (e.whatsapp ?? ''),
       score: l.score ?? scoreLead(l, e),
       stage: l.stage ?? 'novo',
       status: l.enrichmentStatus ?? '',

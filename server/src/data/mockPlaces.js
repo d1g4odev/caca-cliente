@@ -8,6 +8,7 @@ import crypto from 'node:crypto';
 const PREFIXOS = ['Espaço', 'Studio', 'Clínica', 'Ateliê', 'Casa', 'Instituto', 'Centro', 'Vila'];
 const NOMES = ['Bella', 'Essência', 'Vida Leve', 'Harmonia', 'Lumina', 'Prime', 'Renova', 'Aurora', 'Jardins', 'Alecrim', 'Horizonte', 'Mariposa'];
 const SOBRENOMES = ['Almeida', 'Castro', 'Nogueira', 'Ferraz', 'Sampaio', 'Duarte', 'Linhares', 'Rocha'];
+const PESSOAS = ['Dra. Ana Paula', 'Dr. Carlos Mendes', 'MARCOS VINICIUS', 'Juliana Costa', 'Fernando Oliveira', 'Dra. Renata Souza', 'LUCAS HENRIQUE', 'Gabriela Santos', 'Dr. Pedro Alves', 'Amanda Lima'];
 const RUAS = ['Rua das Acácias', 'Av. Central', 'Rua dos Ipês', 'Al. das Palmeiras', 'Travessa do Sol', 'Rua Sete de Abril', 'Av. Brasil', 'Rua das Hortênsias'];
 
 const DDD_POR_CIDADE = [
@@ -25,6 +26,8 @@ function nomeFicticio(niche) {
   const n = niche.toLowerCase();
   if (n.includes('advo')) return `${pick(SOBRENOMES)} & ${pick(SOBRENOMES)} Advogados`;
   if (n.includes('nutri')) return `${pick(['Consultório', 'Clínica', 'Espaço'])} ${pick(NOMES)} Nutrição`;
+  // ~40% nomes de pessoa (pra testar detector de nome próprio no motor de mensagens)
+  if (Math.random() < 0.4) return pick(PESSOAS);
   return `${pick(PREFIXOS)} ${pick(NOMES)}`;
 }
 
@@ -46,7 +49,9 @@ export function gerarEstabelecimentos({ niche, city, lat, lng, radiusKm, count =
       name: nomeFicticio(niche),
       niche,
       address: `${pick(RUAS)}, ${100 + Math.floor(Math.random() * 1900)} – ${city}`,
-      phone: `(${ddd}) 9${rand4()}-${rand4()}`,
+      phone: Math.random() < 0.3
+        ? `(${ddd}) ${2 + Math.floor(Math.random() * 4)}${rand4().slice(1)}-${rand4()}`
+        : `(${ddd}) 9${rand4()}-${rand4()}`,
       rating: Math.round((3.4 + Math.random() * 1.6) * 10) / 10,
       reviewsCount: 3 + Math.floor(Math.random() * 180),
       hasWebsite: Math.random() < 0.35, // ~35% têm site e serão descartados pelo filtro

@@ -56,6 +56,20 @@ export function createSearch(leads, meta = {}) {
     session.queue = [...session.leads.keys()];
     pump(session);
   }
+
+  // Dedup entre buscas: anota seenBefore/alreadyContacted (só com Postgres)
+  if (db.dbEnabled) {
+    db.findDupLeads(id, [...session.leads.values()]).then((dupMap) => {
+      for (const [leadId, dup] of dupMap) {
+        const lead = session.leads.get(leadId);
+        if (lead) {
+          lead.seenBefore = true;
+          lead.alreadyContacted = STAGES.indexOf(dup.stage) >= STAGES.indexOf('contatado');
+        }
+      }
+    }).catch(() => {});
+  }
+
   setTimeout(() => destroySearch(id), TTL_MS);
   return id;
 }
@@ -94,10 +108,17 @@ export function updateLead(searchId, leadId, patch = {}) {
     const v = patch.estimatedValue === null || patch.estimatedValue === '' ? null : Number(patch.estimatedValue);
     lead.estimatedValue = Number.isFinite(v) ? v : null; fields.estimatedValue = lead.estimatedValue;
   }
-  // phone: normaliza leve (trim, vazia → null)
+  // phone: normaliza leve (trim, vazia → null). Sincroniza enrichment.whatsapp (Bug QA #4).
   if (patch.phone !== undefined) {
     lead.phone = (typeof patch.phone === 'string' ? patch.phone.trim() : patch.phone) || null;
     fields.phone = lead.phone;
+    if (lead.phone) {
+      lead.enrichment ||= {};
+      lead.enrichment.whatsapp = lead.phone;
+    } else if (lead.enrichment?.whatsapp) {
+      lead.enrichment.whatsapp = null;
+    }
+    fields.enrichment = lead.enrichment;
   }
   // waInvalid: flag "numero nao recebe WhatsApp", top-level
   if (patch.waInvalid !== undefined) {

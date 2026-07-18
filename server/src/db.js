@@ -202,6 +202,32 @@ export async function statsConversao() {
 }
 
 // Histórico de buscas (com contagem de leads e enriquecidos).
+// Busca leads duplicados entre buscas — mesmo telefone normalizado (só dígitos)
+// OU mesmo nome + coordenada (~50m). Só roda com Postgres ativo.
+// Retorna Map<lead_id, {stage}> dos leads ANTERIORES que casam.
+export async function findDupLeads(searchId, leads) {
+  if (!pool || !leads.length) return new Map();
+  const dedup = new Map();
+  for (const l of leads) {
+    const cleanPhone = l.phone?.replace(/\D/g, '');
+    const byPhone = cleanPhone
+      ? await pool.query(`SELECT stage FROM leads WHERE regexp_replace(phone, '\\D', '', 'g') = $1 AND search_id != $2 LIMIT 1`, [cleanPhone, searchId])
+      : null;
+    if (byPhone?.rows.length) {
+      dedup.set(l.id, { stage: byPhone.rows[0].stage });
+      continue;
+    }
+    if (l.name && l.lat != null && l.lng != null) {
+      const byCoord = await pool.query(
+        `SELECT stage FROM leads WHERE name = $1 AND lat IS NOT NULL AND ABS(lat - $2) < 0.0005 AND ABS(lng - $3) < 0.0005 AND search_id != $4 LIMIT 1`,
+        [l.name, l.lat, l.lng, searchId]
+      );
+      if (byCoord.rows.length) dedup.set(l.id, { stage: byCoord.rows[0].stage });
+    }
+  }
+  return dedup;
+}
+
 export async function listSearches(limit = 50) {
   if (!pool) return [];
   try {
