@@ -6,6 +6,7 @@ export const ANGULOS = {
   PERFIL_BONITO_SEM_SITE: 'perfil_bonito_sem_site',
   LINKTREE_FORA_DO_AR: 'linktree_fora_do_ar',
   LINK_SO_WHATSAPP: 'link_so_whatsapp',
+  SEM_PRESENCA_DIGITAL: 'sem_presenca_digital',
   SAUDE_GERAL: 'saude_geral',
   ODONTOPEDIATRA: 'odontopediatra',
   ESTETICA_PROCEDIMENTOS: 'estetica_procedimentos',

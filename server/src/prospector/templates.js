@@ -56,6 +56,21 @@ export const linkSoWhatsapp = (lead) => {
   ].join('\n');
 };
 
+// Sem presença digital (sem site, sem Instagram) — lead encontrado via pesquisa
+// local. Não menciona Instagram, bio, anúncio nem Linktree. O gancho é a
+// pesquisa pelo nicho na cidade. Oferta: site institucional / landing page
+// (NUNCA sistema, agendamento ou automação — regra do manual seção 1).
+export const semPresencaDigital = (lead) => {
+  const { nome, nicho, cidade } = lead;
+  const onde = cidade ? `em ${cidade}` : 'aqui na região';
+  return [
+    saudacao(nome),
+    `Conheci o trabalho de vocês pesquisando por ${nicho || 'serviços'} ${onde} e achei muito bacana o que fazem.`,
+    'Sou desenvolvedor e trabalho com sites para negócios locais. Acredito que um site institucional, feito pra apresentar os serviços e o trabalho de vocês, poderia ajudar bastante — tanto pra passar mais confiança quanto pra clientes encontrarem o negócio pelo Google.',
+    'Posso mostrar uma ideia para vocês?',
+  ].join('\n');
+};
+
 // Odontopediatra — nicho específico do manual (seção 4).
 export const odontopediatra = (lead) => {
   const { nome } = lead;

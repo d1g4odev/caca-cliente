@@ -24,13 +24,14 @@ function FitToResults({ leads, searchId }) {
   return null;
 }
 
-function FlyToSelected({ lead }) {
+function FlyToSelected({ leads, selectedId }) {
   const map = useMap();
   useEffect(() => {
+    const lead = leads.find((l) => l.id === selectedId);
     if (!lead) return;
     map.flyTo([lead.lat, lead.lng], Math.max(map.getZoom(), 15), { duration: 0.8 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lead?.id]);
+  }, [selectedId]); // só dispara quando a seleção muda, busca o lead no array completo
   return null;
 }
 
@@ -74,7 +75,6 @@ function LeadMarker({ lead, selected, onSelect }) {
 }
 
 export default function MapPanel({ center, radiusKm, leads, selectedId, onSelect, searchId }) {
-  const selected = leads.find((l) => l.id === selectedId);
   return (
     <MapContainer center={center} zoom={13} className="map" scrollWheelZoom>
       <TileLayer
@@ -88,7 +88,7 @@ export default function MapPanel({ center, radiusKm, leads, selectedId, onSelect
         <LeadMarker key={l.id} lead={l} selected={l.id === selectedId} onSelect={onSelect} />
       ))}
       <FitToResults leads={leads} searchId={searchId} />
-      <FlyToSelected lead={selected} />
+      <FlyToSelected leads={leads} selectedId={selectedId} />
     </MapContainer>
   );
 }

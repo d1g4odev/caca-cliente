@@ -48,6 +48,7 @@ Antes de criar a mensagem, identificar rapidamente:
 | Perfil bonito, sem site | "Seu perfil já passa profissionalismo; um site próprio deixaria sua presença digital no mesmo nível." |
 | Linktree fora do ar | "Notei que o link da bio parece não estar funcionando; um site próprio evitaria essa perda de contato." |
 | Link só para WhatsApp | "WhatsApp ajuda, mas o site apresenta melhor antes da pessoa chamar." |
+| Sem Instagram e sem site | "Lead encontrado via pesquisa local; site institucional pra apresentar o trabalho e ser encontrado no Google." |
 | Profissional da saúde | Confiança, autoridade, procedimentos, localização e busca no Google. |
 | Odontopediatria | Confiança dos pais, acolhimento, diferenciais e informações claras. |
 | Estética/procedimentos | Antes/depois, dúvidas frequentes, diferenciais, segurança e contato direto pelo WhatsApp. |
@@ -80,6 +81,12 @@ específico, oportunidade leve e pedido de permissão.
 > Vi seu perfil pelo Instagram e achei bem profissional. Vi que hoje o link da bio leva direto para o WhatsApp, o que ajuda bastante no contato.
 > Mas acredito que um site próprio poderia valorizar ainda mais sua imagem, apresentar melhor seus procedimentos e facilitar para pacientes encontrarem você no Google.
 > Posso te mostrar alguns trabalhos que já desenvolvi?
+
+### Quando o lead não tem Instagram nem site (sem presença digital)
+> Oi, tudo bem?
+> Conheci o trabalho de vocês pesquisando por [nicho] em [cidade] e achei muito bacana o que fazem.
+> Sou desenvolvedor e trabalho com sites para negócios locais. Acredito que um site institucional, feito pra apresentar os serviços e o trabalho de vocês, poderia ajudar bastante — tanto pra passar mais confiança quanto pra clientes encontrarem o negócio pelo Google.
+> Posso mostrar uma ideia para vocês?
 
 ## 4. Abordagens por nicho
 
