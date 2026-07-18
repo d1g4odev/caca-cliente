@@ -29,6 +29,9 @@ export default function LeadDetails({ lead, searchId, onSave, onClose }) {
   const [followUpAt, setFollowUpAt] = useState('');
   const [tags, setTags] = useState([]);
   const [value, setValue] = useState('');
+  const [phone, setPhone] = useState('');
+  const [instagram, setInstagram] = useState('');
+  const [email, setEmail] = useState('');
 
   // Estado do gerador de mensagem
   const [msgState, setMsgState] = useState('idle'); // 'idle' | 'loading' | 'success' | 'error'
@@ -43,6 +46,9 @@ export default function LeadDetails({ lead, searchId, onSave, onClose }) {
     setFollowUpAt(lead.followUpAt ?? '');
     setTags(lead.tags ?? []);
     setValue(lead.estimatedValue != null ? String(lead.estimatedValue) : '');
+    setPhone(lead.phone ?? '');
+    setInstagram(lead.enrichment?.instagram ?? '');
+    setEmail(lead.enrichment?.email ?? '');
     // reset gerador ao trocar de lead
     setMsgState('idle');
     setMsgData(null);
@@ -106,7 +112,15 @@ export default function LeadDetails({ lead, searchId, onSave, onClose }) {
   }
 
   function salvar() {
-    onSave({ notes, followUpAt: followUpAt || null, tags, estimatedValue: value === '' ? null : Number(value) });
+    onSave({
+      notes,
+      followUpAt: followUpAt || null,
+      tags,
+      estimatedValue: value === '' ? null : Number(value),
+      phone: phone || null,
+      instagram: instagram || null,
+      email: email || null,
+    });
     onClose();
   }
 
@@ -134,6 +148,23 @@ export default function LeadDetails({ lead, searchId, onSave, onClose }) {
               <span>💰 Valor estimado (R$)</span>
               <input type="number" min="0" step="50" value={value} onChange={(e) => setValue(e.target.value)} placeholder="0" />
             </label>
+          </div>
+          <div className="field">
+            <span>📞 Contatos</span>
+            <div className="field-row">
+              <label className="field">
+                <span>Telefone/WhatsApp</span>
+                <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Ex: 5199999999" />
+              </label>
+              <label className="field">
+                <span>Instagram</span>
+                <input type="text" value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="Sem @" />
+              </label>
+              <label className="field">
+                <span>E-mail</span>
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@exemplo.com" />
+              </label>
+            </div>
           </div>
           <div className="field">
             <span>🏷️ Tags</span>

@@ -76,8 +76,8 @@ const withScore = (leads) => leads.map((l) => ({ ...l, score: scoreLead(l, l.enr
 // Estágio do funil (Kanban). Fonte da verdade na sessão -> sai no export.
 export const STAGES = ['novo', 'qualificado', 'contatado', 'ganho', 'descartado'];
 
-// Atualiza campos editáveis do lead (CRM): stage, notes, followUpAt, tags, estimatedValue.
-// Aceita um patch parcial; só os campos presentes são alterados.
+// Atualiza campos editáveis do lead (CRM): stage, notes, followUpAt, tags, estimatedValue,
+// phone (top-level), instagram/email (dentro de enrichment). Aceita patch parcial.
 export function updateLead(searchId, leadId, patch = {}) {
   const s = searches.get(searchId);
   const lead = s?.leads.get(leadId);
@@ -93,6 +93,23 @@ export function updateLead(searchId, leadId, patch = {}) {
   if (patch.estimatedValue !== undefined) {
     const v = patch.estimatedValue === null || patch.estimatedValue === '' ? null : Number(patch.estimatedValue);
     lead.estimatedValue = Number.isFinite(v) ? v : null; fields.estimatedValue = lead.estimatedValue;
+  }
+  // phone: normaliza leve (trim, vazia → null)
+  if (patch.phone !== undefined) {
+    lead.phone = (typeof patch.phone === 'string' ? patch.phone.trim() : patch.phone) || null;
+    fields.phone = lead.phone;
+  }
+  // instagram: mora em enrichment, strip @ inicial, vazio → null
+  if (patch.instagram !== undefined) {
+    lead.enrichment ||= {};
+    lead.enrichment.instagram = (typeof patch.instagram === 'string' ? patch.instagram.trim().replace(/^@/, '') : patch.instagram) || null;
+    fields.enrichment = lead.enrichment;
+  }
+  // email: mora em enrichment, vazio → null
+  if (patch.email !== undefined) {
+    lead.enrichment ||= {};
+    lead.enrichment.email = (typeof patch.email === 'string' ? patch.email.trim() : patch.email) || null;
+    fields.enrichment = lead.enrichment;
   }
   if (Object.keys(fields).length && db.dbEnabled && s.dbReady) {
     s.dbReady.then(() => db.saveLeadFields(searchId, leadId, fields)).catch(() => {});

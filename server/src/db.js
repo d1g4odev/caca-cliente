@@ -125,7 +125,7 @@ export async function saveStage(searchId, leadId, stage) {
 // Atualiza os campos editáveis do lead (CRM): stage, notas, follow-up, tags, valor.
 export async function saveLeadFields(searchId, leadId, fields = {}) {
   if (!pool) return;
-  const map = { stage: 'stage', notes: 'notes', followUpAt: 'follow_up_at', tags: 'tags', estimatedValue: 'estimated_value' };
+  const map = { stage: 'stage', notes: 'notes', followUpAt: 'follow_up_at', tags: 'tags', estimatedValue: 'estimated_value', phone: 'phone', enrichment: 'enrichment' };
   const sets = []; const vals = []; let i = 1;
   for (const [k, col] of Object.entries(map)) {
     if (fields[k] !== undefined) { sets.push(`${col}=$${i++}`); vals.push(fields[k]); }

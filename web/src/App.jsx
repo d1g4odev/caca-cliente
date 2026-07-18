@@ -114,7 +114,24 @@ export default function App() {
   // Atualiza um lead (estágio do Kanban OU campos de CRM): otimista no front + PATCH no back
   const patchLead = useCallback(
     (leadId, patch) => {
-      setLeads((prev) => prev.map((l) => (l.id === leadId ? { ...l, ...patch } : l)));
+      setLeads((prev) =>
+        prev.map((l) => {
+          if (l.id !== leadId) return l;
+          // instagram/email vão dentro de enrichment (merge, não replace)
+          const { instagram, email, ...rest } = patch;
+          const updated = { ...l, ...rest };
+          if (instagram !== undefined || email !== undefined) {
+            updated.enrichment = {
+              ...(l.enrichment || {}),
+              ...(instagram !== undefined ? { instagram } : {}),
+              ...(email !== undefined ? { email } : {}),
+            };
+            // Se adicionou contato manual, marca como done pra reaparecer no card
+            if (instagram || email) updated.enrichmentStatus = 'done';
+          }
+          return updated;
+        })
+      );
       if (search) {
         fetch(`/api/search/${search.searchId}/leads/${leadId}`, {
           method: 'PATCH',
