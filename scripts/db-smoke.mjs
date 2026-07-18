@@ -84,5 +84,8 @@ const lead = (id, extra = {}) => ({
   assert.equal(dup.get('b1').stage, 'ganho');
 }
 
-rmSync(tmp, { recursive: true, force: true });
+// Limpeza best-effort: no Windows o arquivo .db segue aberto pelas conexões
+// (DatabaseSync não expõe close aqui) e o unlink dá EBUSY — o temp do runner
+// é descartado de qualquer forma, então falha de cleanup não reprova o smoke.
+try { rmSync(tmp, { recursive: true, force: true }); } catch {}
 console.log('✅ db-smoke: todos os asserts passaram (SQLite ok neste Node/OS).');
