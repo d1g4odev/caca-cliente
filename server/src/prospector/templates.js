@@ -112,10 +112,10 @@ export const institutoClinica = (lead) => {
 export const portfolio = (_lead) => [
   'Perfeito, obrigado.',
   'Vou te mandar dois exemplos de sites que desenvolvi, só para você ter uma ideia da qualidade visual, organização e estilo de entrega.',
-  'Esse primeiro é de uma médica aqui de Santiago. A proposta foi criar um site profissional, elegante e focado em transmitir confiança:',
-  '[link]',
+  'Esse primeiro é de uma profissional da saúde. A proposta foi criar um site profissional, elegante e focado em transmitir confiança:',
+  '[link-1]',
   'Esse segundo tem uma pegada mais visual e institucional:',
-  '[link]',
+  '[link-2]',
   'A ideia para o seu trabalho seria algo personalizado para sua área, apresentando seus serviços, diferenciais, localização, contato e informações importantes de forma mais profissional.',
 ].join('\n');
 

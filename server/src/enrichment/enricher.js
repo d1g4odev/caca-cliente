@@ -40,7 +40,7 @@ export function createSearch(leads, meta = {}) {
     niche: niche ?? '',
     query: { niche: niche ?? '', city: city ?? '', lat: meta.lat, lng: meta.lng, radiusKm: meta.radiusKm },
     found: meta.found ?? null,
-    leads: new Map(leads.map((l) => [l.id, { ...l, enrichment: null, enrichmentStatus: 'pending', stage: 'novo', notes: '', followUpAt: null, tags: [], estimatedValue: null }])),
+    leads: new Map(leads.map((l) => [l.id, { ...l, enrichment: null, enrichmentStatus: 'pending', stage: 'novo', notes: '', followUpAt: null, tags: [], estimatedValue: null, waInvalid: false }])),
     clients: new Set(),
     queue: [],
     inFlight: new Set(),
@@ -98,6 +98,11 @@ export function updateLead(searchId, leadId, patch = {}) {
   if (patch.phone !== undefined) {
     lead.phone = (typeof patch.phone === 'string' ? patch.phone.trim() : patch.phone) || null;
     fields.phone = lead.phone;
+  }
+  // waInvalid: flag "numero nao recebe WhatsApp", top-level
+  if (patch.waInvalid !== undefined) {
+    lead.waInvalid = Boolean(patch.waInvalid);
+    fields.waInvalid = lead.waInvalid;
   }
   // instagram: mora em enrichment, strip @ inicial, vazio → null
   if (patch.instagram !== undefined) {
@@ -201,6 +206,7 @@ async function runOne(session, lead) {
   const enrichment = USE_MOCK ? mockEnrichment(lead) : await spawnPython(lead, session.city);
 
   lead.enrichment = enrichment;
+  lead.linkQuebrado = enrichment ? Boolean(enrichment.linkBroken) : false;
   const achou = enrichment && (enrichment.email || enrichment.instagram || enrichment.facebook || enrichment.linkedin);
   lead.enrichmentStatus = achou ? 'done' : 'not_found';
 

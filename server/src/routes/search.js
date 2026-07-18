@@ -48,6 +48,7 @@ router.post('/api/search', async (req, res) => {
         enrichmentStatus: 'pending',
         enrichment: null,
         stage: 'novo',
+        waInvalid: false,
         score: scoreLead(l, null),
       })),
     });

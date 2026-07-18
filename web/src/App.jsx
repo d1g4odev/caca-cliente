@@ -8,6 +8,7 @@ import MessageSettings from './components/MessageSettings.jsx';
 import DispatchMode from './components/DispatchMode.jsx';
 import LeadDetails from './components/LeadDetails.jsx';
 import HistoryPanel from './components/HistoryPanel.jsx';
+import Onboarding from './components/Onboarding.jsx';
 import ThemeToggle, { useTheme } from './components/ThemeToggle.jsx';
 import Brand from './components/Brand.jsx';
 import Welcome from './components/Welcome.jsx';
@@ -34,6 +35,7 @@ export default function App() {
   const [searchError, setSearchError] = useState(null); // erro inline (substitui alert)
   const { theme, toggle: toggleTheme } = useTheme();
   const [drawerOpen, setDrawerOpen] = useState(false); // mobile: sidebar off-canvas
+  const [onboardingOpen, setOnboardingOpen] = useState(() => !localStorage.getItem('captacao.msgConfig'));
 
   // Persiste o searchId no navegador pra sobreviver a F5: ao montar, tenta
   // reabrir a última busca (ainda em memória do back OU no banco quando ativo).
@@ -333,6 +335,7 @@ export default function App() {
         />
       )}
       {historyOpen && <HistoryPanel onOpen={openSearch} onClose={() => setHistoryOpen(false)} />}
+      {onboardingOpen && <Onboarding onDone={() => setOnboardingOpen(false)} />}
     </div>
   );
 }

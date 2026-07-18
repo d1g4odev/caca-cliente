@@ -34,6 +34,7 @@ TIMEOUT_LEAD = 9.0  # orçamento total por lead, em segundos
 SERP_RETRIES = 2   # tentativas após a primeira falha (total 3)
 SERP_BASE_MS = 600  # backoff base: 0.6s, 1.2s, 2.4s
 
+LINKTREE_DOMAINS = ("linktr.ee", "bio.link", "beacons.ai", "lnk.bio")
 EMAIL_RE = re.compile(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
 # Resultados do DDG HTML usam <a class="result__a" href="https://destino-real">.
 # (Em 2024 deixaram de usar o redirect /l/?uddg=, então lemos a href direta.)
@@ -176,6 +177,21 @@ async def _enrich(lead: dict) -> dict:
             html2 = await _serp(client, f'"{name}" {city} email contato')
             out["email"] = _first_email(html2)
 
+        # Link quebrado: testa linktr.ee ou similar achado na SERP.
+        # SÓ marca True com status HTTP de erro confirmado (4xx/5xx) — timeout ou
+        # falha de rede vira None (desconhecido), nunca True: dizer pro lead que o
+        # link dele está quebrado quando não está queima a abordagem do aluno.
+        linktree_urls = [url for url in links if any(d in url.lower() for d in LINKTREE_DOMAINS)]
+        if linktree_urls:
+            try:
+                async with httpx.AsyncClient(timeout=3, follow_redirects=True, headers=UA) as ck:
+                    r = await ck.get(linktree_urls[0])
+                    out["linkBroken"] = r.status_code >= 400
+            except (httpx.HTTPError, asyncio.TimeoutError):
+                out["linkBroken"] = None
+        else:
+            out["linkBroken"] = None
+
     found = sum(1 for k in ("email", "instagram", "facebook", "linkedin") if out[k])
     out["confidence"] = round(min(1.0, 0.55 + 0.15 * found), 2) if found else 0.0
     return out
@@ -189,7 +205,7 @@ def enrich_sync(lead: dict) -> dict:
             return {
                 "email": None, "instagram": None, "facebook": None, "linkedin": None,
                 "whatsapp": lead.get("phone") or None, "confidence": 0.0, "partial": True,
-                "discoveredWebsite": None,
+                "discoveredWebsite": None, "linkBroken": None,
             }
 
     return asyncio.run(runner())
@@ -206,7 +222,7 @@ if __name__ == "__main__":
     except Exception:  # nunca derruba o processo — o Node depende do JSON
         result = {"email": None, "instagram": None, "facebook": None,
                   "linkedin": None, "whatsapp": lead.get("phone"), "confidence": 0.0, "partial": True,
-                  "discoveredWebsite": None}
+                  "discoveredWebsite": None, "linkBroken": None}
 
     # ensure_ascii evita qualquer problema de encoding no stdout do Windows
     sys.stdout.write(json.dumps(result, ensure_ascii=True))

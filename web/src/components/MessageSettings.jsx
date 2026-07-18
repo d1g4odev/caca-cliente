@@ -12,6 +12,8 @@ export default function MessageSettings({ open, onClose }) {
   const [padrao, setPadrao] = useState('');
   const [seuNome, setSeuNome] = useState('');
   const [seuInstagram, setSeuInstagram] = useState('');
+  const [portfolio1, setPortfolio1] = useState('');
+  const [portfolio2, setPortfolio2] = useState('');
 
   useEffect(() => {
     if (!open) return;
@@ -21,6 +23,8 @@ export default function MessageSettings({ open, onClose }) {
     setPadrao(cfg.beneficioPadrao);
     setSeuNome(cfg.seuNome || '');
     setSeuInstagram(cfg.seuInstagram || '');
+    setPortfolio1(cfg.portfolio1 || '');
+    setPortfolio2(cfg.portfolio2 || '');
   }, [open]);
 
   if (!open) return null;
@@ -31,6 +35,8 @@ export default function MessageSettings({ open, onClose }) {
     beneficioPadrao: padrao,
     seuNome: seuNome.trim(),
     seuInstagram: seuInstagram.trim().replace(/^@/, ''),
+    portfolio1: portfolio1.trim(),
+    portfolio2: portfolio2.trim(),
   };
   const preview = montarMensagem('Studio Aurora', 'salão de estética', cfgAtual);
 
@@ -73,6 +79,19 @@ export default function MessageSettings({ open, onClose }) {
           <span className="muted" style={{ margin: 0, fontSize: 12 }}>
             Preenche automaticamente o <code>[Seu nome]</code> e o <code>@[seu-instagram]</code> em TODAS as
             mensagens — do gerador inteligente, do Modo Disparo e do e-mail. Configure uma vez e esqueça.
+          </span>
+          <div className="field-row">
+            <label className="field">
+              <span>🔗 Site exemplo 1</span>
+              <input type="url" value={portfolio1} onChange={(e) => setPortfolio1(e.target.value)} placeholder="https://meusite.com.br" />
+            </label>
+            <label className="field">
+              <span>🔗 Site exemplo 2</span>
+              <input type="url" value={portfolio2} onChange={(e) => setPortfolio2(e.target.value)} placeholder="https://outro-site.com.br" />
+            </label>
+          </div>
+          <span className="muted" style={{ margin: 0, fontSize: 12 }}>
+            Os <code>[link-1]</code> e <code>[link-2]</code> dos templates são substituídos automaticamente pelos sites acima.
           </span>
           <label className="field">
             <span>Modelo da mensagem <em>(use {'{nome}'} e {'{beneficio}'})</em></span>

@@ -29,7 +29,7 @@ function leadFromSession(l, searchCity, searchNiche) {
     cidade: searchCity ?? '',
     temSite: l.hasWebsite ?? Boolean(e.discoveredWebsite),
     temInstagram: Boolean(e.instagram),
-    linkQuebrado: false,
+    linkQuebrado: l.linkQuebrado ?? false,
     estagio: l.stage ?? 'novo',
     instagram: e.instagram ?? '',
   };
@@ -186,7 +186,7 @@ router.post('/api/search/:searchId/messages/batch', async (req, res) => {
       cidade: data.city ?? '',
       temSite: l.hasWebsite ?? Boolean(e.discoveredWebsite),
       temInstagram: Boolean(e.instagram),
-      linkQuebrado: false,
+      linkQuebrado: l.linkQuebrado ?? false,
       estagio: l.stage ?? 'novo',
       instagram: e.instagram ?? '',
     };

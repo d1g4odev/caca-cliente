@@ -59,6 +59,7 @@ ALTER TABLE leads ADD COLUMN IF NOT EXISTS notes text;
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS follow_up_at text;
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS tags text[] DEFAULT '{}';
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS estimated_value numeric;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS wa_invalid BOOLEAN DEFAULT false;
 `;
 
 export async function initDb() {
@@ -90,10 +91,10 @@ export async function saveSearch(search, meta = {}) {
     );
     for (const l of search.leads.values()) {
       await client.query(
-        `INSERT INTO leads (search_id, lead_id, name, address, phone, lat, lng, has_website, source, niche, rating, reviews_count, enrichment, enrichment_status, stage)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
+        `INSERT INTO leads (search_id, lead_id, name, address, phone, lat, lng, has_website, source, niche, rating, reviews_count, enrichment, enrichment_status, stage, wa_invalid)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
          ON CONFLICT (search_id, lead_id) DO NOTHING`,
-        [search.id, l.id, l.name, l.address, l.phone, l.lat, l.lng, l.hasWebsite ?? false, l.source ?? null, l.niche ?? null, l.rating ?? null, l.reviewsCount ?? null, l.enrichment ?? null, l.enrichmentStatus, l.stage]
+        [search.id, l.id, l.name, l.address, l.phone, l.lat, l.lng, l.hasWebsite ?? false, l.source ?? null, l.niche ?? null, l.rating ?? null, l.reviewsCount ?? null, l.enrichment ?? null, l.enrichmentStatus, l.stage, l.waInvalid ?? false]
       );
     }
     await client.query('COMMIT');
@@ -125,7 +126,7 @@ export async function saveStage(searchId, leadId, stage) {
 // Atualiza os campos editáveis do lead (CRM): stage, notas, follow-up, tags, valor.
 export async function saveLeadFields(searchId, leadId, fields = {}) {
   if (!pool) return;
-  const map = { stage: 'stage', notes: 'notes', followUpAt: 'follow_up_at', tags: 'tags', estimatedValue: 'estimated_value', phone: 'phone', enrichment: 'enrichment' };
+  const map = { stage: 'stage', notes: 'notes', followUpAt: 'follow_up_at', tags: 'tags', estimatedValue: 'estimated_value', phone: 'phone', enrichment: 'enrichment', waInvalid: 'wa_invalid' };
   const sets = []; const vals = []; let i = 1;
   for (const [k, col] of Object.entries(map)) {
     if (fields[k] !== undefined) { sets.push(`${col}=$${i++}`); vals.push(fields[k]); }
@@ -145,6 +146,7 @@ function rowToLead(r) {
     enrichment: r.enrichment, enrichmentStatus: r.enrichment_status, stage: r.stage,
     notes: r.notes ?? '', followUpAt: r.follow_up_at ?? null,
     tags: r.tags ?? [], estimatedValue: r.estimated_value != null ? Number(r.estimated_value) : null,
+    waInvalid: r.wa_invalid ?? false,
   };
   lead.score = scoreLead(lead, lead.enrichment);
   return lead;

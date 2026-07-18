@@ -38,16 +38,21 @@ export const DEFAULT_MSG_CONFIG = {
   beneficioPadrao: DEFAULT_BENEFICIO_PADRAO,
   seuNome: '',
   seuInstagram: '',
+  portfolio1: '',
+  portfolio2: '',
 };
 
 // Substitui os placeholders de identidade ([Seu nome] e [seu-instagram]) pelo
 // perfil salvo na config. Sem perfil preenchido, mantém o placeholder — que
 // serve de lembrete visual pro aluno editar antes de enviar.
+// Também substitui [link-1]/[link-2] pelos portfólios, quando preenchidos.
 export function aplicarPerfil(texto, cfg = loadMsgConfig()) {
   if (!texto) return texto;
   let out = texto;
   if (cfg.seuNome) out = out.replaceAll('[Seu nome]', cfg.seuNome);
   if (cfg.seuInstagram) out = out.replaceAll('[seu-instagram]', cfg.seuInstagram.replace(/^@/, ''));
+  if (cfg.portfolio1) out = out.replaceAll('[link-1]', cfg.portfolio1);
+  if (cfg.portfolio2) out = out.replaceAll('[link-2]', cfg.portfolio2);
   return out;
 }
 
