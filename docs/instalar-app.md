@@ -67,9 +67,9 @@ O app cria um banco SQLite automaticamente na primeira vez que você abre. Os da
 
 | Sistema | Local do banco de dados |
 |---|---|
-| **Windows** | `%APPDATA%\Caça-Cliente\caca-cliente.db` (ex.: `C:\Users\SeuNome\AppData\Roaming\Caça-Cliente`) |
-| **Mac** | `~/Library/Application Support/Caça-Cliente/caca-cliente.db` |
-| **Linux** | `~/.config/Caça-Cliente/caca-cliente.db` |
+| **Windows** | `%APPDATA%\caca-cliente-desktop\caca-cliente.db` (ex.: `C:\Users\SeuNome\AppData\Roaming\caca-cliente-desktop`) |
+| **Mac** | `~/Library/Application Support/caca-cliente-desktop/caca-cliente.db` |
+| **Linux** | `~/.config/caca-cliente-desktop/caca-cliente.db` |
 
 ### Como fazer backup
 
