@@ -18,7 +18,8 @@ const DISMISS_KEY = 'captacao.updateDismissed';
 
 export default function UpdateModal() {
   const [info, setInfo] = useState(null);
-  const [fase, setFase] = useState('oferta'); // oferta | atualizando | falhou
+  const [fase, setFase] = useState('oferta'); // oferta | atualizando | baixando | instalando | falhou
+  const [progresso, setProgresso] = useState(0); // % do download (desktop)
   const pollRef = useRef(null);
 
   useEffect(() => {
@@ -44,9 +45,37 @@ export default function UpdateModal() {
     setInfo(null);
   }
 
+  function abrirPaginaDownload() {
+    setFase('oferta');
+    window.open(info.latestUrl, '_blank', 'noreferrer');
+  }
+
+  // Desktop com electron-updater (Windows/Linux): baixa o instalador novo com
+  // barra de progresso, instala silencioso e o app fecha e reabre atualizado.
+  // Qualquer tropeço (mac, dev, erro de rede) cai no fluxo antigo: abrir a
+  // página de download da release.
+  async function atualizarDesktop() {
+    const ponte = window.cacaDesktop;
+    let suportado = false;
+    try { suportado = ponte ? await ponte.autoUpdateSuportado() : false; } catch { /* sem ponte */ }
+    if (!suportado) return abrirPaginaDownload();
+
+    setProgresso(0);
+    setFase('baixando');
+    ponte.aoProgresso((p) => setProgresso(Math.min(100, Math.round(p.percent || 0))));
+    ponte.aoBaixado(() => setFase('instalando'));
+    ponte.aoErro(() => abrirPaginaDownload());
+    try {
+      const r = await ponte.baixarAtualizacao();
+      if (!r?.ok) abrirPaginaDownload();
+    } catch {
+      abrirPaginaDownload();
+    }
+  }
+
   async function atualizar() {
     if (info.mode === 'desktop') {
-      window.open(info.latestUrl, '_blank', 'noreferrer');
+      atualizarDesktop();
       return;
     }
     setFase('atualizando');
@@ -96,12 +125,29 @@ export default function UpdateModal() {
               </div>
             )}
             <button type="button" className="btn-primary update-modal-cta" onClick={atualizar}>
-              {info.mode === 'desktop' ? '⬇️ Baixar atualização agora' : '⬇️ Atualizar agora'}
+              ⬇️ Atualizar agora
             </button>
             {info.mode === 'git' && (
               <span className="update-modal-hint">A ferramenta se atualiza e recarrega sozinha — leva um minutinho.</span>
             )}
             <button type="button" className="update-modal-later" onClick={dispensar}>Deixar pra depois</button>
+          </>
+        )}
+        {fase === 'baixando' && (
+          <>
+            <div className="update-modal-icon update-modal-spin">⬇️</div>
+            <h2 id="update-title" className="update-modal-title">Baixando atualização…</h2>
+            <div className="update-progress" role="progressbar" aria-valuenow={progresso} aria-valuemin={0} aria-valuemax={100}>
+              <div className="update-progress-fill" style={{ width: `${progresso}%` }} />
+            </div>
+            <p className="update-modal-sub"><strong>{progresso}%</strong> — deixe o app aberto, é rapidinho.</p>
+          </>
+        )}
+        {fase === 'instalando' && (
+          <>
+            <div className="update-modal-icon update-modal-spin">⚙️</div>
+            <h2 id="update-title" className="update-modal-title">Instalando…</h2>
+            <p className="update-modal-sub">O app vai <strong>fechar e reabrir sozinho</strong> já atualizado. Até já!</p>
           </>
         )}
         {fase === 'atualizando' && (

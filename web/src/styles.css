@@ -231,6 +231,15 @@ body {
 .update-modal-later:hover { color: var(--text-muted); }
 .update-modal-spin { animation: update-pulse 1.2s ease-in-out infinite; }
 @keyframes update-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+.update-progress {
+  height: 14px; margin: var(--space-3) 0 var(--space-2);
+  background: var(--bg-muted); border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill); overflow: hidden;
+}
+.update-progress-fill {
+  height: 100%; border-radius: var(--radius-pill);
+  background: var(--accent-btn); transition: width 0.3s ease;
+}
 
 .sidebar { display: flex; flex-direction: column; border-right: 1px solid var(--border); min-width: 0; min-height: 0; overflow: hidden; background: var(--bg-elevated); }
 .sidebar-header { padding: var(--space-4) var(--space-4) var(--space-3); border-bottom: 1px solid var(--border); }
