@@ -8,14 +8,51 @@ import { saudacao } from './nome.js';
 
 const norm = (s) => (s || '').normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
 
-// ── Conteúdo padrão (usado enquanto o usuário não personaliza) ──
-// O template aceita as variáveis {saudacao}, {nome} e {beneficio}.
+// ── Modelos de abordagem (PDF mestre) ──
+// Os 3 seguem a mesma espinha ensinada no manual: elogio específico e
+// verdadeiro → oportunidade leve (nunca criticar o lead) → quem sou e o que
+// faço amarrado ao nicho/cidade → pedido de permissão, sem compromisso.
+// Sem textão, sem prometer milagre, sem mencionar IA.
+// Variáveis aceitas: {saudacao}, {nome}, {nicho}, {cidade} e {beneficio}.
 // O [Seu nome] é preenchido automaticamente pelo perfil (onboarding / tela ✏️).
-const DEFAULT_TEMPLATE = `{saudacao}
+export const MODELOS_ABORDAGEM = [
+  {
+    id: 'avaliacoes-google',
+    nome: '⭐ Avaliações no Google',
+    dica: 'Gancho: avaliações ótimas, mas sem site. O mais direto — confira as avaliações antes de enviar.',
+    template: `{saudacao} Vi as avaliações de vocês no Google, são ótimas. Procurei o site de vocês e não encontrei.
 
-Aqui é o [Seu nome]. Crio sites com IA e ajudo negócios a aparecerem mais na internet. Estava olhando o perfil de vocês e tive uma ideia: {beneficio}.
+Me chamo [Seu nome], crio sites profissionais pra vocês aparecerem no Google quando alguém buscar {nicho} em {cidade}.
 
-Posso te mostrar uma ideia rápida?`;
+Posso te mostrar alguns exemplos do meu trabalho, sem compromisso?`,
+  },
+  {
+    id: 'pesquisa-local',
+    nome: '📍 Achei na pesquisa',
+    dica: 'Gancho: encontrei vocês pesquisando o nicho na cidade. Usa o benefício por nicho.',
+    template: `{saudacao}
+
+Conheci o trabalho de vocês pesquisando por {nicho} em {cidade} e achei muito bacana o que fazem. Procurei um site pra conhecer melhor e não encontrei.
+
+Me chamo [Seu nome], sou desenvolvedor e trabalho com sites pra negócios locais. Acredito que {beneficio}.
+
+Posso te mostrar uma ideia rápida?`,
+  },
+  {
+    id: 'elogio-perfil',
+    nome: '💬 Elogio ao perfil',
+    dica: 'Gancho: o perfil já é profissional; um site deixaria a presença no mesmo nível. Bom pra quem tem Instagram ativo.',
+    template: `{saudacao}
+
+Vi o perfil de vocês e achei muito profissional. Dá pra perceber o cuidado que vocês têm com o trabalho.
+
+Me chamo [Seu nome], sou desenvolvedor e faço sites personalizados. Acredito que um site próprio poderia apresentar melhor os serviços de vocês e passar ainda mais confiança pra quem chega pelo Google ou pelo Instagram.
+
+Posso te mostrar alguns trabalhos que já desenvolvi?`,
+  },
+];
+
+const DEFAULT_TEMPLATE = MODELOS_ABORDAGEM[0].template;
 
 // Gancho de valor por ramo. `kw` são radicais SEM acento (casam por substring).
 // A oferta é SEMPRE site / landing page / site institucional pra apresentar o
@@ -65,12 +102,12 @@ export function loadMsgConfig() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const cfg = { ...DEFAULT_MSG_CONFIG, ...JSON.parse(raw) };
-      // Migração: o template de fábrica antigo tinha "posso te mandar um áudio
-      // curto" (proibido pelo manual). Se o aluno salvou a config antes da
-      // troca e NÃO personalizou o texto (ainda contém a frase de fábrica),
-      // atualiza pro default novo. Template genuinamente customizado sem a
-      // frase proibida é preservado.
-      if (cfg.template && cfg.template.includes('áudio curto')) {
+      // Migração: templates de fábrica antigos tinham "posso te mandar um áudio
+      // curto" (proibido pelo manual) ou "Crio sites com IA" (fora da abordagem
+      // do PDF mestre). Se o aluno salvou a config antes da troca e NÃO
+      // personalizou o texto (ainda contém a frase de fábrica), atualiza pro
+      // default novo. Template genuinamente customizado é preservado.
+      if (cfg.template && (cfg.template.includes('áudio curto') || cfg.template.includes('Crio sites com IA'))) {
         cfg.template = DEFAULT_TEMPLATE;
         saveMsgConfig(cfg);
       }
@@ -111,12 +148,28 @@ function beneficio(niche, cfg) {
   return (cfg.beneficios.find((b) => b.kw.some((k) => n.includes(k))) || {}).txt || cfg.beneficioPadrao;
 }
 
+// ── Cidade da última busca ──
+// O template padrão usa {cidade} ("...quando alguém buscar {nicho} em {cidade}").
+// A cidade não vem no lead individual — vem da busca. O App chama lembrarCidade()
+// a cada busca e o montarMensagem lê daqui. Guarda só o nome ("Caxias do Sul",
+// sem ", Rio Grande do Sul, Brasil" do geocode).
+const CITY_KEY = 'captacao.lastCity';
+export function lembrarCidade(city) {
+  const c = (city || '').split(',')[0].trim();
+  try { if (c) localStorage.setItem(CITY_KEY, c); } catch { /* ignora */ }
+}
+function cidadeLembrada() {
+  try { return localStorage.getItem(CITY_KEY) || ''; } catch { return ''; }
+}
+
 // Monta a mensagem final aplicando a config (personalizada ou padrão).
 export function montarMensagem(nome, niche, cfg = loadMsgConfig()) {
   const msg = (cfg.template || DEFAULT_TEMPLATE)
     .replaceAll('{saudacao}', saudacao(nome))
     .replaceAll('{nome}', nome ?? '')
-    .replaceAll('{beneficio}', beneficio(niche, cfg));
+    .replaceAll('{beneficio}', beneficio(niche, cfg))
+    .replaceAll('{nicho}', (niche || '').trim() || 'o serviço de vocês')
+    .replaceAll('{cidade}', cidadeLembrada() || 'sua cidade');
   return aplicarPerfil(msg, cfg);
 }
 

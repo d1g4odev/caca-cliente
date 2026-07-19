@@ -57,17 +57,21 @@ export const linkSoWhatsapp = (lead) => {
 };
 
 // Sem presença digital (sem site, sem Instagram) — lead encontrado via pesquisa
-// local. Não menciona Instagram, bio, anúncio nem Linktree. O gancho é a
-// pesquisa pelo nicho na cidade. Oferta: site institucional / landing page
-// (NUNCA sistema, agendamento ou automação — regra do manual seção 1).
+// local. Não menciona Instagram, bio, anúncio nem Linktree. Segue a abordagem
+// do PDF mestre: elogio verdadeiro (avaliações no Google) + gancho concreto
+// (procurei o site e não encontrei) + quem sou e o que faço amarrado ao
+// nicho/cidade + CTA sem compromisso. Oferta: site institucional / landing
+// page (NUNCA sistema, agendamento ou automação — regra do manual seção 1).
+// O [Seu nome] é substituído pelo perfil do aluno no front (aplicarPerfil).
 export const semPresencaDigital = (lead) => {
   const { nome, nicho, cidade } = lead;
-  const onde = cidade ? `em ${cidade}` : 'aqui na região';
+  const cidadeCurta = (cidade || '').split(',')[0].trim();
+  const busca = `${nicho || 'o serviço de vocês'}${cidadeCurta ? ` em ${cidadeCurta}` : ' na região'}`;
   return [
     saudacao(nome),
-    `Conheci o trabalho de vocês pesquisando por ${nicho || 'serviços'} ${onde} e achei muito bacana o que fazem.`,
-    'Sou desenvolvedor e trabalho com sites para negócios locais. Acredito que um site institucional, feito pra apresentar os serviços e o trabalho de vocês, poderia ajudar bastante — tanto pra passar mais confiança quanto pra clientes encontrarem o negócio pelo Google.',
-    'Posso mostrar uma ideia para vocês?',
+    'Vi as avaliações de vocês no Google, são ótimas. Procurei o site de vocês e não encontrei.',
+    `Me chamo [Seu nome], crio sites profissionais pra vocês aparecerem no Google quando alguém buscar ${busca}.`,
+    'Posso te mostrar alguns exemplos do meu trabalho, sem compromisso?',
   ].join('\n');
 };
 

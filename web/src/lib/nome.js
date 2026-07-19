@@ -151,17 +151,20 @@ export function saudacao(nome) {
   return 'Oi, tudo bem?';
 }
 
-// Mensagem de fallback quando o motor (API) falha — segue o Manual Mestre
-// Prospector: saudação por primeiro nome (pessoa) ou abertura neutra (empresa),
-// sem "áudio curto", sem nome completo. NÃO usa o template legado de
-// whatsapp.js (que tem "posso te mandar um áudio curto" e saudação por nome
-// completo — proibido pelo manual).
+// Mensagem de fallback quando o motor (API) falha — segue a abordagem do PDF
+// mestre: elogio verdadeiro (avaliações no Google) + gancho concreto (procurei
+// o site e não encontrei) + quem sou e o que faço amarrado ao nicho + CTA sem
+// compromisso. Saudação por primeiro nome (pessoa) ou abertura neutra (empresa).
 //
 // Esta é a mensagem que o aluno vê quando o endpoint do motor está offline.
-// Curta, neutra, respeita o manual. O aluno pode editar antes de enviar.
+// Curta, natural, sem "crio sites com IA". O aluno pode editar antes de enviar.
 export function mensagemFallbackManual(nome, nicho) {
   const abertura = saudacao(nome);
-  const nichoTxt = nicho ? ` de ${nicho}` : '';
-  return `${abertura} Vi seu perfil${nichoTxt} e achei muito profissional. Posso te mostrar uma ideia rápida de como atrair mais clientes? É só um minuto.`;
+  const busca = nicho ? `quando alguém buscar ${nicho} na região` : 'quando alguém buscar o serviço de vocês na região';
+  return [
+    `${abertura} Vi as avaliações de vocês no Google, são ótimas. Procurei o site de vocês e não encontrei.`,
+    `Me chamo [Seu nome], crio sites profissionais pra vocês aparecerem no Google ${busca}.`,
+    'Posso te mostrar alguns exemplos do meu trabalho, sem compromisso?',
+  ].join('\n');
 }
 

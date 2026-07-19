@@ -9,11 +9,12 @@ import DispatchMode from './components/DispatchMode.jsx';
 import LeadDetails from './components/LeadDetails.jsx';
 import HistoryPanel from './components/HistoryPanel.jsx';
 import Onboarding from './components/Onboarding.jsx';
-import UpdateBanner from './components/UpdateBanner.jsx';
+import UpdateModal from './components/UpdateModal.jsx';
 import ThemeToggle, { useTheme } from './components/ThemeToggle.jsx';
 import Brand from './components/Brand.jsx';
 import Welcome from './components/Welcome.jsx';
 import { leadScore } from './lib/score.js';
+import { lembrarCidade } from './lib/whatsapp.js';
 import { useEnrichmentStream } from './hooks/useEnrichmentStream.js';
 
 const CENTRO_PADRAO = [-30.0427211, -51.1626625]; // Porto Alegre (bairro Bom Jesus)
@@ -57,6 +58,12 @@ export default function App() {
       }
     })();
   }, []);
+
+  // Guarda a cidade da busca ativa pro template do WhatsApp ({cidade}).
+  // Vale tanto pra busca nova quanto pra busca reaberta do histórico/F5.
+  useEffect(() => {
+    if (search?.query?.city) lembrarCidade(search.query.city);
+  }, [search]);
 
   // Cinto de segurança: ao selecionar um lead, garante que o mapa fique visível
   useEffect(() => {
@@ -191,7 +198,7 @@ export default function App() {
 
   return (
     <>
-      <UpdateBanner />
+      <UpdateModal />
       <div className="app">
       <aside className={`sidebar ${drawerOpen ? 'sidebar--open' : ''}`}>
         <header className="sidebar-header">

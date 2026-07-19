@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-  loadMsgConfig, saveMsgConfig, DEFAULT_MSG_CONFIG,
+  loadMsgConfig, saveMsgConfig, DEFAULT_MSG_CONFIG, MODELOS_ABORDAGEM,
   beneficiosToText, beneficiosFromText, montarMensagem,
 } from '../lib/whatsapp.js';
 
@@ -93,9 +93,26 @@ export default function MessageSettings({ open, onClose }) {
           <span className="muted" style={{ margin: 0, fontSize: 12 }}>
             Os <code>[link-1]</code> e <code>[link-2]</code> dos templates são substituídos automaticamente pelos sites acima.
           </span>
+          <div className="field">
+            <span>Escolha um dos 3 modelos de abordagem <em>(do manual do curso — clique pra usar)</em></span>
+            <div className="msg-modelos">
+              {MODELOS_ABORDAGEM.map((m) => (
+                <button
+                  key={m.id}
+                  type="button"
+                  className={`msg-modelo ${template.trim() === m.template.trim() ? 'msg-modelo--on' : ''}`}
+                  onClick={() => setTemplate(m.template)}
+                  title={m.dica}
+                >
+                  <strong>{m.nome}</strong>
+                  <span>{m.dica}</span>
+                </button>
+              ))}
+            </div>
+          </div>
           <label className="field">
-            <span>Modelo da mensagem <em>(use {'{saudacao}'}, {'{nome}'} e {'{beneficio}'})</em></span>
-            <textarea rows={7} value={template} onChange={(e) => setTemplate(e.target.value)} />
+            <span>Modelo da mensagem <em>(edite à vontade — use {'{saudacao}'}, {'{nome}'}, {'{nicho}'}, {'{cidade}'} e {'{beneficio}'})</em></span>
+            <textarea rows={9} value={template} onChange={(e) => setTemplate(e.target.value)} />
           </label>
           <label className="field">
             <span>Benefício por nicho <em>(1 por linha: palavras-chave =&gt; texto)</em></span>

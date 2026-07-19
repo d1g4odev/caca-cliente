@@ -175,27 +175,26 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: var(--text-subtle); }
 
 /* ── Layout: lista à esquerda, mapa à direita ── */
-.app { display: grid; grid-template-columns: 400px 1fr; height: 100%; overflow: clip; }
-.map-wrap { min-width: 0; position: relative; }
+/* grid-template-rows minmax(0, 1fr): sem isso a linha implícita é "auto" e
+   cresce com o conteúdo (Kanban com muitos cards estoura a viewport, o
+   overflow: clip corta e o scroll interno das colunas nunca engata). */
+.app { display: grid; grid-template-columns: 400px 1fr; grid-template-rows: minmax(0, 1fr); height: 100%; overflow: clip; }
+.map-wrap { min-width: 0; min-height: 0; position: relative; }
 .map { height: 100%; width: 100%; }
 
-/* ── Banner de nova versão (fixo no topo, sobrepõe o app) ── */
-.update-banner {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 5000; height: 30px;
-  display: flex; align-items: center; gap: 4px;
-  padding: 0 var(--space-4); font-size: var(--font-sm);
-  background: var(--accent-soft); border-bottom: 1px solid var(--accent-border);
-  color: var(--text);
+/* ── Pop-up de atualização (sobrepõe o app inteiro) ── */
+.update-modal-overlay { z-index: 6000; }
+.update-modal {
+  max-width: 420px; text-align: center;
+  padding: var(--space-6) var(--space-5);
 }
-.update-banner a { color: var(--accent-strong); font-weight: 600; text-decoration: none; white-space: nowrap; }
-.update-banner a:hover { text-decoration: underline; }
-.update-banner-x {
-  margin-left: auto; border: 0; background: none; color: var(--text-muted);
-  cursor: pointer; font-size: 14px; line-height: 1;
-  padding: 4px 6px; border-radius: var(--radius-sm);
-  transition: background var(--transition), color var(--transition);
-}
-.update-banner-x:hover { color: var(--text); background: var(--bg-muted); }
+.update-modal h2 { margin: 0 0 var(--space-3); font-size: var(--font-xl); }
+.update-modal p { margin: 0 0 var(--space-3); line-height: 1.5; }
+.update-modal code { font-size: 0.9em; background: var(--bg-muted); padding: 1px 5px; border-radius: var(--radius-sm); }
+.update-modal-icon { font-size: 40px; margin-bottom: var(--space-2); }
+.update-modal-actions { display: flex; justify-content: center; gap: var(--space-3); margin-top: var(--space-4); }
+.update-modal-spin { animation: update-pulse 1.2s ease-in-out infinite; }
+@keyframes update-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
 .sidebar { display: flex; flex-direction: column; border-right: 1px solid var(--border); min-width: 0; min-height: 0; overflow: hidden; background: var(--bg-elevated); }
 .sidebar-header { padding: var(--space-4) var(--space-4) var(--space-3); border-bottom: 1px solid var(--border); }
@@ -691,6 +690,27 @@ body {
 }
 .msg-settings-notice strong { color: var(--accent-strong); }
 
+/* ── Seletor dos 3 modelos de abordagem (tela ✏️) ── */
+.msg-modelos { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2); }
+.msg-modelo {
+  display: flex; flex-direction: column; gap: 4px; text-align: left;
+  padding: var(--space-2) var(--space-3); cursor: pointer;
+  background: var(--bg-muted); color: var(--text);
+  border: 1px solid var(--border-strong); border-radius: var(--radius-md);
+  font: inherit; font-size: var(--font-sm); line-height: 1.35;
+  transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+}
+.msg-modelo:hover { border-color: var(--accent); }
+.msg-modelo--on {
+  background: var(--accent-soft); border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-ring);
+}
+.msg-modelo strong { font-size: var(--font-base); }
+.msg-modelo span { color: var(--text-muted); font-size: var(--font-xs); }
+@media (max-width: 760px) {
+  .msg-modelos { grid-template-columns: 1fr; }
+}
+
 /* ── Histórico de buscas ── */
 .history-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
 .history-item {
@@ -706,7 +726,7 @@ body {
 /* ── Mobile: drawer off-canvas ── */
 .mobile-bar { display: none; }
 @media (max-width: 760px) {
-  .app { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+  .app { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr); }
   .map-wrap { order: 1; }
   .sidebar {
     position: fixed; top: 0; left: 0; bottom: 0; width: min(380px, 88vw); z-index: 1500;
