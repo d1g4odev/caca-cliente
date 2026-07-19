@@ -255,6 +255,13 @@ body {
 
 /* ── Rodapé da sidebar (marca do curso) ── */
 .sidebar-foot { margin-top: auto; padding: var(--space-3) var(--space-4); border-top: 1px solid var(--border); }
+.brand-version {
+  display: flex; align-items: center; gap: 8px; margin-top: 6px;
+  font-size: var(--font-xs); color: var(--text-subtle);
+}
+.brand-version strong { color: var(--text-muted); font-weight: 600; }
+.brand-version--ok { color: var(--success-strong); }
+.brand-version--velha { color: var(--accent-strong); font-weight: 600; }
 .brand-link {
   display: flex; flex-direction: column; gap: 4px; text-decoration: none; color: var(--text-muted);
   transition: color var(--transition);
