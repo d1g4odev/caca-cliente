@@ -182,17 +182,53 @@ body {
 .map-wrap { min-width: 0; min-height: 0; position: relative; }
 .map { height: 100%; width: 100%; }
 
-/* ── Pop-up de atualização (sobrepõe o app inteiro) ── */
-.update-modal-overlay { z-index: 6000; }
-.update-modal {
-  max-width: 420px; text-align: center;
-  padding: var(--space-6) var(--space-5);
+/* ── Pop-up de atualização (centro da tela, fundo borrado, chama atenção) ── */
+.update-modal-overlay {
+  z-index: 6000;
+  background: rgba(40, 44, 52, 0.55);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
 }
-.update-modal h2 { margin: 0 0 var(--space-3); font-size: var(--font-xl); }
-.update-modal p { margin: 0 0 var(--space-3); line-height: 1.5; }
+.update-modal {
+  max-width: 460px; width: min(460px, 92vw); text-align: center;
+  padding: var(--space-6) var(--space-5);
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 0 6px var(--accent-ring), var(--shadow-lg);
+  animation: update-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes update-pop { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.update-modal-title {
+  margin: 0 0 var(--space-2); font-size: 24px; font-weight: 800;
+  letter-spacing: -0.01em; color: var(--accent-strong); text-transform: uppercase;
+}
+.update-modal-sub { margin: 0 0 var(--space-4); line-height: 1.55; color: var(--text); }
 .update-modal code { font-size: 0.9em; background: var(--bg-muted); padding: 1px 5px; border-radius: var(--radius-sm); }
-.update-modal-icon { font-size: 40px; margin-bottom: var(--space-2); }
-.update-modal-actions { display: flex; justify-content: center; gap: var(--space-3); margin-top: var(--space-4); }
+.update-modal-icon { font-size: 48px; margin-bottom: var(--space-2); }
+.update-modal-bounce { animation: update-bounce 1.6s ease-in-out infinite; }
+@keyframes update-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+.update-modal-news {
+  text-align: left; margin: 0 0 var(--space-4);
+  background: var(--accent-soft); border: 1px solid var(--accent-border);
+  border-radius: var(--radius-md); padding: var(--space-3) var(--space-4);
+}
+.update-modal-news-title { display: block; font-weight: 700; margin-bottom: var(--space-2); color: var(--accent-strong); }
+.update-modal-news ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
+.update-modal-news li { line-height: 1.4; font-size: var(--font-base); }
+.update-modal-cta {
+  width: 100%; padding: 14px 16px; font-size: 16px; font-weight: 700;
+  animation: update-glow 1.8s ease-in-out infinite;
+}
+@keyframes update-glow {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-ring); }
+  50% { box-shadow: 0 0 0 7px var(--accent-ring); }
+}
+.update-modal-hint { display: block; margin-top: var(--space-2); font-size: var(--font-sm); color: var(--text-muted); }
+.update-modal-later {
+  margin-top: var(--space-3); border: 0; background: none; cursor: pointer;
+  color: var(--text-subtle); font-size: var(--font-sm); text-decoration: underline;
+  font-family: inherit;
+}
+.update-modal-later:hover { color: var(--text-muted); }
 .update-modal-spin { animation: update-pulse 1.2s ease-in-out infinite; }
 @keyframes update-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 

@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 
-// Pop-up de atualização. Consulta /api/app-info ao abrir o app e, se o GitHub
-// tiver versão mais nova que a instalada, mostra "ATUALIZAÇÃO DETECTADA".
+// Pop-up de atualização — bloqueia o centro da tela com fundo borrado até o
+// aluno decidir. Consulta /api/app-info ao abrir o app e, havendo versão nova,
+// mostra o que mudou (bullets da release no modo desktop; assuntos dos commits
+// no modo git) e pede a atualização.
 //
 //   - Instalação GIT (npm run dev): "Atualizar agora" chama POST /api/app-update
 //     (git pull + npm install no servidor). O node --watch e o Vite reiniciam
@@ -10,8 +12,8 @@ import { useEffect, useRef, useState } from 'react';
 //   - Instalação DESKTOP (Electron): "Baixar atualização" abre a página da
 //     release nova no GitHub.
 //
-// "Agora não" dispensa ESTA versão (localStorage) — o pop-up só volta quando
-// uma atualização mais nova ainda for publicada.
+// "Deixar pra depois" (link discreto) dispensa ESTA versão (localStorage) — o
+// pop-up volta assim que uma atualização mais nova ainda for publicada.
 const DISMISS_KEY = 'captacao.updateDismissed';
 
 export default function UpdateModal() {
@@ -34,6 +36,8 @@ export default function UpdateModal() {
   let dismissed = null;
   try { dismissed = localStorage.getItem(DISMISS_KEY); } catch { /* ignora */ }
   if (fase === 'oferta' && dismissed && dismissed === updateId) return null;
+
+  const novidades = (info.novidades || []).slice(0, 6);
 
   function dispensar() {
     try { localStorage.setItem(DISMISS_KEY, updateId); } catch { /* ignora */ }
@@ -76,42 +80,47 @@ export default function UpdateModal() {
       <div className="modal update-modal" role="alertdialog" aria-labelledby="update-title" onClick={(e) => e.stopPropagation()}>
         {fase === 'oferta' && (
           <>
-            <div className="update-modal-icon">🚀</div>
-            <h2 id="update-title">Atualização detectada!</h2>
-            <p>
+            <div className="update-modal-icon update-modal-bounce">🚀</div>
+            <h2 id="update-title" className="update-modal-title">Atualização detectada!</h2>
+            <p className="update-modal-sub">
               Saiu uma versão nova do Caça-Cliente
-              {info.mode === 'desktop' && info.latest ? <> (v{info.latest})</> : null}
-              {info.mode === 'git' && info.behind > 0 ? <> ({info.behind} melhoria{info.behind > 1 ? 's' : ''} nova{info.behind > 1 ? 's' : ''})</> : null}
-              .
+              {info.mode === 'desktop' && info.latest ? <> — <strong>v{info.latest}</strong></> : null}
+              . Atualize para continuar com a versão mais recente da ferramenta.
             </p>
-            <p><strong>Deseja atualizar para a última versão?</strong></p>
-            <div className="update-modal-actions">
-              <button type="button" className="btn-secondary" onClick={dispensar}>Agora não</button>
-              <button type="button" className="btn-primary" onClick={atualizar}>
-                {info.mode === 'desktop' ? '⬇️ Baixar atualização' : '⬇️ Atualizar agora'}
-              </button>
-            </div>
+            {novidades.length > 0 && (
+              <div className="update-modal-news">
+                <span className="update-modal-news-title">✨ O que chegou nessa versão</span>
+                <ul>
+                  {novidades.map((n, i) => <li key={i}>{n}</li>)}
+                </ul>
+              </div>
+            )}
+            <button type="button" className="btn-primary update-modal-cta" onClick={atualizar}>
+              {info.mode === 'desktop' ? '⬇️ Baixar atualização agora' : '⬇️ Atualizar agora'}
+            </button>
+            {info.mode === 'git' && (
+              <span className="update-modal-hint">A ferramenta se atualiza e recarrega sozinha — leva um minutinho.</span>
+            )}
+            <button type="button" className="update-modal-later" onClick={dispensar}>Deixar pra depois</button>
           </>
         )}
         {fase === 'atualizando' && (
           <>
             <div className="update-modal-icon update-modal-spin">⏳</div>
-            <h2 id="update-title">Atualizando…</h2>
-            <p>Baixando a versão nova e instalando. Isso pode levar um ou dois minutos.</p>
+            <h2 id="update-title" className="update-modal-title">Atualizando…</h2>
+            <p className="update-modal-sub">Baixando a versão nova e instalando. Isso pode levar um ou dois minutos.</p>
             <p className="muted">Não feche o terminal. A ferramenta recarrega sozinha quando terminar.</p>
           </>
         )}
         {fase === 'falhou' && (
           <>
             <div className="update-modal-icon">😕</div>
-            <h2 id="update-title">Não consegui confirmar a atualização</h2>
-            <p>
+            <h2 id="update-title" className="update-modal-title">Não consegui confirmar a atualização</h2>
+            <p className="update-modal-sub">
               Pode ser só a internet lenta. Se a ferramenta não recarregar sozinha, feche o terminal
               (Ctrl+C), rode <code>git pull</code> na pasta <code>caca-cliente</code> e depois <code>npm run dev</code>.
             </p>
-            <div className="update-modal-actions">
-              <button type="button" className="btn-primary" onClick={() => window.location.reload()}>Recarregar a página</button>
-            </div>
+            <button type="button" className="btn-primary update-modal-cta" onClick={() => window.location.reload()}>Recarregar a página</button>
           </>
         )}
       </div>

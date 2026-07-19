@@ -31,7 +31,19 @@ const sh = (cmd, timeout = 8000) =>
 
 // ── Desktop: última release no GitHub (cache 6h) ────────────────────────────
 const RELEASE_CACHE_MS = 6 * 60 * 60 * 1000;
-let releaseCache = { at: 0, latest: null, latestUrl: null };
+let releaseCache = { at: 0, latest: null, latestUrl: null, novidades: [] };
+
+// Extrai os bullets ("- ...") das notas da release pra listar no pop-up.
+// Remove negrito/código markdown — o front mostra texto puro.
+function bulletsDasNotas(body) {
+  return String(body || '')
+    .split('\n')
+    .map((l) => l.trim())
+    .filter((l) => l.startsWith('- '))
+    .map((l) => l.slice(2).replaceAll('**', '').replaceAll('`', '').trim())
+    .filter(Boolean)
+    .slice(0, 6);
+}
 
 async function fetchLatestRelease() {
   if (Date.now() - releaseCache.at < RELEASE_CACHE_MS) return releaseCache;
@@ -46,12 +58,13 @@ async function fetchLatestRelease() {
         at: Date.now(),
         latest: (data.tag_name ?? '').replace(/^v/, '') || null,
         latestUrl: data.html_url ?? null,
+        novidades: bulletsDasNotas(data.body),
       };
     } else {
-      releaseCache = { at: Date.now(), latest: null, latestUrl: null };
+      releaseCache = { at: Date.now(), latest: null, latestUrl: null, novidades: [] };
     }
   } catch {
-    releaseCache = { at: Date.now(), latest: null, latestUrl: null };
+    releaseCache = { at: Date.now(), latest: null, latestUrl: null, novidades: [] };
   }
   return releaseCache;
 }
@@ -73,19 +86,31 @@ async function checkGit() {
   const behindRaw = await sh('git rev-list --count HEAD..origin/main');
   const remoteSha = await sh('git rev-parse --short origin/main');
   const behind = behindRaw == null ? 0 : Number(behindRaw) || 0;
-  gitCache = { at: Date.now(), data: { behind, remoteSha } };
+  // Assuntos dos commits que ainda não chegaram — viram a lista "o que mudou"
+  // do pop-up. Remove prefixos de convenção (feat:/fix:/chore:) pro aluno ler
+  // frase limpa.
+  let novidades = [];
+  if (behind > 0) {
+    const log = await sh('git log --pretty=%s HEAD..origin/main -n 6');
+    novidades = (log || '')
+      .split('\n')
+      .map((l) => l.replace(/^\w+(\([^)]*\))?!?:\s*/, '').trim())
+      .filter(Boolean);
+  }
+  gitCache = { at: Date.now(), data: { behind, remoteSha, novidades } };
   return gitCache.data;
 }
 
 router.get('/api/app-info', async (_req, res) => {
   const version = process.env.APP_VERSION ?? null;
   if (version) {
-    const { latest, latestUrl } = await fetchLatestRelease();
+    const { latest, latestUrl, novidades } = await fetchLatestRelease();
     return res.json({
       mode: 'desktop',
       version,
       latest,
       latestUrl,
+      novidades,
       updateAvailable: Boolean(latest && latest !== version),
     });
   }
@@ -96,6 +121,7 @@ router.get('/api/app-info', async (_req, res) => {
       version: null,
       behind: git.behind,
       remoteSha: git.remoteSha,
+      novidades: git.novidades ?? [],
       updateAvailable: git.behind > 0,
     });
   }
